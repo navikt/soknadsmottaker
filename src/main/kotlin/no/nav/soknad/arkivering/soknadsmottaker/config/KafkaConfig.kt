@@ -1,6 +1,6 @@
-package no.nav.soknad.archiving.archiverproducer.config
+package no.nav.soknad.arkivering.soknadsmottaker.config
 
-import no.nav.soknad.archiving.dto.ArchivalData
+import no.nav.soknad.arkivering.dto.ArchivalData
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.context.annotation.Bean

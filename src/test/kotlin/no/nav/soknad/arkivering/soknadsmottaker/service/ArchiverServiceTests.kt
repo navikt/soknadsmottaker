@@ -1,4 +1,4 @@
-package no.nav.soknad.archiving.archiverproducer.service
+package no.nav.soknad.arkivering.soknadsmottaker.service
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock

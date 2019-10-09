@@ -1,6 +1,6 @@
-package no.nav.soknad.archiving.archiverproducer.service
+package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import no.nav.soknad.archiving.dto.ArchivalData
+import no.nav.soknad.arkivering.dto.ArchivalData
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 

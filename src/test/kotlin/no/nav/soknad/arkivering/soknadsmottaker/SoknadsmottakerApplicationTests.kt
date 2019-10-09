@@ -1,10 +1,10 @@
-package no.nav.soknad.archiving.archiverproducer
+package no.nav.soknad.arkivering.soknadsmottaker
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class ArchiverProducerApplicationTests {
+class SoknadsmottakerApplicationTests {
 
 	@Test
 	fun `Spring context loads`() {

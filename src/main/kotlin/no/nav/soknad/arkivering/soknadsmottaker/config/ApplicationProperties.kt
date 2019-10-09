@@ -1,4 +1,4 @@
-package no.nav.soknad.archiving.archiverproducer.config
+package no.nav.soknad.arkivering.soknadsmottaker.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component

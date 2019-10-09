@@ -1,8 +1,8 @@
-package no.nav.soknad.archiving.archiverproducer.rest
+package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.soknad.archiving.dto.ArchivalData
-import no.nav.soknad.archiving.archiverproducer.service.ArchiverService
-import no.nav.soknad.archiving.archiverproducer.service.KafkaSender
+import no.nav.soknad.arkivering.dto.ArchivalData
+import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
+import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.times

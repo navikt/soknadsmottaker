@@ -1,11 +1,11 @@
-package no.nav.soknad.archiving.archiverproducer
+package no.nav.soknad.arkivering.soknadsmottaker
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class ArchiverProducerApplication
+class SoknadsmottakerApplication
 
 fun main(args: Array<String>) {
-	runApplication<ArchiverProducerApplication>(*args)
+	runApplication<SoknadsmottakerApplication>(*args)
 }
