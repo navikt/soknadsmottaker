@@ -1,0 +1,22 @@
+server:
+  port: 8090
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+application:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+
+
+---
+spring:
+  profiles: docker
+
+application:
+  kafka:
+    bootstrap-servers: kafka-broker:29092
