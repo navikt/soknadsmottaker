@@ -1,3 +1,9 @@
 package no.nav.soknad.arkivering.dto
 
-data class ArchivalData(val id: String, val message: String)
+import org.joda.time.DateTime
+
+data class SoknadMottattDto (var henvendelsesId: String, var ettersendelsesId: String?, var personId: String, var tema: String
+														 , var innsendtDato: DateTime, var mottatteDokumenter: List<InnsendtDokumentDto>)
+
+data class MottattDokumentDto(var uuid: String, var skjemaNummer: String, var erAlternativRepresentasjon: Boolean, var erHovedSkjema: Boolean,
+															 var tittel: String?, var mimeType: String?, var filNavn: String?, var filStorrelse: Int?)
