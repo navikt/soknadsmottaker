@@ -25,7 +25,7 @@ class ReceiverTests {
 		receiver.receiveMessage(message)
 
 		verify(kafkaMock, times(1))
-			.send(Mockito.eq("archival"), Mockito.eq("personId"), Mockito.any())
+			.send(Mockito.eq("privat-soknadInnsendt-sendsoknad-v1-q0"), Mockito.eq("personId"), Mockito.any())
 	}
 
 	private fun createMessage(): SoknadInnsendtDto {
