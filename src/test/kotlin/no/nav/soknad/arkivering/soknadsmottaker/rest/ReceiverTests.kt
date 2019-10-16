@@ -1,8 +1,10 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import no.nav.soknad.arkivering.dto.InnsendtDokumentDto
+import no.nav.soknad.arkivering.dto.InnsendtVariantDto
 import no.nav.soknad.arkivering.dto.SoknadInnsendtDto
 import no.nav.soknad.arkivering.dto.SoknadMottattDto
+import no.nav.soknad.arkivering.soknadsmottaker.objectMother
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import org.joda.time.DateTime
@@ -17,23 +19,38 @@ class ReceiverTests {
 
 	private val kafkaMock: KafkaTemplate<String, SoknadMottattDto> = mock()
 	private val receiver = mockReceiver()
+	// TODO generaliser med objectMother
+	private val innsendingsidIdForBilForsendelse = "IS123456"
+	private val personIDBil = "12345678910"
+	private val temaBil = "BIL"
+	private val skjemanummerBil = "NAV 10-07.40"
+	private val erHovedSkjemaBil = true
+	private val tittelBil = "Søknad om stønad til anskaffelse av motorkjøretøy"
+	private val uuidBil = "e7179251-635e-493a-948c-749a39eedacc"
+	private val filNavnBil = skjemanummerBil
+	private val filStorrelseBil = "10000"
+	private val variantformatBilHovedskjema = "ARKIV"
+	private val mimeTypeBil = "er det bruk for denne? bør vel være dokumenttype" // pdf, xml, json, pdfa
 
 	@Test
-	fun `When receiving REST call, message is put on Kafka`() {
-		val message = createMessage()
+	fun `Ved mottatt REST call, legg melding paa Kafka`() {
+		val melding = opprettMelding()
 
-		receiver.receiveMessage(message)
+		receiver.receiveMessage(melding)
 
 		verify(kafkaMock, times(1))
 			.send(Mockito.eq("privat-soknadInnsendt-sendsoknad-v1-q0"), Mockito.eq("personId"), Mockito.any())
 	}
 
-	private fun createMessage(): SoknadInnsendtDto {
-		val innsendtDokumentDto =  InnsendtDokumentDto("123456789","NAV 11-12.12", false
-			, true,"Eksempel","application/pdf", "NAV 11-12.12", 100)
+	private fun opprettMelding(): SoknadInnsendtDto {
 
-		return SoknadInnsendtDto("100","99","01018012345","TSO", DateTime.now(), Arrays.asList(innsendtDokumentDto))
+		val innsendtDokumentDto =
+			InnsendtDokumentDto(skjemanummerBil,true, tittelBil, varianter = listOf(opprettHoveddokumentVariant())  )
+
+		return SoknadInnsendtDto(innsendingsidIdForBilForsendelse,false , personIDBil, temaBil, DateTime.now(), Arrays.asList())
 	}
+	fun opprettHoveddokumentVariant() =
+		InnsendtVariantDto(uuidBil, mimeTypeBil, filNavnBil, filStorrelseBil, variantformatBilHovedskjema, filNavnBil)
 
 	private fun mockReceiver(): Receiver {
 		val kafkaSender = KafkaSender(kafkaMock)

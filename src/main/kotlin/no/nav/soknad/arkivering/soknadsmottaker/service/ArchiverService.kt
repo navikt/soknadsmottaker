@@ -1,9 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import no.nav.soknad.arkivering.dto.InnsendtDokumentDto
-import no.nav.soknad.arkivering.dto.MottattDokumentDto
-import no.nav.soknad.arkivering.dto.SoknadInnsendtDto
-import no.nav.soknad.arkivering.dto.SoknadMottattDto
+import no.nav.soknad.arkivering.dto.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -15,10 +12,9 @@ class ArchiverService(private val kafkaSender: KafkaSender) {
 		val mottattSoknad = message.toSoknadMottattView()
 		publishToKafka(mottattSoknad)
 	}
-
+// mappe til https://dokarkiv-q1.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST
 	private fun SoknadInnsendtDto.toSoknadMottattView() = SoknadMottattDto(
-		henvendelsesId = henvendelsesId,
-		ettersendelsesId = ettersendelsesId,
+	eksternReferanseId= innsendingsId,
 		personId = personId,
 		tema = tema,
 		innsendtDato = innsendtDato,
@@ -26,15 +22,23 @@ class ArchiverService(private val kafkaSender: KafkaSender) {
 	)
 
 	private fun InnsendtDokumentDto.toMottattDokumentView() = MottattDokumentDto(
-		uuid = uuid,
-		erAlternativRepresentasjon = erAlternativRepresentasjon,
-		erHovedSkjema =  erHovedSkjema,
 		skjemaNummer = skjemaNummer,
+		erHovedSkjema =  erHovedSkjema,
 		tittel = tittel,
-		filNavn = filNavn,
-		filStorrelse = filStorrelse,
-		mimeType = mimeType
+		varianter =  konverterTilMotattVarianterListe(varianter)
 	)
+
+	private fun InnsendtVariantDto.toMottattVariantView() = MottattVariantDto(
+		uuid = uuid,
+		filNavn = filNavn,
+		filtype = filtype,
+		variantformat = variantformat
+	)
+			private fun konverterTilMotattVarianterListe(innsendtVariantDto: List<InnsendtVariantDto>): List<MottattVariantDto> {
+			return innsendtVariantDto
+				.map { f -> f.toMottattVariantView() }
+				.toList()
+		}
 
 	private fun konverterTilMottatteDokumenterList(innsendtDto: List<InnsendtDokumentDto>): List<MottattDokumentDto> {
 		return innsendtDto

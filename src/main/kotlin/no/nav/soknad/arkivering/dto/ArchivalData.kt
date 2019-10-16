@@ -2,8 +2,11 @@ package no.nav.soknad.arkivering.dto
 
 import org.joda.time.DateTime
 
-data class SoknadMottattDto (var henvendelsesId: String, var ettersendelsesId: String?, var personId: String, var tema: String
-														 , var innsendtDato: DateTime, var mottatteDokumenter: List<MottattDokumentDto>)
 
-data class MottattDokumentDto(var uuid: String, var skjemaNummer: String, var erAlternativRepresentasjon: Boolean, var erHovedSkjema: Boolean,
-															 var tittel: String?, var mimeType: String?, var filNavn: String?, var filStorrelse: Int?)
+data class SoknadMottattDto (val eksternReferanseId: String, val personId: String,val idType: String = "FNR", val tema: String
+														 , val innsendtDato: DateTime, val mottatteDokumenter: List<MottattDokumentDto>)
+
+data class MottattDokumentDto(var skjemaNummer: String, var erHovedSkjema: Boolean?,
+															var tittel: String?, val varianter: List<MottattVariantDto>)
+
+data class MottattVariantDto(val uuid: String, val filNavn: String?, val filtype: String, val variantformat: String)
