@@ -1,7 +1,7 @@
 package no.nav.soknad.arkivering.dto
 
 class InputTransformer (val input: SoknadInnsendtDto) {
-	
+
 	 fun apply () : SoknadMottattDto{
 		 return input.toSoknadMottattView()
 	}

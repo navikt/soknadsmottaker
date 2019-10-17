@@ -27,22 +27,21 @@ class ArchiverServiceTests {
 	private val filNavnBil = skjemanummerBIL
 
 
-	/*@Test
-	fun `Will call Kafka Sender`() {
+	@Test
+	fun `Kaller Kafka sender`() {
 		archiverService.archive(opprettMeldingPaKafka())
 
 		verify(kafkaSender, times(1)).publish(any(), any(), any())
 	}
 
 	private fun opprettMeldingPaKafka(): SoknadMottattDto {
-		val motattDokumentDto = MottattDokumentDto(skjemanummerBIL, erhovedskjemaBIL, tittelBIL,varianter = listOf(opprettHoveddokumentVariant()) )
+		//val motattDokumentDto = MottattDokumentDto(skjemanummerBIL, erhovedskjemaBIL, tittelBIL,varianter = listOf(opprettHoveddokumentVariant()) )
 
 		return SoknadMottattDto(eksternReferanseIDBil,personIdBIL,"FNR","BIL", DateTime.now(), Arrays.asList())
 	}
 
 	private fun opprettHoveddokumentVariant(): MottattVariantDto {
-		MottattVariantDto(uuidBIL, filNavnBil, "PDF", "PDFA" )
-
-	}*/
+		return MottattVariantDto(uuidBIL, filNavnBil, "PDF", "PDFA")
+	}
 
 }

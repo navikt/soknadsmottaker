@@ -4,7 +4,6 @@ import no.nav.soknad.arkivering.dto.InnsendtDokumentDto
 import no.nav.soknad.arkivering.dto.InnsendtVariantDto
 import no.nav.soknad.arkivering.dto.SoknadInnsendtDto
 import no.nav.soknad.arkivering.dto.SoknadMottattDto
-import no.nav.soknad.arkivering.soknadsmottaker.objectMother
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import org.joda.time.DateTime

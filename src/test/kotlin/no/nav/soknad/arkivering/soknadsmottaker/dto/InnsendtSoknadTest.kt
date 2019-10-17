@@ -4,8 +4,9 @@ import no.nav.soknad.arkivering.dto.InnsendtDokumentDto
 import no.nav.soknad.arkivering.dto.InnsendtVariantDto
 import no.nav.soknad.arkivering.dto.SoknadInnsendtDto
 import org.joda.time.DateTime
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
-import java.time.LocalDateTime
 
 @SpringBootTest
 class InnsendtSoknadTest() {
@@ -32,7 +33,7 @@ class InnsendtSoknadTest() {
 	private val filnavnKvitteering = "kvittering.pdf"
 	private val tittelKvitteering = "kvittering"
 	private val skjemanummerKvittering = "L7"
-	private val filtypeforKvittering = "PDF/A"
+	private val filtypeforKvittering = "PDF"
 	// forerkort
 	private val uuidBILvedlegg = "e7179251-635e-493a-948c-749a39vedleg"
 	private val filnavnForerkort = "forerkort.pdf"
@@ -45,23 +46,29 @@ class InnsendtSoknadTest() {
 	private val variantformatOrginal = "ORGINAL"
 	private val mimeTypeBil = "er det bruk for denne? bør vel være dokumenttype" // pdf, xml, json, pdfa
 
+	// varianter
+	private	val variantHovedskjemaBil = InnsendtVariantDto(uuidBil, mimeTypeBil, filNavnBil, filStorrelseBil, variantformatBilHovedskjema, filtypeForBILSoknad)
+	private	val variantKvitteringBil = InnsendtVariantDto(uuidBilKvittering, mimeTypeBil, filnavnKvitteering, filstorrelseVedlegg, variantformatOrginal, filtypeforKvittering)
+	private	val variantForerkort = InnsendtVariantDto(uuidBILvedlegg, mimeTypeBil, filnavnForerkort, filstorrelseVedlegg, variantformatOrginal, filtypeforForerkort)
+	//Innsendte dokumenter
+	private	val bilHovedskjemaDokument = InnsendtDokumentDto (skjemanummerBil, erHovedSkjemaBil, tittelBil, varianter = listOf(variantHovedskjemaBil))
+	private	val bilKvitteringDokument = InnsendtDokumentDto( skjemanummerKvittering, erIkkeHovedskjemaBil, tittelKvitteering, varianter = listOf(variantKvitteringBil))
+	private	val bilForerkortDokument = InnsendtDokumentDto (skjemanummerForerkort, erIkkeHovedskjemaBil, tittelForerkort, varianter = listOf(variantForerkort))
+	private val innsendteDokumenterBil = mutableListOf<InnsendtDokumentDto>(bilHovedskjemaDokument, bilKvitteringDokument, bilForerkortDokument)
 
-	private fun `mottak av BIL forstegangs innsending`(){
-
-		val variantHovedskjemaBil = InnsendtVariantDto(uuidBil, mimeTypeBil, filNavnBil, filStorrelseBil, variantformatBilHovedskjema, filtypeForBILSoknad)
-		val variantKvitteringBil = InnsendtVariantDto(uuidBilKvittering, mimeTypeBil, filnavnKvitteering, filstorrelseVedlegg, variantformatOrginal, filtypeforKvittering)
-		val variantForerkort = InnsendtVariantDto(uuidBILvedlegg, mimeTypeBil, filnavnForerkort, filstorrelseVedlegg, variantformatOrginal, filtypeforForerkort)
-
-		val bilHovedskjemaDokument = InnsendtDokumentDto (skjemanummerBil, erHovedSkjemaBil, tittelBil, varianter = listOf(variantHovedskjemaBil))
-		val bilKvitteringDokument = InnsendtDokumentDto( skjemanummerKvittering, erIkkeHovedskjemaBil, tittelKvitteering, varianter = listOf(variantKvitteringBil))
-		val bilForerkortDokument = InnsendtDokumentDto (skjemanummerForerkort, erIkkeHovedskjemaBil, tittelForerkort, varianter = listOf(variantForerkort))
-
-		val innsendteDokumenterBil = mutableListOf<InnsendtDokumentDto>(bilHovedskjemaDokument, bilKvitteringDokument, bilForerkortDokument)
-
-		val innsendtBilSoknad = SoknadInnsendtDto (innsendingsidIdForBilForsendelse, erEttersendelseBil, personIDBil, temaBil,
+	private val innsendtBilSoknad = SoknadInnsendtDto (innsendingsidIdForBilForsendelse, erEttersendelseBil, personIDBil, temaBil,
 			this.innsendtDatoBil, innsendteDokumenter = innsendteDokumenterBil)
 
+
+
+	@Test
+	fun `opprett Soknad med bare Hovedskjema`() {
+		Assertions.assertTrue(bilHovedskjemaDokument.varianter::isNotEmpty)
 	}
 
+	@Test
+	fun `innsendt soknad om bilstonad har 3 dokumenter`(){
+		Assertions.assertEquals(3, innsendteDokumenterBil.count())
+	}
 
 }
