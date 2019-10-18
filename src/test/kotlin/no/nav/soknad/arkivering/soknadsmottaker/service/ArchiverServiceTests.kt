@@ -35,7 +35,7 @@ class ArchiverServiceTests {
 	}
 
 	private fun opprettMeldingPaKafka(): SoknadMottattDto {
-		//val motattDokumentDto = MottattDokumentDto(skjemanummerBIL, erhovedskjemaBIL, tittelBIL,varianter = listOf(opprettHoveddokumentVariant()) )
+		val motattDokumentDto = MottattDokumentDto(skjemanummerBIL, erhovedskjemaBIL, tittelBIL,varianter = listOf(opprettHoveddokumentVariant()) )
 
 		return SoknadMottattDto(eksternReferanseIDBil,personIdBIL,"FNR","BIL", DateTime.now(), Arrays.asList())
 	}

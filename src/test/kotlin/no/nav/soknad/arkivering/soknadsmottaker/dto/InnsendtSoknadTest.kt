@@ -1,8 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.dto
 
-import com.nhaarman.mockitokotlin2.notNull
 import no.nav.soknad.arkivering.dto.*
-import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
