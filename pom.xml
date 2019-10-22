@@ -19,6 +19,8 @@
 		<java.version>1.8</java.version>
 		<kotlin.version>1.3.50</kotlin.version>
 		<mockito-kotlin.version>2.2.0</mockito-kotlin.version>
+		<swagger-ui.version>3.9.2</swagger-ui.version> <!--swagger anotations -->
+		<swagger.version>2.9.2</swagger.version>
 	</properties>
 
 	<dependencies>
@@ -50,7 +52,17 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 		</dependency>
-
+		<!--Swagger-->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -100,6 +112,11 @@
 		</plugins>
 	</build>
 
+	<scm>
+		<connection>scm:git:https://github.com/navikt/soknadsmottaker</connection>
+		<developerConnection>scm:git:https://github.com/navikt/soknadsmottaker</developerConnection>
+	</scm>
+
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
@@ -114,5 +131,18 @@
 			<url>https://repo.spring.io/milestone</url>
 		</pluginRepository>
 	</pluginRepositories>
+	<distributionManagement>
+		<repository>
+			<id>m2internal</id>
+			<name>NAV Maven2 Internal Repository</name>
+			<url>https://repo.adeo.no/repository/maven-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>m2snapshot</id>
+			<name>NAV Maven2 Snapshot Repository</name>
+			<url>https://repo.adeo.no/repository/maven-snapshots</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
