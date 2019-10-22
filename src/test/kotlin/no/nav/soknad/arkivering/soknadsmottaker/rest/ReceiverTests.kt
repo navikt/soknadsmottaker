@@ -1,18 +1,15 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.soknad.arkivering.dto.InnsendtDokumentDto
-import no.nav.soknad.arkivering.dto.InnsendtVariantDto
 import no.nav.soknad.arkivering.dto.SoknadInnsendtDto
 import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
-import org.joda.time.DateTime
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.springframework.kafka.core.KafkaTemplate
-import java.util.*
+import java.time.LocalDateTime
 
 class ReceiverTests {
 
@@ -42,14 +39,8 @@ class ReceiverTests {
 	}
 
 	private fun opprettMelding(): SoknadInnsendtDto {
-
-		val innsendtDokumentDto =
-			InnsendtDokumentDto(skjemanummerBil,true, tittelBil, varianter = listOf(opprettHoveddokumentVariant())  )
-
-		return SoknadInnsendtDto(innsendingsidIdForBilForsendelse,false , personIDBil, temaBil, DateTime.now(), Arrays.asList())
+		return SoknadInnsendtDto(innsendingsidIdForBilForsendelse, false , personIDBil, temaBil, LocalDateTime.now(), listOf())
 	}
-	fun opprettHoveddokumentVariant() =
-		InnsendtVariantDto(uuidBil, mimeTypeBil, filNavnBil, filStorrelseBil, variantformatBilHovedskjema, filNavnBil)
 
 	private fun mockReceiver(): Receiver {
 		val kafkaSender = KafkaSender(kafkaMock)

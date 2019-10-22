@@ -15,8 +15,8 @@ class ArchiverService(private val kafkaSender: KafkaSender) {
 // mappe til https://dokarkiv-q1.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST
 
 
-	private fun publishToKafka(archivalData: SoknadMottattDto) {
-		logger.info("Publishing to Kafka: $archivalData")
-		kafkaSender.publish("privat-soknadInnsendt-sendsoknad-v1-q0", "personId", archivalData)
+	private fun publishToKafka(data: SoknadMottattDto) {
+		logger.info("Publishing to Kafka: $data")
+		kafkaSender.publish("privat-soknadInnsendt-sendsoknad-v1-q0", "personId", data)
 	}
 }

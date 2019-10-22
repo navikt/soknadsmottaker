@@ -4,10 +4,9 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import no.nav.soknad.arkivering.dto.*
-import org.joda.time.DateTime
+import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.time.LocalDateTime
 
 class ArchiverServiceTests {
 
@@ -35,13 +34,6 @@ class ArchiverServiceTests {
 	}
 
 	private fun opprettMeldingPaKafka(): SoknadMottattDto {
-		//val motattDokumentDto = MottattDokumentDto(skjemanummerBIL, erhovedskjemaBIL, tittelBIL,varianter = listOf(opprettHoveddokumentVariant()) )
-
-		return SoknadMottattDto(eksternReferanseIDBil,personIdBIL,"FNR","BIL", DateTime.now(), Arrays.asList())
+		return SoknadMottattDto(eksternReferanseIDBil, personIdBIL, "FNR", "BIL", LocalDateTime.now(), listOf())
 	}
-
-	private fun opprettHoveddokumentVariant(): MottattVariantDto {
-		return MottattVariantDto(uuidBIL, filNavnBil, "PDF", "PDFA")
-	}
-
 }
