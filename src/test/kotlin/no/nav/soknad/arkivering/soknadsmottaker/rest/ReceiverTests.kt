@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
+import no.nav.soknad.arkivering.dto.ArchivalData
 import no.nav.soknad.arkivering.dto.SoknadInnsendtDto
 import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
@@ -13,7 +14,7 @@ import java.time.LocalDateTime
 
 class ReceiverTests {
 
-	private val kafkaMock: KafkaTemplate<String, SoknadMottattDto> = mock()
+	private val kafkaMock: KafkaTemplate<String, ArchivalData> = mock()
 	private val receiver = mockReceiver()
 	// TODO generaliser med objectMother
 	private val innsendingsidIdForBilForsendelse = "IS123456"

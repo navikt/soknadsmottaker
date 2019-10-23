@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.config
 
-import no.nav.soknad.arkivering.dto.SoknadMottattDto
+import no.nav.soknad.arkivering.dto.ArchivalData
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.context.annotation.Bean
@@ -14,7 +14,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer
 class KafkaConfig(private val applicationProperties: ApplicationProperties) {
 
 	@Bean
-	fun producerFactory(): ProducerFactory<String, SoknadMottattDto> {
+	fun producerFactory(): ProducerFactory<String, ArchivalData> {
 		val configProps = HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = applicationProperties.kafka.bootstrapServers
 			it[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
