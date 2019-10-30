@@ -1,60 +1,61 @@
 package no.nav.soknad.arkivering.dto
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 
-internal class InputTransformerTest {
+class InputTransformerTest {
 	private val innsendtSoknad = opprettBilInnsendingMedBareSoknadOgKvittering()
-	private val enkelBilVariantHoveddokumentVariant = opprettHoveddokumentVariant()
-	private val enkeltBilHovedskjema: InnsendtDokumentDto = innsendtHovedskjemaDokument(enkelBilVariantHoveddokumentVariant)
-	private val transformertSoknad = InputTransformer(innsendtSoknad).apply()
-	private val motattHoveddokument = transformertSoknad.mottatteDokumenter.find { it.erHovedSkjema == true }
-	private val motattHoveddokumentVarianer = motattHoveddokument?.varianter
-	private val varianFormatErARKIV = motattHoveddokumentVarianer?.find { it.uuid == uuidBil }
 
   @Test
   fun sjekkAtInnsendtSoknadTransformeresTilMottattSoknadOgSjekkInformasjontransformering() {
+		val transformertSoknad = transformereSoknad()
 
-		Assertions.assertEquals(innsendtSoknad.innsendingsId, transformertSoknad.eksternReferanseId)
-		Assertions.assertEquals(innsendtSoknad.personId, transformertSoknad.personId)
-		Assertions.assertEquals(innsendtSoknad.tema, transformertSoknad.tema)
-		Assertions.assertEquals(innsendtSoknad.innsendtDato, transformertSoknad.innsendtDato)
-		Assertions.assertEquals(innsendtSoknad.innsendteDokumenter.size, transformertSoknad.mottatteDokumenter.size)
-
+		assertEquals(innsendtSoknad.innsendingsId, transformertSoknad.eksternReferanseId)
+		assertEquals(innsendtSoknad.personId, transformertSoknad.personId)
+		assertEquals(innsendtSoknad.tema, transformertSoknad.tema)
+		assertEquals(innsendtSoknad.innsendtDato, transformertSoknad.innsendtDato)
+		assertEquals(innsendtSoknad.innsendteDokumenter.size, transformertSoknad.mottatteDokumenter.size)
 	}
 
 	@Test
 	fun `innsendt dokumentformat blir transformert til mottatt dokument`() {
+		val transformertSoknad = transformereSoknad()
+		val motattHoveddokument = transformertSoknad.mottatteDokumenter.find { it.erHovedSkjema == true }
 
-		Assertions.assertEquals(skjemanummerBil, motattHoveddokument?.skjemaNummer)
-		Assertions.assertEquals("true", motattHoveddokument?.erHovedSkjema.toString())
-		Assertions.assertEquals(tittelBil, motattHoveddokument?.tittel)
-
+		assertEquals(skjemanummerBil, motattHoveddokument?.skjemaNummer)
+		assertEquals(true, motattHoveddokument?.erHovedSkjema)
+		assertEquals(tittelBil, motattHoveddokument?.tittel)
 	}
 
 	@Test
-	fun `innsendt variant blir transformert til mottat variant`() {
-		val hoveddokumentVariant = varianFormatErARKIV
-		val forventetUuid = uuidBil
+	fun `innsendte variant for hoveddokument blir transformert til mottatt variant for hoveddokument`() {
 
-		Assertions.assertEquals(forventetUuid, hoveddokumentVariant?.uuid)
-		Assertions.assertEquals(filNavnBil, hoveddokumentVariant?.filNavn)
-		Assertions.assertEquals(variantformatBilHovedskjema, hoveddokumentVariant?.variantformat)
+		val forventetUuidHoveddokument = uuidBil
 
-	}
+		val transformertSoknad = transformereSoknad()
+		val mottattHoveddokument = transformertSoknad.mottatteDokumenter.find { it.erHovedSkjema == true }
+		val variantFormatForHoveddokument = mottattHoveddokument?.varianter?.find { it.uuid == forventetUuidHoveddokument }
 
-
-	@Test
-	fun innsendtHovedskjemaVariantErAvTypenHovedskjemaVariant (){
-		Assertions.assertEquals("PDF/A", enkelBilVariantHoveddokumentVariant.filtype)
-		Assertions.assertEquals("ARKIV", enkelBilVariantHoveddokumentVariant.variantformat)
-		Assertions.assertEquals("true",enkeltBilHovedskjema.erHovedSkjema.toString() )
+		assertEquals(forventetUuidHoveddokument, variantFormatForHoveddokument?.uuid)
+		assertEquals(filNavnBil, variantFormatForHoveddokument?.filNavn)
+		assertEquals(variantformatBilHovedskjema, variantFormatForHoveddokument?.variantformat)
+		assertEquals(filtypeBilHoveskjema, variantFormatForHoveddokument?.filtype)
 	}
 
 	@Test
-	fun mottattBilSoknad () {
-		val ettersendelseSkalVareFalse = false
-		Assertions.assertEquals(innsendtSoknad.ettersendelse, ettersendelseSkalVareFalse)
-		Assertions.assertEquals(innsendtSoknad.innsendteDokumenter.size, 2)
+	fun `insendt vedleggsvariant kvittering transformeres riktig`() {
+
+		val transformertSoknad = transformereSoknad()
+
+		val forventetUuidKvittering = uuidBilKvittering
+		val mottattKvittering = transformertSoknad.mottatteDokumenter.find { it.erHovedSkjema == false }
+		val variantFormatForKvittering = mottattKvittering?.varianter?.find { it.uuid == forventetUuidKvittering }
+
+		assertEquals(forventetUuidKvittering, variantFormatForKvittering?.uuid)
+		assertEquals(filnavnKvitteering, variantFormatForKvittering?.filNavn)
+		assertEquals(variantformatBilKvittering, variantFormatForKvittering?.variantformat)
+		assertEquals(filtypeBilKvittering, variantFormatForKvittering?.filtype)
 	}
+
+	private fun transformereSoknad() = InputTransformer(innsendtSoknad).apply()
 }
