@@ -11,7 +11,7 @@ import org.springframework.kafka.core.KafkaTemplate
 
 class ReceiverTests {
 
-	private val kafkaMock: KafkaTemplate<String, SoknadMottattDto> = mock()
+	private val kafkaMock: KafkaTemplate<String, ArchivalData> = mock()
 	private val receiver = mockReceiver()
 
 	@Test

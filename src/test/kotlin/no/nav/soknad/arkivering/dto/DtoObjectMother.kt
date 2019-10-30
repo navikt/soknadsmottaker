@@ -1,13 +1,13 @@
 package no.nav.soknad.arkivering.dto
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
 
 //forsendelse informasjon
 private const val innsendingsidIdForBilForsendelse = "IS123456"
 private var erEttersendelseBil = false
 private const val personIDBil = "12345678910"
 private const val temaBil = "BIL"
-private val innsendtDatoBil = DateTime.now()
+private val innsendtDatoBil = LocalDateTime.now()
 // hovedskjema
 const val skjemanummerBil = "NAV 10-07.40"
 private const val erHovedSkjemaBil = true

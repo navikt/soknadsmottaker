@@ -5,9 +5,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import no.nav.soknad.arkivering.dto.*
-import org.joda.time.DateTime
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.time.LocalDateTime
 
 class ArchiverServiceTests {
 
@@ -25,5 +24,5 @@ class ArchiverServiceTests {
 	}
 
 	private fun opprettMeldingPaKafka() =
-		SoknadMottattDto(eksternReferanseIDBil,personIdBIL,"FNR","BIL", DateTime.now(), listOf())
+		SoknadMottattDto(eksternReferanseIDBil,personIdBIL,"FNR","BIL", LocalDateTime.now(), listOf())
 }
