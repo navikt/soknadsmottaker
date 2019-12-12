@@ -1,6 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.soknad.arkivering.dto.*
+import no.nav.soknad.arkivering.dto.ArchivalData
+import no.nav.soknad.arkivering.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import org.junit.jupiter.api.Test

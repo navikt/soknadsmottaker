@@ -1,7 +1,7 @@
 package no.nav.soknad.arkivering.dto
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class InputTransformerTest {
 	private val innsendtSoknad = opprettBilInnsendingMedBareSoknadOgKvittering()

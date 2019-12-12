@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import no.nav.soknad.arkivering.dto.*
+import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
