@@ -1,5 +1,4 @@
-FROM navikt/java:8
-LABEL maintainer="Team Søknad"
+FROM azul/zulu-openjdk-alpine:12
 
 COPY target/*SNAPSHOT.jar /app.jar
 

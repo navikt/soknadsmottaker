@@ -13,6 +13,6 @@ class Receiver(private val archiverService: ArchiverService) {
 	@PostMapping("/save")
 	fun receiveMessage(@RequestBody message: SoknadInnsendtDto) {
 		logger.info("Received message '$message'")
-		archiverService.archive( InputTransformer (message).apply())
+		archiverService.archive(InputTransformer (message).apply())
 	}
 }
