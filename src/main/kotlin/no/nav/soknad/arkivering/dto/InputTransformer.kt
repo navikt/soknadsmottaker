@@ -2,9 +2,7 @@ package no.nav.soknad.arkivering.dto
 
 class InputTransformer (private val input: SoknadInnsendtDto) {
 
-	fun apply() : SoknadMottattDto {
-		return input.toSoknadMottattView()
-	}
+	fun apply() : SoknadMottattDto = input.toSoknadMottattView()
 
 	private fun SoknadInnsendtDto.toSoknadMottattView() = SoknadMottattDto(
 		eksternReferanseId= innsendingsId,
@@ -28,15 +26,8 @@ class InputTransformer (private val input: SoknadInnsendtDto) {
 		variantformat = variantformat
 	)
 
-	private fun konverterTilMotattVarianterListe(innsendtVariantDto: List<InnsendtVariantDto>): List<MottattVariantDto> {
-		return innsendtVariantDto
-			.map { it.toMottattVariantView() }
-			.toList()
-	}
+	private fun konverterTilMotattVarianterListe(list: List<InnsendtVariantDto>) = list.map { it.toMottattVariantView() }
 
-	private fun konverterTilMottatteDokumenterList(innsendtDto: List<InnsendtDokumentDto>): List<MottattDokumentDto> {
-		return innsendtDto
-			.map { it.toMottattDokumentView() }
-			.toList()
-	}
+	private fun konverterTilMottatteDokumenterList(list: List<InnsendtDokumentDto>) =list.map { it.toMottattDokumentView() }
+
 }

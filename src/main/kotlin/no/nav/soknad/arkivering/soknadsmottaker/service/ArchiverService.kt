@@ -1,6 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import no.nav.soknad.arkivering.dto.*
+import no.nav.soknad.arkivering.dto.ArchivalData
+import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -15,8 +16,6 @@ class ArchiverService(private val kafkaSender: KafkaSender) {
 	}
 
 	private fun convertMessage(message: SoknadMottattDto) = ArchivalData(message.personId, message.tema)
-// mappe til https://dokarkiv-q1.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST
-
 
 	private fun publishToKafka(data: ArchivalData) {
 		logger.info("Publishing to Kafka: $data")
