@@ -20,7 +20,14 @@
 		<kotlin.version>1.3.50</kotlin.version>
 		<mockito-kotlin.version>2.2.0</mockito-kotlin.version>
 		<swagger-ui.version>3.9.2</swagger-ui.version>
-		<swagger.version>2.9.2</swagger.version>
+		<springfox.version>2.9.2</springfox.version>
+		<okhttp-version>4.2.2</okhttp-version>
+		<moshi-version>1.9.1</moshi-version>
+		<okio-version>2.4.3</okio-version>
+		<plexus-version>2.5.2</plexus-version>
+		<httpclient-version>4.5.6</httpclient-version>
+		<jackson-bom-version>2.10.2</jackson-bom-version>
+		<jackson-module-kotlin-version>2.10.1</jackson-module-kotlin-version>
 	</properties>
 
 	<dependencies>
@@ -31,10 +38,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-kotlin</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
@@ -52,12 +55,51 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>${swagger.version}</version>
+			<version>${springfox.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>${swagger.version}</version>
+			<version>${springfox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-kotlin</artifactId>
+			<version>${jackson-module-kotlin-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson</groupId>
+			<artifactId>jackson-bom</artifactId>
+			<version>${jackson-bom-version}</version>
+			<scope>runtime</scope>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-parameter-names</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jdk8</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-classworlds</artifactId>
+			<version>${plexus-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.moshi</groupId>
+			<artifactId>moshi-adapters</artifactId>
+			<version>${moshi-version}</version>
 		</dependency>
 
 		<dependency>
@@ -77,6 +119,49 @@
 			<version>${mockito-kotlin.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- For generering av swagger.json -->
+			<dependency>
+				<groupId>com.github.kongchen</groupId>
+				<artifactId>swagger-maven-plugin</artifactId>
+				<version>3.1.7</version>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.okhttp3</groupId>
+				<artifactId>okhttp</artifactId>
+				<version>${okhttp-version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.squareup.okio</groupId>
+						<artifactId>okio</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.okio</groupId>
+				<artifactId>okio</artifactId>
+				<version>${okio-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.okhttp3</groupId>
+				<artifactId>logging-interceptor</artifactId>
+				<version>${okhttp-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.moshi</groupId>
+				<artifactId>moshi-kotlin</artifactId>
+				<version>1.9.2</version>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.moshi</groupId>
+				<artifactId>moshi-kotlin-codegen</artifactId>
+				<version>1.9.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.moshi</groupId>
+				<artifactId>moshi-adapters</artifactId>
+				<version>1.9.2</version>
+			</dependency>
+		<!-- For generering av swagger.json -->
 	</dependencies>
 
 	<build>
@@ -107,6 +192,80 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>testCompile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+			TODO Denne genererer ny versjon av swagger.json og pom.xml for å bygge klient.
+			 Resultatet legges i api-klient mappen. Kjør mvn package for å generere klient kode
+			 Merk at den genererte koden ikke bygger med Moshi versjon 4. Må manuelt inn å fikse i generert kode.
+			 Har derfor sjekket inn koden under api-klient/src.
+			Ved endring av APIet fjern den utkommenterte koden og kjør bygget og manuelt fiks koden.
+			-->
+			<!--
+						<plugin>
+							<groupId>com.github.kongchen</groupId>
+							<artifactId>swagger-maven-plugin</artifactId>
+							<version>3.1.7</version>
+							<executions>
+								<execution>
+									<phase>compile</phase>
+									<goals>
+										<goal>generate</goal>
+									</goals>
+								</execution>
+							</executions>
+							<configuration>
+								<apiSources>
+									<apiSource>
+										<springmvc>true</springmvc>
+										<basePath>/</basePath>
+										<host>localhost:8090</host>
+										<info>
+											<title>Soknadsmottaker - api doc</title>
+											<version>v1</version>
+											<description>
+												# Soknadsmottak
+											</description>
+										</info>
+										<schemes>
+											<scheme>http</scheme>
+											<scheme>https</scheme>
+										</schemes>
+
+										<locations>
+											<location>no.nav.soknad.arkivering.soknadsmottaker.rest.Ping</location>
+											<location>no.nav.soknad.arkivering.soknadsmottaker.rest.Receiver</location>
+										</locations>
+										<swaggerDirectory>${basedir}/api-klient/</swaggerDirectory>
+										<securityDefinitions>
+											<securityDefinition>
+												<name>Basic</name>
+												<type>basic</type>
+											</securityDefinition>
+										</securityDefinitions>
+						</apiSource>
+					</apiSources>
+				</configuration>
+			</plugin>
+			-->
 		</plugins>
 	</build>
 </project>

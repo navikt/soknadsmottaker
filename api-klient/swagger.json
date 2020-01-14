@@ -1,0 +1,132 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "# Soknadsmottak",
+    "version" : "v1",
+    "title" : "Soknadsmottaker - api doc"
+  },
+  "host" : "localhost:8090",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "soknadsmottaker"
+  } ],
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/ping" : {
+      "get" : {
+        "tags" : [ "soknadsmottaker" ],
+        "operationId" : "ping",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        },
+        "security" : [ {
+          "Basic" : [ ]
+        } ]
+      }
+    },
+    "/save" : {
+      "post" : {
+        "tags" : [ "soknadsmottaker" ],
+        "operationId" : "receiveMessage",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/SoknadInnsendtDto"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "security" : [ {
+          "Basic" : [ ]
+        } ]
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "Basic" : {
+      "type" : "basic"
+    }
+  },
+  "definitions" : {
+    "InnsendtDokumentDto" : {
+      "type" : "object",
+      "properties" : {
+        "skjemaNummer" : {
+          "type" : "string"
+        },
+        "erHovedSkjema" : {
+          "type" : "boolean"
+        },
+        "tittel" : {
+          "type" : "string"
+        },
+        "varianter" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/InnsendtVariantDto"
+          }
+        }
+      }
+    },
+    "InnsendtVariantDto" : {
+      "type" : "object",
+      "properties" : {
+        "uuid" : {
+          "type" : "string"
+        },
+        "mimeType" : {
+          "type" : "string"
+        },
+        "filNavn" : {
+          "type" : "string"
+        },
+        "filStorrelse" : {
+          "type" : "string"
+        },
+        "variantformat" : {
+          "type" : "string"
+        },
+        "filtype" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SoknadInnsendtDto" : {
+      "type" : "object",
+      "properties" : {
+        "innsendingsId" : {
+          "type" : "string"
+        },
+        "ettersendelse" : {
+          "type" : "boolean"
+        },
+        "personId" : {
+          "type" : "string"
+        },
+        "tema" : {
+          "type" : "string"
+        },
+        "innsendtDato" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "innsendteDokumenter" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/InnsendtDokumentDto"
+          }
+        }
+      }
+    }
+  }
+}

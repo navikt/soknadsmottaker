@@ -1,7 +1,9 @@
 package no.nav.soknad.arkivering.dto
 
+import com.squareup.moshi.JsonClass
 import java.time.LocalDateTime
 
+@JsonClass(generateAdapter = true)
 data class SoknadInnsendtDto(val innsendingsId: String, val ettersendelse: Boolean, val personId: String, val tema: String,
 														 val innsendtDato: LocalDateTime, val innsendteDokumenter: List<InnsendtDokumentDto>)
 

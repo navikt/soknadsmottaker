@@ -28,6 +28,6 @@ class InputTransformer (private val input: SoknadInnsendtDto) {
 
 	private fun konverterTilMotattVarianterListe(list: List<InnsendtVariantDto>) = list.map { it.toMottattVariantView() }
 
-	private fun konverterTilMottatteDokumenterList(list: List<InnsendtDokumentDto>) =list.map { it.toMottattDokumentView() }
+	private fun konverterTilMottatteDokumenterList(list: List<InnsendtDokumentDto>) = list.map { it.toMottattDokumentView() }
 
 }
