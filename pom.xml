@@ -22,7 +22,7 @@
 		<swagger-ui.version>3.9.2</swagger-ui.version>
 		<springfox.version>2.9.2</springfox.version>
 		<okhttp-version>4.2.2</okhttp-version>
-		<moshi-version>1.9.1</moshi-version>
+		<moshi-version>1.9.2</moshi-version>
 		<okio-version>2.4.3</okio-version>
 		<plexus-version>2.5.2</plexus-version>
 		<httpclient-version>4.5.6</httpclient-version>
@@ -149,17 +149,17 @@
 			<dependency>
 				<groupId>com.squareup.moshi</groupId>
 				<artifactId>moshi-kotlin</artifactId>
-				<version>1.9.2</version>
+				<version>${moshi-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup.moshi</groupId>
 				<artifactId>moshi-kotlin-codegen</artifactId>
-				<version>1.9.1</version>
+				<version>${moshi-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup.moshi</groupId>
 				<artifactId>moshi-adapters</artifactId>
-				<version>1.9.2</version>
+				<version>${moshi-version}</version>
 			</dependency>
 		<!-- For generering av swagger.json -->
 	</dependencies>
