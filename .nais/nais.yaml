@@ -1,0 +1,33 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: soknadsmottaker
+  namespace: default
+  labels:
+    team: team-soknad
+spec:
+  image: {{image}}
+  port: 8090
+  liveliness:
+    path: /internal/isAlive
+    port: 8080
+    initialDelay: 5
+  readiness:
+    path: /internal/isReady
+    port: 8080
+    initialDelay: 5
+  prometheus:
+    enable: true
+    path: /internal/prometheus
+  replicas:
+    min: 2
+    max: 4
+  resource:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  vault:
+    enable: true
