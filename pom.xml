@@ -22,9 +22,12 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<kotlin.version>1.3.50</kotlin.version>
+		<kotlin.version>1.3.60</kotlin.version>
+		<kotlin-maven-version>1.3.50</kotlin-maven-version>
+		<maven-compiler-version>3.8.1</maven-compiler-version>
 		<mockito-kotlin.version>2.2.0</mockito-kotlin.version>
 		<swagger-ui.version>3.9.2</swagger-ui.version>
+		<swagger-maven-version>3.1.7</swagger-maven-version>
 		<springfox.version>2.9.2</springfox.version>
 		<okhttp-version>4.2.2</okhttp-version>
 		<moshi-version>1.9.2</moshi-version>
@@ -123,7 +126,7 @@
 			<dependency>
 				<groupId>com.github.kongchen</groupId>
 				<artifactId>swagger-maven-plugin</artifactId>
-				<version>3.1.7</version>
+				<version>${swagger-maven-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup.okhttp3</groupId>
@@ -188,13 +191,14 @@
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>
 						<artifactId>kotlin-maven-allopen</artifactId>
-						<version>${kotlin.version}</version>
+						<version>${kotlin-maven-version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-version}</version>
 				<executions>
 					<execution>
 						<id>compile</id>
