@@ -10,9 +10,17 @@ jobs:
   bygg-app:
     name: Bygg app/image, push til github
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo ::set-env name=CI::true
+          echo ::set-env name=IMAGE_REGISTRY::docker.pkg.github.com/$(echo ${GITHUB_REPOSITORY})
+          echo ::set-env name=IMAGE_NAME::$(echo ${GITHUB_REPOSITORY##*/})
+          echo ::set-env name=IMAGE_VERSION::$(echo ${GITHUB_WORKFLOW})-$(echo ${GITHUB_SHA})
       - name: Read/save .m2 cache
         uses: actions/cache@v1
         with:
@@ -27,7 +35,6 @@ jobs:
       - name: Bygg med maven
         env:
           GITHUB_USERNAME: x-access-token
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mvn package --settings .m2/maven-settings.xml --file pom.xml
       - name: Bygg Docker image
         run: |
@@ -35,7 +42,7 @@ jobs:
       - name: Login to Github Package Registry
         env:
           DOCKER_USERNAME: x-access-token
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_DOCKER_PUSH_PACKAGE_TOKEN }}
+          DOCKER_PASSWORD: ${{ secrets.NPM_TOKEN }}
         run: |
           echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
       - name: Push Docker image
@@ -43,6 +50,7 @@ jobs:
   bygg-app-klient:
     name: Bygg soknadsmottaker-api-klient, push til github pkg
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
@@ -50,7 +58,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('api-klient/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('*/api-klient/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Set up JDK 1.11
