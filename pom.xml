@@ -169,13 +169,20 @@
 	</dependencies>
 
 	<build>
+<!--
 		<sourceDirectory>${project.basedir}/service/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>${project.basedir}/service/src/test/kotlin</testSourceDirectory>
+-->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
