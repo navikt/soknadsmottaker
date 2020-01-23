@@ -48,6 +48,11 @@ jobs:
           echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
       - name: Push Docker image
         run: docker push $IMAGE
+      - name: Upload API client artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: artifact
+          path: soknadsmottaker/api-klient/target/soknadsmottaker-api-klient*.jar
   bygg-app-klient:
     name: Bygg soknadsmottaker-api-klient, push til github pkg
     runs-on: ubuntu-latest
