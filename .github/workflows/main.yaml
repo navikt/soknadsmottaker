@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: artifact
-          path: soknadsmottaker/api-klient/target/soknadsmottaker-api-klient*.jar
+          path: soknadsmottaker/api-klient/target/soknadsmottaker-api-klient-0.0.1.jar
   bygg-app-klient:
     name: Bygg soknadsmottaker-api-klient, push til github pkg
     runs-on: ubuntu-latest
