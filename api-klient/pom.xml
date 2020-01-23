@@ -154,7 +154,6 @@
 								pom.xml
 							</checkModificationExclude>
 						</checkModificationExcludes>
-						<deployAtEnd>true</deployAtEnd>
 					</configuration>
 				</plugin>
 			</plugins>
