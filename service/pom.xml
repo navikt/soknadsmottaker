@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+				 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>soknadsmottaker</artifactId>
+		<groupId>no.nav.soknad.arkivering</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>service</artifactId>
+
+
+	<build>
+		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>${kotlin.version}</version>
+				<configuration>
+					<args>
+						<arg>-Xjsr305=strict</arg>
+					</args>
+					<compilerPlugins>
+						<plugin>spring</plugin>
+					</compilerPlugins>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-allopen</artifactId>
+						<version>${kotlin-maven-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-version}</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>testCompile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+			TODO Denne genererer ny versjon av swagger.json og pom.xml for å bygge klient.
+			 Resultatet legges i api-klient mappen. Kjør mvn package for å generere klient kode
+			 Merk at den genererte koden ikke bygger med Moshi versjon 4. Må manuelt inn å fikse i generert kode.
+			 Har derfor sjekket inn koden under api-klient/src.
+			Ved endring av APIet fjern den utkommenterte koden og kjør bygget og manuelt fiks koden.
+			-->
+			<!--
+						<plugin>
+							<groupId>com.github.kongchen</groupId>
+							<artifactId>swagger-maven-plugin</artifactId>
+							<version>${swagger-maven-version}</version>
+							<executions>
+								<execution>
+									<phase>compile</phase>
+									<goals>
+										<goal>generate</goal>
+									</goals>
+								</execution>
+							</executions>
+							<configuration>
+								<apiSources>
+									<apiSource>
+										<springmvc>true</springmvc>
+										<basePath>/</basePath>
+										<host>localhost:8090</host>
+										<info>
+											<title>Soknadsmottaker - api doc</title>
+											<version>v1</version>
+											<description>
+												# Soknadsmottak
+											</description>
+										</info>
+										<schemes>
+											<scheme>http</scheme>
+											<scheme>https</scheme>
+										</schemes>
+
+										<locations>
+											<location>no.nav.soknad.arkivering.soknadsmottaker.rest.Ping</location>
+											<location>no.nav.soknad.arkivering.soknadsmottaker.rest.Receiver</location>
+										</locations>
+										<swaggerDirectory>${basedir}/api-klient/</swaggerDirectory>
+										<securityDefinitions>
+											<securityDefinition>
+												<name>Basic</name>
+												<type>basic</type>
+											</securityDefinition>
+										</securityDefinitions>
+						</apiSource>
+					</apiSources>
+				</configuration>
+			</plugin>
+			-->
+		</plugins>
+	</build>
+
+</project>

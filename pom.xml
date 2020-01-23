@@ -17,6 +17,7 @@
 
 	<packaging>pom</packaging>
 	<modules>
+		<module>service</module>
 		<module>api-klient</module>
 	</modules>
 
@@ -168,8 +169,8 @@
 	</dependencies>
 
 	<build>
-		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+		<sourceDirectory>${project.basedir}/service/src/main/kotlin</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/service/src/test/kotlin</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
