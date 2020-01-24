@@ -54,6 +54,43 @@ class SoknadsmottakerApi(basePath: kotlin.String = "http://localhost:8090") : Ap
         }
     }
 
+	/**
+	 *
+	 *
+	 * @return kotlin.String
+	 */
+	@Suppress("UNCHECKED_CAST")
+	fun isAlive() : kotlin.String {
+		val localVariableBody: kotlin.Any? = null
+		val localVariableQuery: MultiValueMap = mapOf()
+
+		val contentHeaders: Map<String,String> = mapOf()
+		val acceptsHeaders: Map<String,String> = mapOf()
+		val localVariableHeaders: MutableMap<String,String> = mutableMapOf()
+		localVariableHeaders.putAll(contentHeaders)
+		localVariableHeaders.putAll(acceptsHeaders)
+
+		val localVariableConfig = RequestConfig(
+			RequestMethod.GET,
+			"/internal/isAlive",
+			query = localVariableQuery,
+			headers = localVariableHeaders
+		)
+		val response = request<kotlin.String>(
+			localVariableConfig,
+			localVariableBody
+		)
+
+		return when (response.responseType) {
+			ResponseType.Success -> (response as Success<*>).data as kotlin.String
+			ResponseType.Informational -> TODO()
+			ResponseType.Redirection -> TODO()
+			ResponseType.ClientError -> throw ClientException((response as ClientError<*>).body as? String ?: "Client error")
+			ResponseType.ServerError -> throw ServerException((response as ServerError<*>).message ?: "Server error")
+			else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
+		}
+	}
+
     /**
     *
     *
