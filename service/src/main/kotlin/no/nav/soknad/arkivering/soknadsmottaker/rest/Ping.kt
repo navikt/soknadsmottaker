@@ -14,9 +14,16 @@ import org.springframework.web.bind.annotation.RestController
 class Ping {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	@GetMapping("/ping")
+	@GetMapping("/internal/ping")
 	fun ping(): String {
 		logger.info("pinget")
-		return "OK"
+		return "pong"
 	}
+
+	@GetMapping("/internal/isAlive")
+	fun isAlive(): String {
+		logger.info("isAlive er kalt")
+		return "Ok"
+	}
+
 }

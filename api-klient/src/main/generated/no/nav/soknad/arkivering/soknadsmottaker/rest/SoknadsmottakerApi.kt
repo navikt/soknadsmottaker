@@ -35,7 +35,7 @@ class SoknadsmottakerApi(basePath: kotlin.String = "http://localhost:8090") : Ap
 
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
-            "/ping",
+            "/internal/ping",
             query = localVariableQuery,
             headers = localVariableHeaders
         )

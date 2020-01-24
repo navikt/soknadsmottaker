@@ -8,7 +8,9 @@
 
 	<name>Soknadsmottaker - api-klient</name>
 	<description>Klient kode med dto definisjoner for kall til soknadsmottaker</description>
+<!--
 	<url>https://github.com/navikt/soknadsmottaker-api-klient</url>
+-->
 	<packaging>jar</packaging>
 
 	<licenses>
@@ -46,7 +48,7 @@
 	<distributionManagement>
 		<repository>
 			<id>github</id>
-			<url>https://maven.pkg.github.com/navikt/soknadsmottaker</url>
+			<url>https://maven.pkg.github.com/navikt/</url>
 		</repository>
 	</distributionManagement>
 
@@ -160,6 +162,7 @@
 		</pluginManagement>
 
 		<plugins>
+<!--
 			<plugin>
 				<groupId>io.swagger.codegen.v3</groupId>
 				<artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -193,6 +196,7 @@
 					</execution>
 				</executions>
 			</plugin>
+-->
 
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
