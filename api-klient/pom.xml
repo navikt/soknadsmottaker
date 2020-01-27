@@ -48,7 +48,7 @@
 	<distributionManagement>
 		<repository>
 			<id>github</id>
-			<url>https://maven.pkg.github.com/navikt/</url>
+			<url>https://maven.pkg.github.com/navikt/soknadsmottaker</url>
 		</repository>
 	</distributionManagement>
 
@@ -58,6 +58,17 @@
 		<url>https://github.com/navikt/soknadsmottaker.git</url>
 		<tag>HEAD</tag>
 	</scm>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>no.nav.soknad.arkivering.api</groupId>
+				<artifactId>soknadsmottaker-api-klient</artifactId>
+				<type>pom</type>
+				<version>0.0.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
