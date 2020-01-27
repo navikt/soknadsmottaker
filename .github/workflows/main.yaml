@@ -53,4 +53,24 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: soknadsmottaker-api-klient
-          path: ./api-klient/target/soknadsmottaker-api-klient-0.0.1.jar
+          path: ./api
+  deploy-qa:
+    name: Deploy to preprod
+    needs: bygg-app
+    if: github.ref == 'refs/heads/SD-983-arkiverservice-swagger' || github.ref == 'refs/heads/dev'
+    # if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-preprod.yaml
+          VAR: app_version=${{ github.sha }}
+#       env:
+#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+#          PRINT_PAYLOAD: true
+#          CLUSTER: dev-sbs
+#          RESOURCE: .nais/nais-q1.yml

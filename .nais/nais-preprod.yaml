@@ -13,7 +13,7 @@ spec:
     port: 8080
     initialDelay: 5
   readiness:
-    path: /internal/isReady
+    path: /internal/isAlive
     port: 8080
     initialDelay: 5
   prometheus:
