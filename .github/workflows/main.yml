@@ -73,7 +73,6 @@ jobs:
           name: docker_tag
       - name: Unpack
         run: |
-          # cp docker_image/.docker_image .
          cp docker_tag/.docker_tag .
          TAG=`cat .docker_tag`
          echo $TAG
