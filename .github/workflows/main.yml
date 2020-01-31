@@ -99,6 +99,7 @@ jobs:
           RESOURCE: .nais/nais-preprod.yml
           VAR: app_version=${{env.TAG}}
           DRY_RUN: true
+          IMAGE: docker.pkg.github.com/${{ github.repository }}/soknadsmottaker:${{env.TAG}}
 #        env:
 #          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
 #          PRINT_PAYLOAD: true
