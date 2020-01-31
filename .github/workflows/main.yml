@@ -95,7 +95,7 @@ jobs:
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
           RESOURCE: .nais/nais-preprod.yml
-          VAR: app_version=${{(cat .docker_tag)}}
+          VAR: app_version=${{cat .docker_tag}}
           DRY_RUN: true
  #        env:
 #          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
