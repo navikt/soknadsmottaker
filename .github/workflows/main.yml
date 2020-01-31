@@ -67,24 +67,24 @@ jobs:
     if: github.ref == 'refs/heads/kjore-pa-nais' || github.ref == 'refs/heads/q0-pipeline'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v1
-        # Download the image and tag file to use for the deployment cli.
-      - name: Download image file
-        uses: actions/download-artifact@v1
-        with:
-          name: docker_image
       - name: Download tag file
         uses: actions/download-artifact@v1
         with:
           name: docker_tag
       - name: Unpack
         run: |
-          cp docker_image/.docker_image .
-          cp docker_tag/.docker_tag .
-          TAG=`cat .docker_tag`
-          echo $TAG
-          echo ::set-env name=TAG::`cat .docker_tag`
+          # cp docker_image/.docker_image .
+         cp docker_tag/.docker_tag .
+         TAG=`cat .docker_tag`
+         echo $TAG
+         echo ::set-env name=TAG::`cat .docker_tag`
+      - name: Checkout code
+        uses: actions/checkout@v1
+        # Download the image and tag file to use for the deployment cli.
+#      - name: Download image file
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: docker_image
       - name: Login to Github Package Registry
         env:
           DOCKER_USERNAME: x-access-token
