@@ -82,6 +82,7 @@ jobs:
         run: |
           cp docker_image/.docker_image .
           cp docker_tag/.docker_tag .
+          cat .docker_tag  > TAG
       - name: Login to Github Package Registry
         env:
           DOCKER_USERNAME: x-access-token
@@ -95,7 +96,7 @@ jobs:
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
           RESOURCE: .nais/nais-preprod.yml
-          VAR: app_version=${{cat .docker_tag}}
+          VAR: app_version=$TAG
           DRY_RUN: true
  #        env:
 #          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
