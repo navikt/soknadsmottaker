@@ -89,7 +89,7 @@ jobs:
         run: |
           echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
       - name: Deploy
-      - uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           PRINT_PAYLOAD: true
@@ -97,7 +97,7 @@ jobs:
           RESOURCE: .nais/nais-preprod.yml
           VAR: app_version=$(cat .docker_tag)
           DRY_RUN: true
-  #       env:
+ #        env:
 #          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
 #          PRINT_PAYLOAD: true
 #          CLUSTER: dev-sbs
