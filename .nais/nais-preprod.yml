@@ -6,16 +6,14 @@ metadata:
   labels:
     team: team-soknad
 spec:
-  image: {{image}}
-  port: 9042
+  image: {{image}}:{{ tag }}
+  port: 8080
   liveliness:
     path: /internal/isAlive
-    port: 8080
-    initialDelay: 5
+    initialDelay: 20
   readiness:
     path: /internal/isAlive
-    port: 8080
-    initialDelay: 5
+    initialDelay: 20
   prometheus:
     enable: true
     path: /internal/prometheus
