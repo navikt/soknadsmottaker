@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '11.x'
-      - name: Bygg med maven
+      - name: Build with maven
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "docker.pkg.github.com"/"$GITHUB_REPOSITORY"/"$NAME" > .docker_image
           echo "$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)" > .docker_tag
-      - name: build docker image
+      - name: Build docker image
         run: docker build . --pull -t $(cat .docker_image):$(cat .docker_tag)
       - name: Login and push docker image
         run: |
@@ -95,7 +95,7 @@ jobs:
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
           RESOURCE: .nais/nais-preprod.yml
-          VAR: app_version=$(cat .docker_tag)
+          VAR: app_version=${{(cat .docker_tag)}}
           DRY_RUN: true
  #        env:
 #          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
