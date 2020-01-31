@@ -4,8 +4,6 @@ on:
     branches:
       - '*'
       - '*/*'
-env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/soknadsmottaker:${{ github.sha }}
 jobs:
   bygg-app:
     name: Bygg app/image, push til github
@@ -38,32 +36,68 @@ jobs:
           GITHUB_USERNAME: x-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mvn install --settings .m2/maven-settings.xml --file pom.xml
+      - name: Create Docker tag
+        env:
+          NAME: soknadsmottaker
+        run: |
+          echo "docker.pkg.github.com"/"$GITHUB_REPOSITORY"/"$NAME" > .docker_image
+          echo "$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)" > .docker_tag
+      - name: build docker image
+        run: docker build . --pull -t $(cat .docker_image):$(cat .docker_tag)
+      - name: Login and push docker image
+        run: |
+          echo "$GITHUB_ACCESS_TOKEN" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
+          docker push $(cat .docker_image):$(cat .docker_tag)
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pass image file to next job.
+        uses: actions/upload-artifact@v1
+        with:
+          name: docker_image
+          path: .docker_image
+      - name: Pass tag file to next job.
+        uses: actions/upload-artifact@v1
+        with:
+          name: docker_tag
+          path: .docker_tag
+
   deploy-qa:
     name: Deploy to preprod
     needs: bygg-app
     if: github.ref == 'refs/heads/kjore-pa-nais' || github.ref == 'refs/heads/q0-pipeline'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout code
+        uses: actions/checkout@v1
+        # Download the image and tag file to use for the deployment cli.
+      - name: Download image file
+        uses: actions/download-artifact@v1
+        with:
+          name: docker_image
+      - name: Download tag file
+        uses: actions/download-artifact@v1
+        with:
+          name: docker_tag
+      - name: unpack
+        run: |
+          cp docker_image/.docker_image .
+          cp docker_tag/.docker_tag .
       - name: Login to Github Package Registry
         env:
           DOCKER_USERNAME: x-access-token
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
-      - name: Bygg Docker image
-        run: |
-          docker build -t $IMAGE .
-      - name: Push Docker image
-        run: docker push $IMAGE
+      - name: Deploy
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
           RESOURCE: .nais/nais-preprod.yml
-          VAR: app_version=${{ github.sha }}
-#       env:
+          VAR: app_version=$(cat .docker_tag)
+          DRY_RUN: true
+  #       env:
 #          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
 #          PRINT_PAYLOAD: true
 #          CLUSTER: dev-sbs
