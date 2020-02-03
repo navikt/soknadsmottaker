@@ -2,10 +2,14 @@ server:
   port: 8090
 
 management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: ["info", "health", "prometheus", "metrics"]
 
 application:
   kafka:
