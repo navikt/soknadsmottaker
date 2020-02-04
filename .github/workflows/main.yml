@@ -8,7 +8,6 @@ jobs:
   bygg-app:
     name: Bygg app/image, push til github
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/q0-pipeline' && github.ref != 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
@@ -50,21 +49,16 @@ jobs:
           docker push $(cat .docker_image):$(cat .docker_tag)
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Pass image file to next job.
-        uses: actions/upload-artifact@v1
-        with:
-          name: docker_image
-          path: .docker_image
       - name: Pass tag file to next job.
         uses: actions/upload-artifact@v1
         with:
           name: docker_tag
           path: .docker_tag
 
-  deploy-qa:
+  deploy-preprod-default:
     name: Deploy to preprod
     needs: bygg-app
-    if: github.ref == 'refs/heads/kjore-pa-nais' || github.ref == 'refs/heads/q0-pipeline'
+    if: github.ref != 'refs/heads/master' && github.ref != 'refs/heads/q0-pipeline'
     runs-on: ubuntu-latest
     steps:
       - name: Download tag file
@@ -77,11 +71,6 @@ jobs:
          TAG=`cat .docker_tag`
          echo $TAG
          echo ::set-env name=TAG::`cat .docker_tag`
-        # Download the image and tag file to use for the deployment cli.
-#      - name: Download image file
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: docker_image
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Login to Github Package Registry
@@ -100,22 +89,73 @@ jobs:
           VAR: app_version=${{env.TAG}}
           DRY_RUN: false
           IMAGE: docker.pkg.github.com/${{ github.repository }}/soknadsmottaker:${{env.TAG}}
-#        env:
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          PRINT_PAYLOAD: true
-#          CLUSTER: dev-sbs
-#          RESOURCE: .nais/nais-q1.yml
+
+  deploy-q0:
+    name: Deploy to Q0
+    needs: bygg-app
+    if: github.ref == 'refs/heads/q0-pipeline'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download tag file
+        uses: actions/download-artifact@v1
+        with:
+          name: docker_tag
+      - name: Unpack
+        run: |
+          cp docker_tag/.docker_tag .
+          TAG=`cat .docker_tag`
+          echo $TAG
+          echo ::set-env name=TAG::`cat .docker_tag`
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Login to Github Package Registry
+        env:
+          DOCKER_USERNAME: x-access-token
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-q0.yml
+          VAR: app_version=${{env.TAG}}
+          DRY_RUN: false
+          IMAGE: docker.pkg.github.com/${{ github.repository }}/soknadsmottaker:${{env.TAG}}
+
   deploy-prod:
     name: Deploy to prod
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: nais/deploy/actions/deploy@v1
+      - name: Download tag file
+        uses: actions/download-artifact@v1
+        with:
+          name: docker_tag
+      - name: Unpack
+        run: |
+          cp docker_tag/.docker_tag .
+          TAG=`cat .docker_tag`
+          echo $TAG
+          echo ::set-env name=TAG::`cat .docker_tag`
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Login to Github Package Registry
+        env:
+          DOCKER_USERNAME: x-access-token
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          DRY_RUN: true
           PRINT_PAYLOAD: true
-          CLUSTER: prod-sbs
+          CLUSTER: dev-fss
           RESOURCE: .nais/nais.yml
-          VAR: app_version=${{ github.sha }}
+          VAR: app_version=${{env.TAG}}
+          DRY_RUN: true
+          IMAGE: docker.pkg.github.com/${{ github.repository }}/soknadsmottaker:${{env.TAG}}
+
