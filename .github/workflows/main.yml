@@ -64,7 +64,6 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: docker_tag
-          path: .docker_tag
       - name: Unpack
         run: |
          cp docker_tag/.docker_tag .
@@ -100,7 +99,6 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: docker_tag
-          path: .docker_tag
       - name: Unpack
         run: |
           cp docker_tag/.docker_tag .
@@ -135,7 +133,6 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: docker_tag
-          path: .docker_tag
       - name: Unpack
         run: |
           cp docker_tag/.docker_tag .
