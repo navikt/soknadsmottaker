@@ -1,5 +1,5 @@
-FROM azul/zulu-openjdk-alpine:12
+FROM navikt/java:11
 
-COPY target/*SNAPSHOT.jar /app.jar
+COPY target/*.jar app.jar
 
-CMD java -jar /app.jar
+EXPOSE 8080
