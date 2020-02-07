@@ -9,6 +9,9 @@ class ApplicationProperties {
 	var kafka = Kafka()
 
 	class Kafka {
+		var envPar = KafkaConfig2.config
+
 		lateinit var bootstrapServers: String
+
 	}
 }
