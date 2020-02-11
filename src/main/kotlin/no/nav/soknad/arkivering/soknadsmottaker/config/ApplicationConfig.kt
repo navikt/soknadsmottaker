@@ -7,6 +7,8 @@ import com.natpryce.konfig.Key
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
 import org.apache.kafka.clients.CommonClientConfigs
+import org.apache.kafka.common.config.SaslConfigs
+import java.io.Serializable
 import java.util.*
 
 
@@ -29,9 +31,37 @@ object KafkaConfig2 {
 	}
 
 	val config = Properties().apply {
-		appConfig.getOrNull(KafkaConfig2.servers)?.let {
+		appConfig.getOrNull(servers)?.let {
 			setProperty(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, it)
+		}
+		if (appConfig.contains(username) && appConfig.contains(password)) {
+			setProperty(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required " +
+				"username=\"${appConfig[username]}\" password=\"${appConfig[password]}\";")
+
+			if (System.getenv("APPLICATION_PROFILE") != "remote")
+				setProperty(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
+
 		}
 	}
 
+	internal fun Map<String, Serializable>.addKafkaSecurity(
+		username: String,
+		password: String,
+		secProtocol: String = "SASL_PLAINTEXT",
+		saslMechanism: String = "PLAIN"
+	): Map<String, Any> = this.let {
+
+		val mMap = this.toMutableMap()
+
+		mMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = secProtocol
+		mMap[SaslConfigs.SASL_MECHANISM] = saslMechanism
+
+		val jaasPainLogin = "org.apache.kafka.common.security.plain.PlainLoginModule"
+		val jaasRequired = "required"
+
+		mMap[SaslConfigs.SASL_JAAS_CONFIG] = "$jaasPainLogin $jaasRequired " +
+			"username=\"$username\" password=\"$password\";"
+
+		mMap.toMap()
+	}
 }
