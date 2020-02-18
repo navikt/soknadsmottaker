@@ -17,22 +17,25 @@ import org.springframework.kafka.support.serializer.JsonSerializer
 class KafkaConfig(private val applicationProperties: ApplicationProperties) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	@Bean
-	fun producerFactory(): ProducerFactory<String, ArchivalData> {
+	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig2): ProducerFactory<String, ArchivalData> {
+		logger.info("Start setKafkaConfig")
 		val configProps = HashMap<String, Any>().also {
-			it[BOOTSTRAP_SERVERS_CONFIG] = applicationProperties.kafka.bootstrapServers
-			applicationProperties.kafka.envPar.getProperty(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG)?.let {srv ->
-				it[BOOTSTRAP_SERVERS_CONFIG] = srv
-				logger.info("Kafka servers " + srv)
-			}
-			applicationProperties.kafka.envPar.getProperty(SaslConfigs.SASL_JAAS_CONFIG)?.let {sec ->
-				it[SaslConfigs.SASL_JAAS_CONFIG] = sec
-				logger.info("Kafka sec satt" )
-			}
+			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.servers
+			it[SaslConfigs.SASL_JAAS_CONFIG] = kafkaConfig.saslJaasConfig
 			it[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
 			it[VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
 		}
+		logger.info("Slutt setKafkaConfig. Kafka servers=${kafkaConfig.servers}")
+		logger.info("Miljø=${kafkaConfig.delme}")
 		return DefaultKafkaProducerFactory(configProps)
+	}
+
+	@Bean
+	fun producerFactory(): ProducerFactory<String, ArchivalData> {
+		logger.info("Start av producerFactory")
+		val config = AppConfiguration()
+
+		return setKafkaConfig(config.kafkaConfig)
 	}
 
 	@Bean

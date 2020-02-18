@@ -50,4 +50,6 @@ spec:
       value: PLAIN
     - name: KAFKA_TOPIC
       value: privat-soknadInnsendt-sendsoknad-v1-q0
+    - name: DELME_TEST
+      value: Q0
 

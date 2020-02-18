@@ -1,67 +1,49 @@
 package no.nav.soknad.arkivering.soknadsmottaker.config
 
-import com.natpryce.konfig.ConfigurationProperties
+import com.natpryce.konfig.*
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
-import com.natpryce.konfig.EnvironmentVariables
-import com.natpryce.konfig.Key
-import com.natpryce.konfig.overriding
-import com.natpryce.konfig.stringType
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.common.config.SaslConfigs
 import java.io.Serializable
-import java.util.*
 
+private val defaultProperties = ConfigurationMap(
+	mapOf(
+		"APP_VERSION" to "",
+		"KAFKA_BOOTSTRAP_SERVERS" to "kafka-broker:29092",
+		"KAFKA_CLIENTID" to "srvsoknadsmottaker",
+		"KAFKA_SECURITY" to "",
+		"KAFKA_SECPROT" to "",
+		"KAFKA_SASLMEC" to "",
+		"KAFKA_TOPIC" to "privat-soknadInnsendt-sendsoknad-v1-default",
+	  "APPLICATION_PROFILE" to "",
+		"DELME_TEST" to "local"
+	)
+)
 
-object KafkaConfig2 {
-	val username = Key("srvsoknadsmottaker.username", stringType)
-	val password = Key("srvsoknadsmottaker.password", stringType)
-	val servers = Key("kafka.bootstrap.servers", stringType)
-	val secure = Key("kafka.security", stringType)
-	val protocol = Key("kafka.secprot", stringType)
-	val salsmec = Key("kafka.saslmec", stringType)
-	val topic = Key("kafka.topic", stringType)
+val appConfig =
+	EnvironmentVariables() overriding
+		systemProperties() overriding
+		ConfigurationProperties.fromResource(Configuration::class.java,"/application.yml") overriding
+		ConfigurationProperties.fromResource(Configuration::class.java,"/local.properties") overriding
+		defaultProperties
 
-	val appConfig = if (System.getenv("APPLICATION_PROFILE") == "remote") {
-		EnvironmentVariables() overriding
-			systemProperties() overriding
-			ConfigurationProperties.fromResource("application.yml")
-	} else {
-		EnvironmentVariables() overriding
-			systemProperties()
-	}
+private fun String.configProperty(): String = appConfig[Key(this, stringType)]
 
-	val config = Properties().apply {
-		appConfig.getOrNull(servers)?.let {
-			setProperty(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, it)
-		}
-		if (appConfig.contains(username) && appConfig.contains(password)) {
-			setProperty(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required " +
-				"username=\"${appConfig[username]}\" password=\"${appConfig[password]}\";")
-
-			if (System.getenv("APPLICATION_PROFILE") != "remote")
-				setProperty(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
-
-		}
-	}
-
-	internal fun Map<String, Serializable>.addKafkaSecurity(
-		username: String,
-		password: String,
-		secProtocol: String = "SASL_PLAINTEXT",
-		saslMechanism: String = "PLAIN"
-	): Map<String, Any> = this.let {
-
-		val mMap = this.toMutableMap()
-
-		mMap[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = secProtocol
-		mMap[SaslConfigs.SASL_MECHANISM] = saslMechanism
-
-		val jaasPainLogin = "org.apache.kafka.common.security.plain.PlainLoginModule"
-		val jaasRequired = "required"
-
-		mMap[SaslConfigs.SASL_JAAS_CONFIG] = "$jaasPainLogin $jaasRequired " +
-			"username=\"$username\" password=\"$password\";"
-
-		mMap.toMap()
-	}
+data class AppConfiguration (
+	val kafkaConfig: KafkaConfig2 = KafkaConfig2()
+) {
+	data class KafkaConfig2 (
+		val profile: String = "APPLICATION_PROFILE".configProperty(),
+		val version: String = "APP_VERSION".configProperty(),
+		val username: String = "srvsoknadsmottaker.username".configProperty(),
+		val password: String = "srvsoknadsmottaker.password".configProperty(),
+		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
+		val clientId: String = "KAFKA_CLIENTID".configProperty(),
+		val secure: String = "KAFKA_SECURITY".configProperty(),
+		val protocol: String = "KAFKA_SECPROT".configProperty(),
+		val salsmec: String = "KAFKA_SASLMEC".configProperty(),
+		val topic: String = "KAFKA_TOPIC".configProperty(),
+		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required " + "username=\"$username\" password=\"$password\";",
+		val delme: String = "DELME_TEST".configProperty()
+	)
 }
