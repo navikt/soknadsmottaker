@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.soknad.arkivering.dto.ArchivalData
+import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import no.nav.soknad.arkivering.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
@@ -12,7 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate
 
 class ReceiverTests {
 
-	private val kafkaMock: KafkaTemplate<String, ArchivalData> = mock()
+	private val kafkaMock: KafkaTemplate<String, SoknadMottattDto> = mock()
 	private val receiver = mockReceiver()
 
 	@Test
@@ -31,5 +31,5 @@ class ReceiverTests {
 		return Receiver(orderService)
 	}
 
-	private inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)!!
+	private inline fun <reified T : Any> mock() = Mockito.mock(T::class.java)!!
 }
