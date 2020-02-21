@@ -2,6 +2,7 @@ package no.nav.soknad.arkivering.soknadsmottaker.config
 
 import no.nav.soknad.arkivering.dto.ArchivalData
 import org.apache.kafka.clients.CommonClientConfigs
+import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.serialization.StringSerializer
@@ -17,11 +18,10 @@ import org.springframework.kafka.support.serializer.JsonSerializer
 class KafkaConfig(private val applicationProperties: ApplicationProperties) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig2): ProducerFactory<String, ArchivalData> {
-		logger.info("Start setKafkaConfig")
+	@Bean
+	fun producerFactory(): ProducerFactory<String, SoknadMottattDto> {
 		val configProps = HashMap<String, Any>().also {
-			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.servers
-			it[SaslConfigs.SASL_JAAS_CONFIG] = kafkaConfig.saslJaasConfig
+			it[BOOTSTRAP_SERVERS_CONFIG] = applicationProperties.kafka.bootstrapServers
 			it[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
 			it[VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
 		}
@@ -42,3 +42,19 @@ class KafkaConfig(private val applicationProperties: ApplicationProperties) {
 	fun kafkaTemplate() = KafkaTemplate(producerFactory())
 }
 
+/*
+acks=all
+client.id=soknadInnsendt-sendsoknad
+enable.idempotence=true
+max.in.flight.requests.per.connection=1
+max.block.ms=15000
+retries=2
+key.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
+value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
+bootstrap.servers=localhost:9092
+schema.registry.url=http://kafka-schema-registry.tpa:8081
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+compression.type=gzip
+max.request.size=15728640
+*/

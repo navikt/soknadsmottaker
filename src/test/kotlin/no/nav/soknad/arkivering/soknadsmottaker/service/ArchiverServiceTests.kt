@@ -10,20 +10,17 @@ import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.config.appConfig
 import org.junit.jupiter.api.Assertions
+import no.nav.soknad.arkivering.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 
 class ArchiverServiceTests {
 
 	private val kafkaSender = mock<KafkaSender> { }
 	private val archiverService = ArchiverService(kafkaSender)
-	private val eksternReferanseIDBil = "123445666"
-	private val personIdBIL = "12345678910"
-
 
 	@Test
 	fun `Kaller Kafka sender`() {
-		archiverService.archive(opprettMeldingPaKafka())
+		archiverService.archive(opprettBilInnsendingMedBareSoknadOgKvittering())
 
 		verify(kafkaSender, times(1)).publish(any(), any(), any())
 	}
