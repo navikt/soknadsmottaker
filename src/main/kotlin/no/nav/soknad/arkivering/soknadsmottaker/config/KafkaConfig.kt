@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.config
 
-import no.nav.soknad.arkivering.dto.ArchivalData
+import no.nav.soknad.arkivering.dto.SoknadInnsendtDto
 import org.apache.kafka.clients.CommonClientConfigs
 import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import org.apache.kafka.clients.producer.ProducerConfig.*
@@ -18,8 +18,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer
 class KafkaConfig(private val applicationProperties: ApplicationProperties) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	@Bean
-	fun producerFactory(): ProducerFactory<String, SoknadMottattDto> {
+	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig2): ProducerFactory<String, SoknadMottattDto> {
 		val configProps = HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = applicationProperties.kafka.bootstrapServers
 			it[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
@@ -31,7 +30,7 @@ class KafkaConfig(private val applicationProperties: ApplicationProperties) {
 	}
 
 	@Bean
-	fun producerFactory(): ProducerFactory<String, ArchivalData> {
+	fun producerFactory(): ProducerFactory<String, SoknadMottattDto> {
 		logger.info("Start av producerFactory")
 		val config = AppConfiguration()
 
