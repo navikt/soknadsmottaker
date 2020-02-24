@@ -35,8 +35,8 @@ data class AppConfiguration (
 	data class KafkaConfig2 (
 		val profile: String = "APPLICATION_PROFILE".configProperty(),
 		val version: String = "APP_VERSION".configProperty(),
-		val username: String = "srvsoknadsmottaker.username".configProperty(),
-		val password: String = "srvsoknadsmottaker.password".configProperty(),
+		val username: String = "SRVSSOKNADSMOTTAKER_USERNAME".configProperty(),
+		val password: String = "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty(),
 		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
 		val clientId: String = "KAFKA_CLIENTID".configProperty(),
 		val secure: String = "KAFKA_SECURITY".configProperty(),

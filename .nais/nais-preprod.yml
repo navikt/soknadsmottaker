@@ -33,12 +33,10 @@ spec:
   vault:
     enabled: true
     paths:
-      - mountPath: /var/run/secrets/nais.io/vault
-        kvPath: /kv/preprod/fss/soknadsmottaker/default
-      - mountPath: /var/run/secrets/nais.io/service_user
+      - mountPath: /var/run/secrets/nais.io/serviceuser
         kvPath: /serviceuser/data/dev/srvsoknadsmottaker
-      - kvPath: /apikey/appdynamics/dev
-        mountPath: /var/run/secrets/nais.io/appdynamics
+      - mountPath: /var/run/secrets/nais.io/appdynamics
+        kvPath: /apikey/appdynamics/dev
 
   env:
     - name: APPRES_CMS_URL
@@ -59,3 +57,5 @@ spec:
       value: privat-soknadInnsendt-sendsoknad-v1-default
     - name: DELME_TEST
       value: preprod
+    - name: SRVSSOKNADSMOTTAKER_USERNAME
+      value: srvsoknadsmottaker
