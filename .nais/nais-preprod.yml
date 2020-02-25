@@ -55,7 +55,5 @@ spec:
       value: PLAIN
     - name: KAFKA_TOPIC
       value: privat-soknadInnsendt-sendsoknad-v1-default
-    - name: DELME_TEST
-      value: preprod
     - name: SRVSSOKNADSMOTTAKER_USERNAME
-      value: srvsoknadsmottakar
+      value: srvsoknadsmottaker

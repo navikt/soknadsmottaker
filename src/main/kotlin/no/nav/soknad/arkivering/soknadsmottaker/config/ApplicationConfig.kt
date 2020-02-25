@@ -17,8 +17,7 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
 		"KAFKA_TOPIC" to "privat-soknadInnsendt-sendsoknad-v1-default",
-	  "APPLICATION_PROFILE" to "",
-		"DELME_TEST" to "local"
+	  "APPLICATION_PROFILE" to ""
 	)
 )
 
@@ -45,7 +44,6 @@ data class AppConfiguration (
 		val protocol: String = "KAFKA_SECPROT".configProperty(),
 		val salsmec: String = "KAFKA_SASLMEC".configProperty(),
 		val topic: String = "KAFKA_TOPIC".configProperty(),
-		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required " + "username=\"$username\" password=\"$password\";",
-		val delme: String = "DELME_TEST".configProperty()
+		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required " + "username=\"$username\" password=\"$password\";"
 	)
 }

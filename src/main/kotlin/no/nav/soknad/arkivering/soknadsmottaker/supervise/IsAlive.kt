@@ -23,7 +23,7 @@ class IsAlive() {
 
 	@GetMapping("/isReady")
 	fun isReady(): String {
-		logger.info("isReady kalt")
+		logger.debug("isReady kalt")
 		return "Ready for actions"
 	}
 
