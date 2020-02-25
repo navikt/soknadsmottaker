@@ -26,6 +26,11 @@ class KafkaConfig(private val applicationProperties: ApplicationProperties) {
 		}
 		logger.info("Slutt setKafkaConfig. Kafka servers=${kafkaConfig.servers}")
 		logger.info("Miljø=${kafkaConfig.delme}")
+		logger.info("Passord="+
+			( when {
+				"".equals(kafkaConfig.password, true) || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
+			  else -> "*Noe hemmelig fra Vault*"
+			}))
 		return DefaultKafkaProducerFactory(configProps)
 	}
 
