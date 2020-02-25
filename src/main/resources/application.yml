@@ -11,7 +11,7 @@ management:
       exposure:
         include: ["info", "health", "prometheus", "metrics"]
 
-srvsoknadsmottaker: [username: srvsoknadsmottaker, password: test]
+srvsoknadsmottaker: [username: srvsoknadsmottakerY, password: test]
 
 application:
   kafka:

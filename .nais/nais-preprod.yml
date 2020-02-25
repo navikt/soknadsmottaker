@@ -58,4 +58,4 @@ spec:
     - name: DELME_TEST
       value: preprod
     - name: SRVSSOKNADSMOTTAKER_USERNAME
-      value: srvsoknadsmottaker
+      value: srvsoknadsmottakar
