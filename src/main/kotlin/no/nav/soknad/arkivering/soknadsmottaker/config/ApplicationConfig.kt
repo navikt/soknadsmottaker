@@ -9,6 +9,8 @@ import java.io.Serializable
 private val defaultProperties = ConfigurationMap(
 	mapOf(
 		"APP_VERSION" to "",
+		"SRVSSOKNADSMOTTAKER_USERNAME" to "srvsoknadsmottaker",
+		"SRVSSOKNADSMOTTAKER_PASSWORD" to "",
 		"KAFKA_BOOTSTRAP_SERVERS" to "kafka-broker:29092",
 		"KAFKA_CLIENTID" to "srvsoknadsmottaker",
 		"KAFKA_SECURITY" to "",
