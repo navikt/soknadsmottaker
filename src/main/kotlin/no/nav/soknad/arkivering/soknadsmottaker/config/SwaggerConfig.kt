@@ -13,22 +13,22 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 @Configuration
 @EnableSwagger2
- class SwaggerConfig {
+class SwaggerConfig {
 
 	@Bean
 	fun api(): Docket {
-		val contact =  Contact ("Team Søknad", "https://nav-it.slack.com/messages/C9USRUMKM", "/DGNAVITTeamselvbetjening-Soknad@nav.no")
-		val apiInfo = ApiInfo ("Søknadsmottak",
+		val contact = Contact("Team Søknad", "https://nav-it.slack.com/messages/C9USRUMKM", "/DGNAVITTeamselvbetjening-Soknad@nav.no")
+		val apiInfo = ApiInfo("Søknadsmottak",
 			"Dette er en tjeneste for Søknadsdialoger og Dokumentinnsneding sin metadata for arkivering av søknader i Joark via kafka strøm. Krever at dokumenter er lagret via filtjeneste.",
 			"1.0",
 			"https://nav-it.slack.com/messages/C9USRUMKM",
 			contact,
 			"For intern bruk",
-			"http:nav.no",emptyList<VendorExtension<Any?>>())
+			"http:nav.no", emptyList<VendorExtension<Any?>>())
 
 		return Docket(DocumentationType.SWAGGER_2)
 			.select()
-			. apis(RequestHandlerSelectors.any())
+			.apis(RequestHandlerSelectors.any())
 			.paths(PathSelectors.any())
 			.build()
 			.apiInfo(apiInfo)
