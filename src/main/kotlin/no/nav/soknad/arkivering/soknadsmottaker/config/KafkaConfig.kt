@@ -17,7 +17,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer
 class KafkaConfig() {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig2): ProducerFactory<String, SoknadMottattDto> {
+	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig): ProducerFactory<String, SoknadMottattDto> {
 		val configProps = HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.servers
 			it[SECURITY_PROTOCOL_CONFIG] = kafkaConfig.protocol
@@ -26,7 +26,13 @@ class KafkaConfig() {
 			it[VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
 			it["TOPIC"] = kafkaConfig.topic
 		}
-		logger.info("Slutt setKafkaConfig. Kafka servers=${configProps.get(BOOTSTRAP_SERVERS_CONFIG)}")
+		logger.info("Slutt setKafkaConfig." +
+			" Kafka servers=${configProps.get(BOOTSTRAP_SERVERS_CONFIG)}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}")
+		logger.info("Passord="+
+			( when {
+				"".equals(kafkaConfig.password, true) || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
+				else -> "*Noe hemmelig fra Vault*"
+			}))
 		return DefaultKafkaProducerFactory(configProps)
 	}
 

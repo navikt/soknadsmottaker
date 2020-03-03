@@ -57,3 +57,5 @@ spec:
       value: privat-soknadInnsendt-sendsoknad-v1-default
     - name: SRVSSOKNADSMOTTAKER_USERNAME
       value: srvsoknadsmottaker
+    - name: APPLICATION_PROFILE
+      value: dev

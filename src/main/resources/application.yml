@@ -11,8 +11,6 @@ management:
       exposure:
         include: ["info", "health", "prometheus", "metrics"]
 
-srvsoknadsmottaker: [username: srvsoknadsmottaker, password: test]
-
 application:
   kafka:
     bootstrap-servers: localhost:9092
@@ -22,6 +20,7 @@ application:
 spring:
   profiles: docker
 
+KAFKA_BOOTSTRAP_SERVERS: kafka-broker:9092
 application:
   kafka:
     bootstrap-servers: kafka-broker:29092

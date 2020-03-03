@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(value = ["/internal"])
 class IsAlive() {
 	private val logger = LoggerFactory.getLogger(javaClass)
+	private var oppstart = 0
 
 	@GetMapping("/isAlive")
 	fun isAlive(): String {
@@ -23,7 +24,10 @@ class IsAlive() {
 
 	@GetMapping("/isReady")
 	fun isReady(): String {
-		logger.debug("isReady kalt")
+		if (oppstart < 10) {
+			logger.debug("isReady kalt")
+			oppstart++
+		}
 		return "Ready for actions"
 	}
 
