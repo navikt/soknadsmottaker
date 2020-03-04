@@ -14,13 +14,13 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECURITY" to "",
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
-		"KAFKA_TOPIC" to "privat-soknadInnsendt-sendsoknad-v1",
+		"KAFKA_TOPIC" to "privat-soknadInnsendt-sendsoknad-v1-default",
 	  "APPLICATION_PROFILE" to ""
 	)
 )
 
 val environment = System.getenv("APPLICATION_PROFILE")
-val appConfig = if ( environment != "") {
+val appConfig = if ( environment != "" && environment != null) {
 	EnvironmentVariables() overriding
 		systemProperties() overriding
 		ConfigurationProperties.fromFile(File("/var/run/secrets/nais.io/serviceuser/password")) overriding
