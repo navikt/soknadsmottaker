@@ -19,23 +19,17 @@ private val defaultProperties = ConfigurationMap(
 	)
 )
 
-val environment = System.getenv("APPLICATION_PROFILE")
-val appConfig = if ( environment != "" && environment != null) {
-	EnvironmentVariables() overriding
-		systemProperties() overriding
-		ConfigurationProperties.fromFile(File("/var/run/secrets/nais.io/serviceuser/password")) overriding
-		ConfigurationProperties.fromResource(Configuration::class.java, "/application.yml") overriding
-		ConfigurationProperties.fromResource(Configuration::class.java, "/local.properties") overriding
-		defaultProperties
-} else {
+val appConfig =
 	EnvironmentVariables() overriding
 		systemProperties() overriding
 		ConfigurationProperties.fromResource(Configuration::class.java, "/application.yml") overriding
 		ConfigurationProperties.fromResource(Configuration::class.java, "/local.properties") overriding
 		defaultProperties
-}
 
 private fun String.configProperty(): String = appConfig[Key(this, stringType)]
+
+fun readFileyAsText(fileName: String): String
+	= File(fileName).readText(Charsets.UTF_8)
 
 data class AppConfiguration (
 	val kafkaConfig: KafkaConfig = KafkaConfig()
@@ -44,7 +38,10 @@ data class AppConfiguration (
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val version: String = "APP_VERSION".configProperty(),
 		val username: String = "SRVSSOKNADSMOTTAKER_USERNAME".configProperty(),
-		val password: String = "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty(),
+		val password: String = 	( when {
+			"".equals(profiles) || "test".equals(profiles, true) -> "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()
+			else -> readFileyAsText("/var/run/secrets/nais.io/serviceuser/password")
+		}),
 		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
 		val clientId: String = "KAFKA_CLIENTID".configProperty(),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
