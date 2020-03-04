@@ -19,7 +19,7 @@ private val defaultProperties = ConfigurationMap(
 	)
 )
 val environment = System.getenv("APPLICATION_PROFILE")
-val appConfig = if ( environment != null && !"".equals(environment)) {
+val appConfig = if ( environment == "prod" || environment == "dev") {
 	EnvironmentVariables() overriding
 		systemProperties() overriding
 		ConfigurationProperties.fromFile(File("/var/run/secrets/nais.io/serviceuser/password")) overriding

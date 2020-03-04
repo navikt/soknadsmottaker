@@ -13,7 +13,10 @@ class IsAlive() {
 
 	@GetMapping("/isAlive")
 	fun isAlive(): String {
-		logger.info("isAlive kalt")
+		if (oppstart < 10) {
+			logger.info("isAlive kalt")
+			oppstart++
+		}
 		return "Ok"
 	}
 
