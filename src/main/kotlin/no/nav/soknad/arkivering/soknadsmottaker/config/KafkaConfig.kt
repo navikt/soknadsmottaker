@@ -27,7 +27,7 @@ class KafkaConfig() {
 			it["TOPIC"] = kafkaConfig.topic
 		}
 		logger.info("Slutt setKafkaConfig." +
-			" Kafka servers=${configProps.get(BOOTSTRAP_SERVERS_CONFIG)}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}")
+			" Kafka servers=${configProps.get(BOOTSTRAP_SERVERS_CONFIG)}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}, topic=${kafkaConfig.topic}")
 		logger.info("Passord="+
 			( when {
 				"".equals(kafkaConfig.password, true) || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
