@@ -28,8 +28,7 @@ spec:
       cpu: 200m
       memory: 256Mi
   ingress:
-    - "https://soknadsmottaker-q0.adeo.no/soknadsmottaker"
-    - "https://soknadsmottaker-q0.nais.adeo.local/"
+    - https://soknadsmottaker.nais.preprod.local
   vault:
     enabled: true
     paths:

@@ -7,14 +7,12 @@ metadata:
     team: team-soknad
 spec:
   image: {{image}}
-  port: 9042
+  port: 8090
   liveliness:
     path: /internal/isAlive
-    port: 8080
     initialDelay: 5
   readiness:
     path: /internal/isAlive
-    port: 8080
     initialDelay: 5
   prometheus:
     enable: true
@@ -30,8 +28,7 @@ spec:
       cpu: 200m
       memory: 256Mi
   ingress:
-    - "https://adeo.no/soknadsmottaker"
-    - "https://soknadsmottaker.nais.adeo.no/"
+    - https://soknadsmottaker.nais.adeo.no
   vault:
     enabled: true
     paths:
