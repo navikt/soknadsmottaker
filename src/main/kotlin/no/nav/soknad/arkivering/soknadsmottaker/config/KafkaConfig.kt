@@ -1,7 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.config
 
 import no.nav.soknad.soknadarkivering.avroschemas.Soknadarkivschema
-import no.nav.soknad.arkivering.dto.SoknadMottattDto
 import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.config.SaslConfigs.SASL_JAAS_CONFIG
@@ -37,7 +36,7 @@ class KafkaConfig() {
 	}
 
 	@Bean
-	fun producerFactory(): ProducerFactory<String, SoknadMottattDto> {
+	fun producerFactory(): ProducerFactory<String, Soknadarkivschema> {
 		logger.info("Start av producerFactory")
 		val config = AppConfiguration()
 
