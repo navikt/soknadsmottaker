@@ -1,9 +1,9 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.soknad.arkivering.dto.SoknadMottattDto
-import no.nav.soknad.arkivering.dto.opprettBilInnsendingMedBareSoknadOgKvittering
+import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
+import no.nav.soknad.soknadarkivering.avroschemas.Soknadarkivschema
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.times
@@ -12,7 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate
 
 class ReceiverTests {
 
-	private val kafkaMock: KafkaTemplate<String, SoknadMottattDto> = mock()
+	private val kafkaMock: KafkaTemplate<String, Soknadarkivschema> = mock()
 	private val receiver = mockReceiver()
 
 	@Test

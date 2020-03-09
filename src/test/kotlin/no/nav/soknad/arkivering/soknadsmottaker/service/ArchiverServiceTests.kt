@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import org.junit.jupiter.api.Assertions
 import no.nav.soknad.arkivering.dto.opprettBilInnsendingMedBareSoknadOgKvittering
+import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import org.junit.jupiter.api.Test
 
 class ArchiverServiceTests {
