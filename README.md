@@ -1,6 +1,8 @@
 # Soknadsmottaker
 This application provides a REST endpoint to which data can be sent. The data will be converted, serialized as an Avro message and put on a Kafka topic.
 
+For a description of the whole archiving system, see [the documentation](https://github.com/navikt/archiving-infrastructure/wiki).
+
 # Dependencies
 This component requires the following to work:
 * [soknadarkiv-schema](https://github.com/navikt/soknadarkiv-schema) (Avro schema definitions)
@@ -28,7 +30,7 @@ Settings -> Build, Execution, Deployment -> Build Tools -> Maven<br />
 Override User Settings File and specify ./m2/maven-settings.xml
 
 ## Inquiries
-Questions regarding the code or the project can be asked at [team-soknad@nav.no](mailto:team-soknad@nav.no)
+Questions regarding the code or the project can be asked to [team-soknad@nav.no](mailto:team-soknad@nav.no)
 
 ### For NAV employees
 NAV employees can reach the team by Slack in the channel #teamsoknad
