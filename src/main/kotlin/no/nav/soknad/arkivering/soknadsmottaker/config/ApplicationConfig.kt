@@ -29,7 +29,7 @@ val appConfig =
 private fun String.configProperty(): String = appConfig[Key(this, stringType)]
 
 fun readFileyAsText(fileName: String): String
-	= File(fileName).readText(Charsets.UTF_8)
+	= (try {File(fileName).readText(Charsets.UTF_8) } catch (e :Exception ) { ""} )
 
 data class AppConfiguration (
 	val kafkaConfig: KafkaConfig = KafkaConfig()
