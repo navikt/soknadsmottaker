@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(value = ["/internal"])
-class IsAlive() {
+class IsAlive {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private var oppstart = 0
 
@@ -33,5 +33,4 @@ class IsAlive() {
 		}
 		return "Ready for actions"
 	}
-
 }

@@ -8,6 +8,7 @@ private var erEttersendelseBil = false
 private const val personIDBil = "12345678910"
 private const val temaBil = "BIL"
 private val innsendtDatoBil = LocalDateTime.now()
+
 // hovedskjema
 const val skjemanummerBil = "NAV 10-07.40"
 private const val erHovedSkjemaBil = true
@@ -17,6 +18,7 @@ const val filNavnBil = "skjemanummerBil + filformat burde den vært"
 private const val filStorrelseBil = "10000"
 const val variantformatBilHovedskjema = "ARKIV"
 const val filtypeBilHoveskjema = "PDFA"
+
 //Vedlegg
 //Kvittering
 const val uuidBilKvittering = "e7179251-635e-493a-948c-749a39kviter"
@@ -25,6 +27,7 @@ private const val tittelKvitteering = "kvittering"
 private const val skjemanummerKvittering = "L7"
 const val variantformatBilKvittering = "ARKIV"
 const val filtypeBilKvittering = "PDFA"
+
 // felles for vedlegg
 private const val filstorrelseVedlegg = "101010"
 private const val erIkkeHovedskjemaBil = false
