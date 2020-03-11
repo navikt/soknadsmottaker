@@ -1,26 +1,18 @@
 server:
-  port: 8080
+  port: 8090
 
 management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints.web:
+    exposure:
+      include: info, health, metrics, prometheus
+    base-path: "/internal"
+    path-mapping:
+      info: "/isAlive"
   metrics:
     export:
       prometheus:
         enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: ["info", "health", "prometheus", "metrics"]
 
-application:
-  kafka:
-    bootstrap-servers: localhost:9092
-
----
-
-spring:
-  profiles: docker
-
-KAFKA_BOOTSTRAP_SERVERS: kafka-broker:9092
-application:
-  kafka:
-    bootstrap-servers: kafka-broker:29092
