@@ -1,4 +1,4 @@
-package no.nav.soknad.arkivering.dto
+package no.nav.soknad.arkivering.soknadsmottaker.dto
 
 import java.time.LocalDateTime
 
@@ -25,16 +25,9 @@ private const val tittelKvitteering = "kvittering"
 private const val skjemanummerKvittering = "L7"
 const val variantformatBilKvittering = "ARKIV"
 const val filtypeBilKvittering = "PDFA"
-// forerkort
-private const val uuidBILvedlegg = "e7179251-635e-493a-948c-749a39vedleg"
-private const val filnavnForerkort = "forerkort.pdf"
-private const val tittelForerkort = "Kopi av førerkort"
-private const val skjemanummerForerkort = "Z4"
-private const val filtypeBilForerkort = "PDF"
 // felles for vedlegg
 private const val filstorrelseVedlegg = "101010"
 private const val erIkkeHovedskjemaBil = false
-private const val variantformatOrginal = "ORGINAL"
 private const val mimeTypeBil = "er det bruk for denne? bør vel være dokumenttype" // pdf, xml, json, pdfa
 
 
@@ -45,16 +38,8 @@ fun opprettBilInnsendingMedBareSoknadOgKvittering(): SoknadInnsendtDto {
 	val kvitteringDokument: InnsendtDokumentDto = innsendtKvitteringDokument(kvittering)
 
 	val listeAvDokumenter = mutableListOf(kvitteringDokument, soknadsDokument)
-	return SoknadInnsendtDto(innsendingsidIdForBilForsendelse, erEttersendelseBil, personIDBil, temaBil, innsendtDatoBil, innsendteDokumenter = listeAvDokumenter)
+	return SoknadInnsendtDto(innsendingsidIdForBilForsendelse, erEttersendelseBil, personIDBil, temaBil, innsendtDatoBil, listeAvDokumenter)
 }
-
-private fun opprettForerkortVedleggMedVariantOgDokument(): InnsendtDokumentDto {
-	val forerkortVariant = opprettForerkortSomVedleggVariant()
-	return InnsendtDokumentDto(skjemanummerForerkort, false, tittelForerkort, mutableListOf(forerkortVariant))
-}
-
-fun opprettForerkortSomVedleggVariant() =
-	InnsendtVariantDto(uuidBILvedlegg, mimeTypeBil, filnavnForerkort, filstorrelseVedlegg, variantformatOrginal, filtypeBilForerkort)
 
 private fun opprettKvitteringVariant() =
 	InnsendtVariantDto(uuidBilKvittering, mimeTypeBil, filnavnKvitteering, filstorrelseVedlegg, variantformatBilKvittering, filtypeBilKvittering)
@@ -65,5 +50,5 @@ fun opprettHoveddokumentVariant() =
 fun innsendtHovedskjemaDokument(variantHovedskjemaBil: InnsendtVariantDto) =
 	InnsendtDokumentDto(skjemanummerBil, erHovedSkjemaBil, tittelBil, listOf(variantHovedskjemaBil))
 
-private fun innsendtKvitteringDokument(variantKvitteringBil: InnsendtVariantDto)=
+private fun innsendtKvitteringDokument(variantKvitteringBil: InnsendtVariantDto) =
 	InnsendtDokumentDto(skjemanummerKvittering, erIkkeHovedskjemaBil, tittelKvitteering, listOf(variantKvitteringBil))
