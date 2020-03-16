@@ -8,9 +8,6 @@ management:
   endpoints.web:
     exposure:
       include: "*"
-    path-mapping:
-      info: "/internal/isAlive"
-      save: "/save"
   metrics:
     export:
       prometheus:
