@@ -14,7 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
 
 @Configuration
-class KafkaConfig() {
+class KafkaConfig {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
 	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig): ProducerFactory<String, Soknadarkivschema> {
@@ -29,13 +29,14 @@ class KafkaConfig() {
 			it[VALUE_SERIALIZER_CLASS_CONFIG] = AvroSerializer::class.java
 			it["TOPIC"] = kafkaConfig.topic
 		}
-		logger.info("Slutt setKafkaConfig." +
-			" Kafka servers=${configProps.get(BOOTSTRAP_SERVERS_CONFIG)}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}, topic=${kafkaConfig.topic}")
-		logger.info("Passord="+
-			( when {
-				"".equals(kafkaConfig.password, true) || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
-				else -> "*Noe hemmelig fra Vault*"
-			}))
+
+		logger.info("Slutt setKafkaConfig. Kafka servers=${configProps[BOOTSTRAP_SERVERS_CONFIG]}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}, topic=${kafkaConfig.topic}")
+		val password = when {
+			"".equals(kafkaConfig.password, true) || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
+			else -> "*Noe hemmelig fra Vault*"
+		}
+		logger.info("Passord='$password'")
+
 		return DefaultKafkaProducerFactory(configProps)
 	}
 
@@ -50,20 +51,3 @@ class KafkaConfig() {
 	@Bean
 	fun kafkaTemplate() = KafkaTemplate(producerFactory())
 }
-
-/*
-acks=all
-client.id=soknadInnsendt-sendsoknad
-enable.idempotence=true
-max.in.flight.requests.per.connection=1
-max.block.ms=15000
-retries=2
-key.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
-value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
-bootstrap.servers=localhost:9092
-schema.registry.url=http://kafka-schema-registry.tpa:8081
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-compression.type=gzip
-max.request.size=15728640
-*/

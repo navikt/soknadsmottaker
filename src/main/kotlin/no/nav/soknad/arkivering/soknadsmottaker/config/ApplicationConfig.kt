@@ -15,7 +15,7 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
 		"KAFKA_TOPIC" to "privat-soknadInnsendt-sendsoknad-v1-default",
-	  "APPLICATION_PROFILE" to ""
+		"APPLICATION_PROFILE" to ""
 	)
 )
 
@@ -28,19 +28,16 @@ val appConfig =
 
 private fun String.configProperty(): String = appConfig[Key(this, stringType)]
 
-fun readFileyAsText(fileName: String): String
-	= (try {File(fileName).readText(Charsets.UTF_8) } catch (e :Exception ) { ""} )
+fun readFileAsText(fileName: String) = try { File(fileName).readText(Charsets.UTF_8) } catch (e :Exception ) { "" }
 
-data class AppConfiguration (
-	val kafkaConfig: KafkaConfig = KafkaConfig()
-) {
-	data class KafkaConfig (
+data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig()) {
+	data class KafkaConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val version: String = "APP_VERSION".configProperty(),
 		val username: String = "SRVSSOKNADSMOTTAKER_USERNAME".configProperty(),
-		val password: String = 	( when {
-			"".equals(profiles) || "test".equals(profiles, true) -> "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()
-			else -> readFileyAsText("/var/run/secrets/nais.io/serviceuser/password")
+		val password: String = (when {
+			"" == profiles || "test".equals(profiles, true) -> "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()
+			else -> readFileAsText("/var/run/secrets/nais.io/serviceuser/password")
 		}),
 		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
 		val clientId: String = "KAFKA_CLIENTID".configProperty(),
@@ -48,6 +45,6 @@ data class AppConfiguration (
 		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
 		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
 		val topic: String = "KAFKA_TOPIC".configProperty(),
-		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required " + "username=\"$username\" password=\"$password\";"
+		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";"
 	)
 }
