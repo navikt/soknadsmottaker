@@ -45,8 +45,8 @@ data class AppConfiguration (
 		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
 		val clientId: String = "KAFKA_CLIENTID".configProperty(),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
-		val protocol: String = "KAFKA_SECPROT".configProperty(),
-		val salsmec: String = "KAFKA_SASLMEC".configProperty(),
+		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
+		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
 		val topic: String = "KAFKA_TOPIC".configProperty(),
 		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required " + "username=\"$username\" password=\"$password\";"
 	)
