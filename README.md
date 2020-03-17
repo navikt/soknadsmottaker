@@ -1,6 +1,9 @@
-# Soknadsmottaker
-This application provides a REST endpoint to which data can be sent. The data will be converted, serialized as an Avro message and put on a Kafka topic.
+Soknadsmottaker
+================
+Applikasjonen tilbyr tjeneste for å metadata om søknader til innsendingsapplikasjoner.
+Oppretter så meldinger på egen strøm i KAFKA for mottakere av metadata slik at de kan agere på dataen.
 
+This application provides a REST endpoint to which data can be sent. The data will be converted, serialized as an Avro message and put on a Kafka topic.
 For a description of the whole archiving system, see [the documentation](https://github.com/navikt/archiving-infrastructure/wiki).
 
 # Dependencies
@@ -15,7 +18,8 @@ Unfortunately, [GitHub doesn't currently allow accessing its package registry wi
 Until that has been fixed, one must have a [Personal Github access token](https://github.com/settings/tokens) with SSO enabled and `read:packages=true`.
 
 ## Building from command line
-* In order to build like normal, add the relevant parts of ./.m2/maven-settings.xml to your ~/.m2/settings.xml file and set the environment variables `GITHUB_USERNAME` and `GITHUB_TOKEN` (e.g. in ~/.bashrc). Then it is possible to build with `mvn clean install` like normal.
+* In order to build like normal, add the relevant parts of ./.m2/maven-settings.xml to your ~/.m2/settings.xml file and set the environment variables
+`GITHUB_USERNAME` and `GITHUB_TOKEN` (e.g. in ~/.bashrc). Then it is possible to build with `mvn clean install` like normal.
 
 * In order to build just this component without changing ~/.m2/settings.xml, one can run the following instead of the step above:<br />
 `export GITHUB_USERNAME=<INSERT_GITHUB_USERNAME_HERE> && export GITHUB_TOKEN=<INSERT_GITHUB_ACCESS_TOKEN_HERE> && mvn --settings ./.m2/maven-settings.xml clean install`
