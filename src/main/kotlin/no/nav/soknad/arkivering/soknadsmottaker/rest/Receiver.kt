@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.soknad.arkivering.dto.SoknadInnsendtDto
+import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping
