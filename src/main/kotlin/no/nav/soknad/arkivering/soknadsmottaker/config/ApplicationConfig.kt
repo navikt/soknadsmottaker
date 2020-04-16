@@ -15,7 +15,9 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
 		"KAFKA_TOPIC" to "privat-soknadInnsendt-sendsoknad-v1-default",
-		"APPLICATION_PROFILE" to ""
+		"APPLICATION_PROFILE" to "",
+		"REST_HENVENDELSE" to "srvHenvendelse",
+		"REST_PASSORD" to "password"
 	)
 )
 
@@ -30,7 +32,7 @@ private fun String.configProperty(): String = appConfig[Key(this, stringType)]
 
 fun readFileAsText(fileName: String) = try { File(fileName).readText(Charsets.UTF_8) } catch (e :Exception ) { "" }
 
-data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig()) {
+data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val restConfig: RestConfig = RestConfig()) {
 	data class KafkaConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val version: String = "APP_VERSION".configProperty(),
@@ -46,5 +48,10 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig()) {
 		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
 		val topic: String = "KAFKA_TOPIC".configProperty(),
 		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";"
+	)
+
+	data class RestConfig(
+		val user: String = "REST_HENVENDELSE".configProperty(),
+		val password: String = "REST_PASSORD".configProperty()
 	)
 }
