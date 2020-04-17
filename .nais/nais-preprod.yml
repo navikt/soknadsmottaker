@@ -28,7 +28,7 @@ spec:
       cpu: 200m
       memory: 256Mi
   ingress:
-    - https://soknadsmottaker.nais.preprod.local
+    - http://soknadsmottaker.nais.preprod.local
   vault:
     enabled: true
     paths:
@@ -38,8 +38,6 @@ spec:
         kvPath: /apikey/appdynamics/dev
 
   env:
-    - name: APPRES_CMS_URL
-      value: https://appres.nav.no
     - name: APP_VERSION
       value: {{ app_version }}
     - name: KAFKA_BOOTSTRAP_SERVERS
