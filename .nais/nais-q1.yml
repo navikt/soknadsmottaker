@@ -30,9 +30,9 @@ spec:
     requests:
       cpu: 200m
       memory: 256Mi
-  ingress:
-    - https://soknadsmottaker-q1.nais.preprod.local
-    - https://soknadsmottaker-q1.dev-fss.nais.io
+  ingresses:
+    - "https://soknadsmottaker-q1.nais.preprod.local"
+    - "https://soknadsmottaker-q1.dev-fss.nais.io"
   vault:
     enabled: true
     paths:

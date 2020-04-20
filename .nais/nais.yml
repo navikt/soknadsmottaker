@@ -27,8 +27,9 @@ spec:
     requests:
       cpu: 200m
       memory: 256Mi
-  ingress:
-    - https://soknadsmottaker.nais.adeo.no
+  ingresses:
+    - "https://soknadsmottaker.nais.adeo.no"
+    - "https://soknadsmottaker.prod-fss.nais.io"
   vault:
     enabled: true
     paths:
