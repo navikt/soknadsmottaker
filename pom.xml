@@ -105,11 +105,6 @@
 			<version>${mockito-kotlin.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>no.nav</groupId>
-			<artifactId>metrics</artifactId>
-			<version>4.0.157.10</version>
-		</dependency>
 	</dependencies>
 
 	<build>
