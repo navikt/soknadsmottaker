@@ -11,12 +11,15 @@ spec:
   liveliness:
     path: /internal/isAlive
     initialDelay: 20
+    failureThreshold: 10
+    timeout: 1
   readiness:
     path: /internal/isAlive
     initialDelay: 20
+    timeout: 1
   prometheus:
     enable: true
-    path: /internal/prometheus
+    path: /metrics
   replicas:
     min: 2
     max: 4
@@ -29,6 +32,7 @@ spec:
       memory: 256Mi
   ingress:
     - https://soknadsmottaker-q0.nais.preprod.local
+    - https://soknadsmottaker-q0.dev-fss.nais.io
   vault:
     enabled: true
     paths:

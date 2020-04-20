@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
+import io.micrometer.core.annotation.Timed
 import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import org.slf4j.LoggerFactory
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@Timed(value = "soknadsmottaker_restcontroller", percentiles = [0.5, 0.95])
 class Receiver(private val archiverService: ArchiverService) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
