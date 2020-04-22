@@ -31,16 +31,14 @@ val appConfig =
 private fun String.configProperty(): String = appConfig[Key(this, stringType)]
 
 fun readFileAsText(fileName: String) = try { File(fileName).readText(Charsets.UTF_8) } catch (e :Exception ) { "" }
+fun readFileAsText(fileName: String, default: String) = try { File(fileName).readText(Charsets.UTF_8) } catch (e :Exception ) { default }
 
 data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val restConfig: RestConfig = RestConfig()) {
 	data class KafkaConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val version: String = "APP_VERSION".configProperty(),
 		val username: String = "SRVSSOKNADSMOTTAKER_USERNAME".configProperty(),
-		val password: String = (when {
-			"" == profiles || "test".equals(profiles, true) -> "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()
-			else -> readFileAsText("/var/run/secrets/nais.io/serviceuser/password")
-		}),
+		val password: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/password", "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()),
 		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
 		val clientId: String = "KAFKA_CLIENTID".configProperty(),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
@@ -51,7 +49,9 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 	)
 
 	data class RestConfig(
+		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val user: String = "REST_HENVENDELSE".configProperty(),
-		val password: String = "REST_PASSORD".configProperty()
+		//val password: String = "REST_PASSORD".configProperty()
+		val password: String = readFileAsText("/var/run/secrets/nais.io/rest/restPassword", "REST_PASSORD".configProperty())
 	)
 }
