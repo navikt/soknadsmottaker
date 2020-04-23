@@ -14,7 +14,7 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECURITY" to "",
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
-		"KAFKA_TOPIC" to "privat-soknadInnsendt-sendsoknad-v1-default",
+		"KAFKA_TOPIC" to "privat-soknadInnsendt-v1-default",
 		"APPLICATION_PROFILE" to "",
 		"REST_HENVENDELSE" to "srvHenvendelse",
 		"REST_PASSORD" to "password"
@@ -39,7 +39,7 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val version: String = "APP_VERSION".configProperty(),
 		val username: String = "SRVSSOKNADSMOTTAKER_USERNAME".configProperty(),
 		val password: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/password", "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()),
-		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
+		val servers: String = readFileAsText("/var/run/secrets/nais.io/kv/kafkaBootstrapServers", "KAFKA_BOOTSTRAP_SERVERS".configProperty()),
 		val clientId: String = "KAFKA_CLIENTID".configProperty(),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
 		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
@@ -51,7 +51,6 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 	data class RestConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val user: String = "REST_HENVENDELSE".configProperty(),
-		//val password: String = "REST_PASSORD".configProperty()
-		val password: String = readFileAsText("/var/run/secrets/nais.io/rest/restPassword", "REST_PASSORD".configProperty())
+		val password: String = readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty())
 	)
 }
