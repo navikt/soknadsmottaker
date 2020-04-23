@@ -27,6 +27,6 @@ class ArchiverServiceTests {
 		val config = AppConfiguration()
 		println(config)
 		Assertions.assertEquals(config.kafkaConfig.username, "srvsoknadsmottaker")
-		Assertions.assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-sendsoknad-v1-default")
+		Assertions.assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-v1-default")
 	}
 }
