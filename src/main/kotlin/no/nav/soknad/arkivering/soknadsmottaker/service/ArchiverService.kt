@@ -21,8 +21,10 @@ class ArchiverService(private val kafkaSender: KafkaSender) {
 	private fun convertMessage(request: SoknadInnsendtDto) = InputTransformer(request).apply()
 
 	private fun publishToKafka(data: Soknadarkivschema) {
-		logger.info("Publishing to topic $topic melding ${data.getBehandlingsid()}")
+		logger.info("Publishing to topic $topic meldingId ${data.getBehandlingsid()}")
 
 		kafkaSender.publish(topic, "personId", data)
+
+		logger.info("Published to topic $topic meldingId ${data.getBehandlingsid()}")
 	}
 }

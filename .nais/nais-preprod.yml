@@ -50,6 +50,8 @@ spec:
       value: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
     - name: KAFKA_CLIENTID
       value: srvsoknadsmottaker
+    - name: SCHEMA_REGISTRY_URL
+      value: https://kafka-test-schema-registry.nais.preprod.local
     - name: KAFKA_SECURITY
       value: 'TRUE'
     - name: KAFKA_SECPROT
