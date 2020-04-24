@@ -3,14 +3,16 @@ package no.nav.soknad.arkivering.soknadsmottaker.dto
 import no.nav.soknad.soknadarkivering.avroschemas.MottattDokument
 import no.nav.soknad.soknadarkivering.avroschemas.MottattVariant
 import no.nav.soknad.soknadarkivering.avroschemas.Soknadarkivschema
+import no.nav.soknad.soknadarkivering.avroschemas.Soknadstyper
 import java.time.ZoneOffset
 
 class InputTransformer(private val input: SoknadInnsendtDto) {
 
 	fun apply(): Soknadarkivschema = input.toSoknadMottattView()
 
-	private fun SoknadInnsendtDto.toSoknadMottattView() = Soknadarkivschema(innsendingsId, personId, tema, "",
-		innsendtDato.toEpochSecond(ZoneOffset.UTC), konverterTilMottatteDokumenterList(innsendteDokumenter)
+	private fun SoknadInnsendtDto.toSoknadMottattView() = Soknadarkivschema(innsendingsId, personId, tema,
+		innsendtDato.toEpochSecond(ZoneOffset.UTC), if (ettersendelse) Soknadstyper.ETTERSENDING else Soknadstyper.SOKNAD,
+		konverterTilMottatteDokumenterList(innsendteDokumenter)
 	)
 
 	private fun InnsendtDokumentDto.toMottattDokumentView() = MottattDokument(skjemaNummer, erHovedSkjema, tittel,

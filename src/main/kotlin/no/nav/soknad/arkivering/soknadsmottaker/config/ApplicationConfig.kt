@@ -9,6 +9,7 @@ private val defaultProperties = ConfigurationMap(
 		"APP_VERSION" to "",
 		"SRVSSOKNADSMOTTAKER_USERNAME" to "srvsoknadsmottaker",
 		"SRVSSOKNADSMOTTAKER_PASSWORD" to "",
+		"SCHEMA_REGISTRY_URL" to "http://localhost:8081",
 		"KAFKA_BOOTSTRAP_SERVERS" to "localhost:29092",
 		"KAFKA_CLIENTID" to "srvsoknadsmottaker",
 		"KAFKA_SECURITY" to "",
@@ -40,6 +41,7 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val username: String = "SRVSSOKNADSMOTTAKER_USERNAME".configProperty(),
 		val password: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/password", "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()),
 		val servers: String = readFileAsText("/var/run/secrets/nais.io/kv/kafkaBootstrapServers", "KAFKA_BOOTSTRAP_SERVERS".configProperty()),
+		val schemaRegistryUrl: String = "SCHEMA_REGISTRY_URL".configProperty(),
 		val clientId: String = "KAFKA_CLIENTID".configProperty(),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
 		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL

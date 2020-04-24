@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class ArchiverServiceTests {
@@ -26,7 +26,7 @@ class ArchiverServiceTests {
 	fun `Sjekker innlesning av miljovariable`() {
 		val config = AppConfiguration()
 		println(config)
-		Assertions.assertEquals(config.kafkaConfig.username, "srvsoknadsmottaker")
-		Assertions.assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-v1-default")
+		assertEquals(config.kafkaConfig.username, "srvsoknadsmottaker")
+		assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-v1-default")
 	}
 }

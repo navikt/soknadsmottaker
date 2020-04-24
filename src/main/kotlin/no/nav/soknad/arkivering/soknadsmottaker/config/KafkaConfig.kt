@@ -1,5 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.config
 
+import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG
+import io.confluent.kafka.serializers.KafkaAvroSerializer
 import no.nav.soknad.soknadarkivering.avroschemas.Soknadarkivschema
 import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.*
@@ -20,17 +22,17 @@ class KafkaConfig {
 	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig): ProducerFactory<String, Soknadarkivschema> {
 		val configProps = HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.servers
-			if ("TRUE".equals(kafkaConfig.secure)) {
+			it[SCHEMA_REGISTRY_URL_CONFIG] = kafkaConfig.schemaRegistryUrl
+			if ("TRUE" == kafkaConfig.secure) {
 				it[SECURITY_PROTOCOL_CONFIG] = kafkaConfig.protocol
 				it[SASL_JAAS_CONFIG] = kafkaConfig.saslJaasConfig
 				it[SASL_MECHANISM] = kafkaConfig.salsmec
 			}
 			it[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
-			it[VALUE_SERIALIZER_CLASS_CONFIG] = AvroSerializer::class.java
-			it["TOPIC"] = kafkaConfig.topic
+			it[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
 		}
 
-		logger.info("Slutt setKafkaConfig. Kafka servers=${configProps[BOOTSTRAP_SERVERS_CONFIG]}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}, topic=${kafkaConfig.topic}")
+		logger.info("Ferdig med setKafkaConfig. Kafka servers=${configProps[BOOTSTRAP_SERVERS_CONFIG]}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}, topic=${kafkaConfig.topic}")
 		val password = when {
 			"".equals(kafkaConfig.password, true) || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
 			else -> "*Noe hemmelig fra Vault*"
