@@ -22,7 +22,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 			.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 			.antMatchers(HttpMethod.POST, "/login", "/register").permitAll()
 			.antMatchers("/save").authenticated()
-			//.anyRequest().authenticated()
 			.and()
 			.httpBasic()
 			.and()
