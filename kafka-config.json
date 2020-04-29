@@ -3,8 +3,8 @@
 		{
 			"topicName": "privat-soknadInnsendt-v1-default",
 			"members": [
-				{"member":"srvsoknadsmottaker", "role":"PRODUCER"},
-				{"member":"srvsoknadarkiverer", "role":"CONSUMER"},
+				{"member":"TODO", "role":"PRODUCER"},
+				{"member":"TODO", "role":"CONSUMER"},
 				{"member":"S156301", "role":"MANAGER"},
 				{"member":"K156027", "role":"MANAGER"},
 				{"member":"R156312", "role":"MANAGER"},
@@ -18,8 +18,8 @@
 		{
 			"topicName": "privat-soknadInnsendt-v1-q0",
 			"members": [
-				{"member":"srvsoknadsmottaker", "role":"PRODUCER"},
-				{"member":"srvsoknadarkiverer", "role":"CONSUMER"},
+				{"member":"TODO", "role":"PRODUCER"},
+				{"member":"TODO", "role":"CONSUMER"},
 				{"member":"S156301", "role":"MANAGER"},
 				{"member":"K156027", "role":"MANAGER"},
 				{"member":"R156312", "role":"MANAGER"},
@@ -33,8 +33,8 @@
 		{
 			"topicName": "privat-soknadInnsendt-v1-q1",
 			"members": [
-				{"member":"srvsoknadsmottaker", "role":"PRODUCER"},
-				{"member":"srvsoknadarkiverer", "role":"CONSUMER"},
+				{"member":"TODO", "role":"PRODUCER"},
+				{"member":"TODO", "role":"CONSUMER"},
 				{"member":"S156301", "role":"MANAGER"},
 				{"member":"K156027", "role":"MANAGER"},
 				{"member":"R156312", "role":"MANAGER"},
@@ -48,8 +48,8 @@
 		{
 			"topicName": "privat-soknadInnsendt-v1",
 			"members": [
-				{"member":"srvsoknadsmottaker", "role":"PRODUCER"},
-				{"member":"srvsoknadarkiverer", "role":"CONSUMER"},
+				{"member":"TODO", "role":"PRODUCER"},
+				{"member":"TODO", "role":"CONSUMER"},
 				{"member":"S156301", "role":"MANAGER"},
 				{"member":"K156027", "role":"MANAGER"},
 				{"member":"R156312", "role":"MANAGER"},
