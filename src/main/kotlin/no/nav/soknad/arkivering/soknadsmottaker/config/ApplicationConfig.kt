@@ -7,17 +7,17 @@ import java.io.File
 private val defaultProperties = ConfigurationMap(
 	mapOf(
 		"APP_VERSION" to "",
-		"SRVSSOKNADSMOTTAKER_USERNAME" to "srvsoknadsmottaker",
+		"SRVSSOKNADSMOTTAKER_USERNAME" to "kafkaproducer",
 		"SRVSSOKNADSMOTTAKER_PASSWORD" to "",
 		"SCHEMA_REGISTRY_URL" to "http://localhost:8081",
 		"KAFKA_BOOTSTRAP_SERVERS" to "localhost:29092",
-		"KAFKA_CLIENTID" to "srvsoknadsmottaker",
+		"KAFKA_CLIENTID" to "kafkaproducer",
 		"KAFKA_SECURITY" to "",
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
 		"KAFKA_TOPIC" to "privat-soknadInnsendt-v1-default",
 		"APPLICATION_PROFILE" to "",
-		"REST_HENVENDELSE" to "srvHenvendelse",
+		"REST_HENVENDELSE" to "avsender",
 		"REST_PASSORD" to "password"
 	)
 )
@@ -38,11 +38,11 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 	data class KafkaConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val version: String = "APP_VERSION".configProperty(),
-		val username: String = "SRVSSOKNADSMOTTAKER_USERNAME".configProperty(),
+		val username: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/username","SRVSSOKNADSMOTTAKER_USERNAME".configProperty()),
 		val password: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/password", "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()),
 		val servers: String = readFileAsText("/var/run/secrets/nais.io/kv/kafkaBootstrapServers", "KAFKA_BOOTSTRAP_SERVERS".configProperty()),
 		val schemaRegistryUrl: String = "SCHEMA_REGISTRY_URL".configProperty(),
-		val clientId: String = "KAFKA_CLIENTID".configProperty(),
+		val clientId: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/username","KAFKA_CLIENTID".configProperty()),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
 		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
 		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
@@ -52,7 +52,7 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 
 	data class RestConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
-		val user: String = "REST_HENVENDELSE".configProperty(),
+		val user: String = readFileAsText("/var/run/secrets/nais.io/kv/restUser","REST_HENVENDELSE".configProperty()),
 		val password: String = readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty())
 	)
 }
