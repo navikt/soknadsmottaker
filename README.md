@@ -10,7 +10,7 @@ For a description of the whole archiving system, see [the documentation](https:/
 This component requires the following to work:
 * [soknadarkiv-schema](https://github.com/navikt/soknadarkiv-schema) (Avro schema definitions)
 * Kafka broker (for providing a Kafka topic to send to)
-* Shared secret for logging on to the application in order to send application data to the REST endpoint. The application reads the shared secret from Vault, REST_PASSORD.
+* Shared secret for logging on to the application in order to send application data to the REST endpoint. The application reads the shared secret from Vault, restPassword and restUser.
 
 # Setup
 The Kafka topic transports Avro serialized events defined in [soknadarkiv-schema](https://github.com/navikt/soknadarkiv-schema). The Avro schema definitions are made available publicly on the GitHub Package Registry.
