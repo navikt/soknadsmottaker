@@ -48,8 +48,6 @@ spec:
       value: {{ app_version }}
     - name: KAFKA_BOOTSTRAP_SERVERS
       value: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
-    - name: KAFKA_CLIENTID
-      value: srvsoknadsmottaker
     - name: SCHEMA_REGISTRY_URL
       value: https://kafka-schema-registry.nais.preprod.local
     - name: KAFKA_SECURITY
@@ -60,7 +58,5 @@ spec:
       value: PLAIN
     - name: KAFKA_TOPIC
       value: privat-soknadInnsendt-v1-default
-    - name: SRVSSOKNADSMOTTAKER_USERNAME
-      value: srvsoknadsmottaker
     - name: APPLICATION_PROFILE
       value: dev
