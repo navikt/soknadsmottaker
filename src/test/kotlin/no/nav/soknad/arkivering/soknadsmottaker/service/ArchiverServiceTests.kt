@@ -26,7 +26,9 @@ class ArchiverServiceTests {
 	fun `Sjekker innlesning av miljovariable`() {
 		val config = AppConfiguration()
 		println(config)
-		assertEquals(config.kafkaConfig.username, "srvsoknadsmottaker")
+		assertEquals(config.kafkaConfig.username, "kafkaproducer")
 		assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-v1-default")
+		assertEquals(config.restConfig.user, "avsender")
+		assertEquals(config.restConfig.password, "password")
 	}
 }
