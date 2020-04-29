@@ -22,7 +22,7 @@ class ReceiverTests {
 		receiver.receiveMessage(melding)
 
 		verify(kafkaMock, times(1))
-			.send(Mockito.eq("privat-soknadInnsendt-sendsoknad-v1-q0"), Mockito.eq("personId"), Mockito.any())
+			.send(Mockito.eq("privat-soknadInnsendt-v1-default"), Mockito.eq("personId"), Mockito.any())
 	}
 
 	private fun mockReceiver(): Receiver {

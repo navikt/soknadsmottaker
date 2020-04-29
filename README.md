@@ -1,7 +1,7 @@
 Soknadsmottaker
 ================
-Applikasjonen tilbyr tjeneste for å metadata om søknader til innsendingsapplikasjoner.
-Oppretter så meldinger på egen strøm i KAFKA for mottakere av metadata slik at de kan agere på dataen.
+Applikasjonen tilbyr REST tjeneste for å motta metadata om innsendte søknader/dokumentinnsendinger.
+Mottatte data mappes til en Avro melding og legges på en egen KAFKA strøm.
 
 This application provides a REST endpoint to which data can be sent. The data will be converted, serialized as an Avro message and put on a Kafka topic.
 For a description of the whole archiving system, see [the documentation](https://github.com/navikt/archiving-infrastructure/wiki).
@@ -10,6 +10,7 @@ For a description of the whole archiving system, see [the documentation](https:/
 This component requires the following to work:
 * [soknadarkiv-schema](https://github.com/navikt/soknadarkiv-schema) (Avro schema definitions)
 * Kafka broker (for providing a Kafka topic to send to)
+* Shared secret for logging on to the application in order to send application data to the REST endpoint. The application reads the shared secret from Vault, restPassword and restUser.
 
 # Setup
 The Kafka topic transports Avro serialized events defined in [soknadarkiv-schema](https://github.com/navikt/soknadarkiv-schema). The Avro schema definitions are made available publicly on the GitHub Package Registry.

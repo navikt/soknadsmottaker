@@ -7,7 +7,7 @@ management:
       show-details: always
   endpoints.web:
     exposure:
-      include: info, health, metrics, prometheus
+      include: info, health, metrics
     base-path: "/internal"
     path-mapping:
       info: "/isAlive"

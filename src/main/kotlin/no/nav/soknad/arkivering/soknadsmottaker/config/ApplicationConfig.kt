@@ -7,16 +7,18 @@ import java.io.File
 private val defaultProperties = ConfigurationMap(
 	mapOf(
 		"APP_VERSION" to "",
-		"SRVSSOKNADSMOTTAKER_USERNAME" to "srvsoknadsmottaker",
+		"SRVSSOKNADSMOTTAKER_USERNAME" to "kafkaproducer",
 		"SRVSSOKNADSMOTTAKER_PASSWORD" to "",
 		"SCHEMA_REGISTRY_URL" to "http://localhost:8081",
 		"KAFKA_BOOTSTRAP_SERVERS" to "localhost:29092",
-		"KAFKA_CLIENTID" to "srvsoknadsmottaker",
+		"KAFKA_CLIENTID" to "kafkaproducer",
 		"KAFKA_SECURITY" to "",
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
-		"KAFKA_TOPIC" to "privat-soknadInnsendt-sendsoknad-v1-default",
-		"APPLICATION_PROFILE" to ""
+		"KAFKA_TOPIC" to "privat-soknadInnsendt-v1-default",
+		"APPLICATION_PROFILE" to "",
+		"REST_HENVENDELSE" to "avsender",
+		"REST_PASSORD" to "password"
 	)
 )
 
@@ -30,23 +32,27 @@ val appConfig =
 private fun String.configProperty(): String = appConfig[Key(this, stringType)]
 
 fun readFileAsText(fileName: String) = try { File(fileName).readText(Charsets.UTF_8) } catch (e :Exception ) { "" }
+fun readFileAsText(fileName: String, default: String) = try { File(fileName).readText(Charsets.UTF_8) } catch (e :Exception ) { default }
 
-data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig()) {
+data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val restConfig: RestConfig = RestConfig()) {
 	data class KafkaConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val version: String = "APP_VERSION".configProperty(),
-		val username: String = "SRVSSOKNADSMOTTAKER_USERNAME".configProperty(),
-		val password: String = (when {
-			"" == profiles || "test".equals(profiles, true) -> "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()
-			else -> readFileAsText("/var/run/secrets/nais.io/serviceuser/password")
-		}),
+		val username: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/username","SRVSSOKNADSMOTTAKER_USERNAME".configProperty()),
+		val password: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/password", "SRVSSOKNADSMOTTAKER_PASSWORD".configProperty()),
+		val servers: String = readFileAsText("/var/run/secrets/nais.io/kv/kafkaBootstrapServers", "KAFKA_BOOTSTRAP_SERVERS".configProperty()),
 		val schemaRegistryUrl: String = "SCHEMA_REGISTRY_URL".configProperty(),
-		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
-		val clientId: String = "KAFKA_CLIENTID".configProperty(),
+		val clientId: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/username","KAFKA_CLIENTID".configProperty()),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
 		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
 		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
 		val topic: String = "KAFKA_TOPIC".configProperty(),
 		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";"
+	)
+
+	data class RestConfig(
+		val profiles: String = "APPLICATION_PROFILE".configProperty(),
+		val user: String = readFileAsText("/var/run/secrets/nais.io/kv/restUser","REST_HENVENDELSE".configProperty()),
+		val password: String = readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty())
 	)
 }
