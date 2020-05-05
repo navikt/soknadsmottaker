@@ -5,12 +5,12 @@ import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.soknadarkivering.avroschemas.Soknadarkivschema
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.springframework.kafka.core.KafkaTemplate
 
 class ReceiverTests {
+
+	private val topic = "privat-soknadInnsendt-v1-default"
 
 	private val kafkaMock: KafkaTemplate<String, Soknadarkivschema> = mock()
 	private val receiver = mockReceiver()
@@ -22,7 +22,7 @@ class ReceiverTests {
 		receiver.receiveMessage(melding)
 
 		verify(kafkaMock, times(1))
-			.send(Mockito.eq("privat-soknadInnsendt-v1-default"), Mockito.eq("personId"), Mockito.any())
+			.send(eq(topic), anyString(), any())
 	}
 
 	private fun mockReceiver(): Receiver {
@@ -31,5 +31,5 @@ class ReceiverTests {
 		return Receiver(orderService)
 	}
 
-	private inline fun <reified T : Any> mock() = Mockito.mock(T::class.java)!!
+	private inline fun <reified T : Any> mock() = mock(T::class.java)!!
 }
