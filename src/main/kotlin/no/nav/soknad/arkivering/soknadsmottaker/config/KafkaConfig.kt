@@ -16,7 +16,7 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
 
 @Configuration
-class KafkaConfig {
+class KafkaConfig(private val appConfiguration: AppConfiguration) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
 	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig): ProducerFactory<String, Soknadarkivschema> {
@@ -45,9 +45,8 @@ class KafkaConfig {
 	@Bean
 	fun producerFactory(): ProducerFactory<String, Soknadarkivschema> {
 		logger.info("Start av producerFactory")
-		val config = AppConfiguration()
 
-		return setKafkaConfig(config.kafkaConfig)
+		return setKafkaConfig(appConfiguration.kafkaConfig)
 	}
 
 	@Bean

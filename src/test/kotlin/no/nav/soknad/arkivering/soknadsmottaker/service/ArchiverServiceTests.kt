@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test
 class ArchiverServiceTests {
 
 	private val kafkaSender = mock<KafkaSender> { }
-	private val archiverService = ArchiverService(kafkaSender)
+	private val config = AppConfiguration()
+
+	private val archiverService = ArchiverService(kafkaSender,config)
 
 	@Test
 	fun `Kaller Kafka sender`() {
@@ -24,7 +26,6 @@ class ArchiverServiceTests {
 
 	@Test
 	fun `Sjekker innlesning av miljovariable`() {
-		val config = AppConfiguration()
 		println(config)
 		assertEquals(config.kafkaConfig.username, "kafkaproducer")
 		assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-v1-default")

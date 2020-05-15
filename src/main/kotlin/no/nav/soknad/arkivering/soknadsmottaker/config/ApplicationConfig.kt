@@ -2,6 +2,7 @@ package no.nav.soknad.arkivering.soknadsmottaker.config
 
 import com.natpryce.konfig.*
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
+import org.springframework.context.annotation.Bean
 import java.io.File
 
 private val defaultProperties = ConfigurationMap(
@@ -55,4 +56,12 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val user: String = readFileAsText("/var/run/secrets/nais.io/kv/restUser","REST_HENVENDELSE".configProperty()),
 		val password: String = readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty())
 	)
+
+	@org.springframework.context.annotation.Configuration
+	class ConfigConfig {
+		@Bean
+		fun appConfiguration() = AppConfiguration()
+	}
+
+
 }

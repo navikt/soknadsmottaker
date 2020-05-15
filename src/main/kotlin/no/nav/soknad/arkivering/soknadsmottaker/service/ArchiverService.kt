@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class ArchiverService(private val kafkaSender: KafkaSender) {
+class ArchiverService(private val kafkaSender: KafkaSender, private val appConfiguration: AppConfiguration) {
 	private val logger = LoggerFactory.getLogger(javaClass)
-	private val topic = AppConfiguration().kafkaConfig.topic
+	private val topic = appConfiguration.kafkaConfig.topic
 
 	fun archive(request: SoknadInnsendtDto) {
 		val kafkaMessage = convertMessage(request)
