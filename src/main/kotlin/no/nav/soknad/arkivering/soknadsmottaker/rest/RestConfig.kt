@@ -13,7 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfigurerAdapter() {
 
 	override fun configure(http: HttpSecurity) {
 		http
@@ -31,7 +31,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
 	@Autowired
 	fun configureGlobal(auth: AuthenticationManagerBuilder) {
-		val config = AppConfiguration()
 		val user = config.restConfig.user
 		val passord = config.restConfig.password
 		auth.inMemoryAuthentication()

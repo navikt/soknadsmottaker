@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
+import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.springframework.kafka.core.KafkaTemplate
 
-class ReceiverTests {
+class ReceiverTests() {
 
 	private val topic = "privat-soknadInnsendt-v1-default"
 
@@ -27,7 +28,8 @@ class ReceiverTests {
 
 	private fun mockReceiver(): Receiver {
 		val kafkaSender = KafkaSender(kafkaMock)
-		val orderService = ArchiverService(kafkaSender)
+		val config: AppConfiguration = AppConfiguration()
+		val orderService = ArchiverService(kafkaSender, config)
 		return Receiver(orderService)
 	}
 
