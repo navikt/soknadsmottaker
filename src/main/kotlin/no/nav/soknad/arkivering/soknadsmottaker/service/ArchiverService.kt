@@ -6,6 +6,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
 import no.nav.soknad.soknadarkivering.avroschemas.Soknadarkivschema
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ArchiverService(private val kafkaSender: KafkaSender, private val appConfiguration: AppConfiguration) {
@@ -21,10 +22,11 @@ class ArchiverService(private val kafkaSender: KafkaSender, private val appConfi
 	private fun convertMessage(request: SoknadInnsendtDto) = InputTransformer(request).apply()
 
 	private fun publishToKafka(data: Soknadarkivschema) {
-		logger.info("Publishing to topic $topic meldingId ${data.getBehandlingsid()}")
+		val key = UUID.randomUUID().toString()
+		logger.info("Publishing to topic '$topic'. Key: '$key'. MeldingId '${data.getBehandlingsid()}'")
 
-		kafkaSender.publish(topic, "personId", data)
+		kafkaSender.publish(topic, key, data)
 
-		logger.info("Published to topic $topic meldingId ${data.getBehandlingsid()}")
+		logger.info("Published to topic '$topic'. Key: '$key'. MeldingId '${data.getBehandlingsid()}'")
 	}
 }
