@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ArchiverService(private val kafkaSender: KafkaSender, private val appConfiguration: AppConfiguration) {
+class ArchiverService(private val kafkaSender: KafkaSender, appConfiguration: AppConfiguration) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val topic = appConfiguration.kafkaConfig.topic
 
