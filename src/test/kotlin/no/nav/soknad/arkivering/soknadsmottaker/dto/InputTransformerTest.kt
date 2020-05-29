@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.dto
 
-import no.nav.soknad.soknadarkivering.avroschemas.Soknadstyper
+import no.nav.soknad.arkivering.avroschemas.Soknadstyper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset

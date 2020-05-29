@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import no.nav.soknad.soknadarkivering.avroschemas.Soknadarkivschema
+import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 
