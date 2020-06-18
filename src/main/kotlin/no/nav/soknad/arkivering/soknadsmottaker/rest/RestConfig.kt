@@ -35,7 +35,7 @@ class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfi
 	fun configureGlobal(auth: AuthenticationManagerBuilder) {
 		val user = config.restConfig.user
 		val passord = config.restConfig.password
-		logger.info("Forventet restbruker=${user}, forventet restpassord=${passord.substring(0,1)} ")
+		logger.info("Forventet restbruker=${user}, forventet restpassord=${passord.substring(0,2)} ") //TMP skal slettes
 		auth.inMemoryAuthentication()
 			.withUser(user)
 			.password("{noop}$passord")
