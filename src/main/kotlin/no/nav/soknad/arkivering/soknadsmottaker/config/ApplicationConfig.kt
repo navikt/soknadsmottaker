@@ -52,8 +52,8 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 
 	data class RestConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
-		val user: String = readFileAsText("/var/run/secrets/nais.io/henvendelse/username", "REST_HENVENDELSE".configProperty()),
-		val password: String = readFileAsText("/var/run/secrets/nais.io/henvendelse/restPassword", "REST_PASSORD".configProperty())
+		val user: String = readFileAsText("/var/run/secrets/nais.io/henvendelse/username", readFileAsText("/var/run/secrets/nais.io/kv/restUser", "REST_HENVENDELSE".configProperty())),
+		val password: String = readFileAsText("/var/run/secrets/nais.io/henvendelse/password", readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty()))
 	)
 
 	@org.springframework.context.annotation.Configuration
