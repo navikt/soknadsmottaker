@@ -1,9 +1,9 @@
 package no.nav.soknad.arkivering.soknadsmottaker.dto
 
-import no.nav.soknad.soknadarkivering.avroschemas.MottattDokument
-import no.nav.soknad.soknadarkivering.avroschemas.MottattVariant
-import no.nav.soknad.soknadarkivering.avroschemas.Soknadarkivschema
-import no.nav.soknad.soknadarkivering.avroschemas.Soknadstyper
+import no.nav.soknad.arkivering.avroschemas.MottattDokument
+import no.nav.soknad.arkivering.avroschemas.MottattVariant
+import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
+import no.nav.soknad.arkivering.avroschemas.Soknadstyper
 import java.time.ZoneOffset
 
 class InputTransformer(private val input: SoknadInnsendtDto) {

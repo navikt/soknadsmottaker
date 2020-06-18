@@ -38,10 +38,13 @@ spec:
     paths:
       - mountPath: /var/run/secrets/nais.io/serviceuser
         kvPath: /serviceuser/data/dev/srvsoknadsmottaker
+      - kvPath: /serviceuser/data/dev/srvhenvendelse
+        mountPath: /var/run/secrets/nais.io/henvendelse
       - mountPath: /var/run/secrets/nais.io/kv
         kvPath: /kv/preprod/fss/soknadsmottaker/default
       - mountPath: /var/run/secrets/nais.io/appdynamics
         kvPath: /apikey/appdynamics/dev
+
   env:
     - name: APP_VERSION
       value: {{ app_version }}
@@ -55,8 +58,7 @@ spec:
       value: SASL_SSL
     - name: KAFKA_SASLMEC
       value: PLAIN
-    - name: KAFKA_TOPIC
-      value: privat-soknadInnsendt-v1-q0
     - name: APPLICATION_PROFILE
       value: dev
-
+    - name: KAFKA_TOPIC
+      value: privat-soknadInnsendt-v1-q0
