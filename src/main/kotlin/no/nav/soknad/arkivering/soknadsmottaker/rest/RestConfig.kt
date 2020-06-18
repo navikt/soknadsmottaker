@@ -1,6 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Configuration
@@ -14,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfigurerAdapter() {
+	private val logger = LoggerFactory.getLogger(javaClass)
 
 	override fun configure(http: HttpSecurity) {
 		http
@@ -33,6 +35,7 @@ class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfi
 	fun configureGlobal(auth: AuthenticationManagerBuilder) {
 		val user = config.restConfig.user
 		val passord = config.restConfig.password
+		logger.info("Forventet restbruker=${user}, forventet restpassord=${passord.substring(0,1)} ")
 		auth.inMemoryAuthentication()
 			.withUser(user)
 			.password("{noop}$passord")
