@@ -39,5 +39,7 @@ class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfi
 			.withUser(user)
 			.password("{noop}$passord")
 			.roles("ADMIN")
+
+		logger.info("Satt forventet brukernavn/passord")
 	}
 }
