@@ -40,7 +40,7 @@ class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfi
 			.password("{noop}$passord")
 			.roles("ADMIN")
 
-		val tmp=passord.substring(0,1)
+		val tmp="{noop}$passord"
 		logger.info("Satt forventet brukernavn/passord. ${user} / ${tmp}, ${passord.length} ")
 	}
 }
