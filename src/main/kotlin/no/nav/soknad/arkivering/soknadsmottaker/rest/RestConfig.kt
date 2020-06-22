@@ -37,7 +37,7 @@ class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfi
 		val passord = config.restConfig.password.trim()
 		auth.inMemoryAuthentication()
 			.withUser(user)
-			.password(passord)
+			.password("{noop}$passord")
 			.roles("ADMIN")
 	}
 }
