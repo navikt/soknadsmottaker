@@ -32,7 +32,7 @@ class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfi
 	@Autowired
 	fun configureGlobal(auth: AuthenticationManagerBuilder) {
 		val user = config.restConfig.user
-		val passord = config.restConfig.password
+		val passord = config.restConfig.password.trim()
 		auth.inMemoryAuthentication()
 			.withUser(user)
 			.password("{noop}$passord")

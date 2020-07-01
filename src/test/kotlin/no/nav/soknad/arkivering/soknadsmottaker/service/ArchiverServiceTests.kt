@@ -14,7 +14,7 @@ class ArchiverServiceTests {
 	private val kafkaSender = mock<KafkaSender> { }
 	private val config = AppConfiguration()
 
-	private val archiverService = ArchiverService(kafkaSender,config)
+	private val archiverService = ArchiverService(kafkaSender, config)
 
 	@Test
 	fun `Kaller Kafka sender`() {
