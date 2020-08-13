@@ -10,13 +10,16 @@ spec:
   port: 8090
   liveliness:
     path: /internal/isAlive
-    initialDelay: 5
+    initialDelay: 20
+    failureThreshold: 10
+    timeout: 1
   readiness:
-    path: /internal/isAlive
-    initialDelay: 5
+    path: /internal/isReady
+    initialDelay: 20
+    timeout: 1
   prometheus:
     enable: true
-    path: /metrics
+    path: /internal/prometheus
   replicas:
     min: 2
     max: 4
@@ -35,10 +38,10 @@ spec:
     paths:
       - mountPath: /var/run/secrets/nais.io/serviceuser
         kvPath: /serviceuser/data/prod/srvsoknadsmottaker
-      - kvPath: /serviceuser/data/dev/srvhenvendelse
-        mountPath: /var/run/secrets/nais.io/henvendelse
+      - mountPath: /var/run/secrets/nais.io/henvendelse
+        kvPath: /serviceuser/data/dev/srvhenvendelse
       - mountPath: /var/run/secrets/nais.io/kv
-        kvPath: /kv/preprod/fss/soknadsmottaker/default
+        kvPath: /kv/prod/fss/soknadsmottaker/default
       - mountPath: /var/run/secrets/nais.io/appdynamics
         kvPath: /apikey/appdynamics/prod
 

@@ -14,12 +14,12 @@ spec:
     failureThreshold: 10
     timeout: 1
   readiness:
-    path: /internal/isAlive
+    path: /internal/isReady
     initialDelay: 20
     timeout: 1
   prometheus:
     enable: true
-    path: /metrics
+    path: /internal/prometheus
   replicas:
     min: 2
     max: 4
@@ -38,8 +38,8 @@ spec:
     paths:
       - mountPath: /var/run/secrets/nais.io/serviceuser
         kvPath: /serviceuser/data/dev/srvsoknadsmottaker
-      - kvPath: /serviceuser/data/dev/srvhenvendelse
-        mountPath: /var/run/secrets/nais.io/henvendelse
+      - mountPath: /var/run/secrets/nais.io/henvendelse
+        kvPath: /serviceuser/data/dev/srvhenvendelse
       - mountPath: /var/run/secrets/nais.io/kv
         kvPath: /kv/preprod/fss/soknadsmottaker/default
       - mountPath: /var/run/secrets/nais.io/appdynamics
