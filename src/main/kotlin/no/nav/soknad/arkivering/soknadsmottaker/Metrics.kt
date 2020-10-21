@@ -19,6 +19,11 @@ internal object Metrics {
 		.register()
 
 	fun mottattSoknadInc(tema: String) {
+		incrementCounter(tema)
+		incrementCounter("ALL")
+	}
+
+	private fun incrementCounter(tema: String) {
 		if (!temaCounterMap.containsKey(tema)) {
 			temaCounterMap.put(tema, registerCounter(tema))
 		}
