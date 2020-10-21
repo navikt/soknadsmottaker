@@ -1,6 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
+import no.nav.soknad.arkivering.soknadsmottaker.Metrics
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
 import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
@@ -14,6 +15,7 @@ class ArchiverService(private val kafkaSender: KafkaSender, appConfiguration: Ap
 	private val topic = appConfiguration.kafkaConfig.topic
 
 	fun archive(request: SoknadInnsendtDto) {
+		Metrics.mottattSoknadInc(request.tema)
 		val kafkaMessage = convertMessage(request)
 
 		publishToKafka(kafkaMessage)
