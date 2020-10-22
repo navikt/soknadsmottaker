@@ -1,10 +1,12 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
+import no.nav.soknad.arkivering.soknadsmottaker.Metrics
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.springframework.kafka.core.KafkaTemplate
@@ -24,6 +26,8 @@ class ReceiverTests {
 
 		verify(kafkaMock, times(1))
 			.send(eq(topic), anyString(), any())
+		assertTrue(Metrics.mottattErrorGet("BIL")== 0.0)
+		assertTrue(Metrics.mottattSoknadGet("BIL")== 1.0)
 	}
 
 	private fun mockReceiver(): Receiver {

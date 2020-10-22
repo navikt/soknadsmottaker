@@ -15,10 +15,15 @@ class ArchiverService(private val kafkaSender: KafkaSender, appConfiguration: Ap
 	private val topic = appConfiguration.kafkaConfig.topic
 
 	fun archive(request: SoknadInnsendtDto) {
-		Metrics.mottattSoknadInc(request.tema)
-		val kafkaMessage = convertMessage(request)
+		try {
+			val kafkaMessage = convertMessage(request)
+			publishToKafka(kafkaMessage)
 
-		publishToKafka(kafkaMessage)
+			Metrics.mottattSoknadInc(request.tema)
+		} catch (error: Exception) {
+			Metrics.mottattErrorInc(request.tema)
+			throw error
+		}
 	}
 
 	private fun convertMessage(request: SoknadInnsendtDto) = InputTransformer(request).apply()
