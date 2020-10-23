@@ -1,7 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
-import no.nav.soknad.arkivering.soknadsmottaker.Metrics
+import no.nav.soknad.arkivering.soknadsmottaker.supervise.Metrics
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
 import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
