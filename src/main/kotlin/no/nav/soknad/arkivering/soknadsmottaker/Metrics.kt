@@ -11,7 +11,7 @@ internal object Metrics {
 	private val HELP = "Number of applications and documents received and published to Kafka stream"
 	private val LABEL_NAME = "tema"
 	private val ERROR = "feil"
-	private val HELP_ERROR = "Number of applications and documents failed receive and publish to Kafka stream"
+	private val HELP_ERROR = "Number of applications and documents that could not be publish to Kafka stream"
 
 	private val innsendtCounter: Counter = registerCounter(NAME, HELP, LABEL_NAME)
 	private val errorCounter: Counter = registerCounter(ERROR, HELP_ERROR, LABEL_NAME)

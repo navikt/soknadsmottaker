@@ -23,7 +23,7 @@ class ArchiverServiceTests {
 		archiverService.archive(opprettBilInnsendingMedBareSoknadOgKvittering())
 
 		verify(kafkaSender, times(1)).publish(any(), any(), any())
-		assert(Metrics.mottattSoknadGet("BIL")==antall + 1.0)
+		assertEquals(Metrics.mottattSoknadGet("BIL"),antall + 1.0)
 	}
 
 
