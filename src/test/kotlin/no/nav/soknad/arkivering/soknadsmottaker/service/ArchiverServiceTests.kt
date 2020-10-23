@@ -19,10 +19,11 @@ class ArchiverServiceTests {
 
 	@Test
 	fun `Kaller Kafka sender`() {
+		val antall = Metrics.mottattSoknadGet("BIL")
 		archiverService.archive(opprettBilInnsendingMedBareSoknadOgKvittering())
 
 		verify(kafkaSender, times(1)).publish(any(), any(), any())
-		assert(Metrics.mottattSoknadGet("BIL")==1.0)
+		assert(Metrics.mottattSoknadGet("BIL")==antall + 1.0)
 	}
 
 
