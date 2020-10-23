@@ -31,6 +31,7 @@ class ReceiverTests {
 		verify(kafkaMock, times(1)).send(capture(captor))
 		assertEquals(topic, captor.value.topic(), "Should send to the right topic")
 		assertEquals(1, captor.value.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
+		assertEquals("BIL", captor.value.value().getArkivtema())
 	}
 
 	private fun mockReceiver(): Receiver {
