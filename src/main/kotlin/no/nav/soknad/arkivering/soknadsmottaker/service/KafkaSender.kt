@@ -10,15 +10,15 @@ import java.util.*
 @Component
 class KafkaSender(private val kafkaTemplate: KafkaTemplate<String, Soknadarkivschema>) {
 
-	private val messageId = "MESSAGE_ID"
-
 	fun publish(topic: String, key: String, value: Soknadarkivschema) {
 
 		val producerRecord = ProducerRecord(topic, key, value)
 		val headers = RecordHeaders()
-		headers.add(messageId, UUID.randomUUID().toString().toByteArray())
+		headers.add(MESSAGE_ID, UUID.randomUUID().toString().toByteArray())
 		headers.forEach { h -> producerRecord.headers().add(h) }
 
 		kafkaTemplate.send(producerRecord)
 	}
 }
+
+const val MESSAGE_ID = "MESSAGE_ID"

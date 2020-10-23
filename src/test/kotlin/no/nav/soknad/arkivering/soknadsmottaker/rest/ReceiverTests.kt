@@ -6,6 +6,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
+import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -28,7 +29,8 @@ class ReceiverTests {
 
 		val captor = argumentCaptor<ProducerRecord<String, Soknadarkivschema>>()
 		verify(kafkaMock, times(1)).send(capture(captor))
-		assertEquals(topic, captor.value.topic())
+		assertEquals(topic, captor.value.topic(), "Should send to the right topic")
+		assertEquals(1, captor.value.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
 	}
 
 	private fun mockReceiver(): Receiver {
