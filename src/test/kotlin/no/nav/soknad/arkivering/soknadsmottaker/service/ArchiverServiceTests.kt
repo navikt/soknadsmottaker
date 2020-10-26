@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import no.nav.soknad.arkivering.soknadsmottaker.supervise.Metrics
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -18,9 +19,11 @@ class ArchiverServiceTests {
 
 	@Test
 	fun `Kaller Kafka sender`() {
+		val metricsBefore = Metrics.mottattSoknadGet("BIL")
 		archiverService.archive(opprettBilInnsendingMedBareSoknadOgKvittering())
 
 		verify(kafkaSender, times(1)).publish(any(), any(), any())
+		assertEquals(metricsBefore + 1.0, Metrics.mottattSoknadGet("BIL"))
 	}
 
 

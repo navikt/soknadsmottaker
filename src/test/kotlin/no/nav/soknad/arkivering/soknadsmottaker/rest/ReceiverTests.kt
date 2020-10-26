@@ -7,6 +7,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareS
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
+import no.nav.soknad.arkivering.soknadsmottaker.supervise.Metrics
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -31,7 +32,9 @@ class ReceiverTests {
 		verify(kafkaMock, times(1)).send(capture(captor))
 		assertEquals(topic, captor.value.topic(), "Should send to the right topic")
 		assertEquals(1, captor.value.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
-		assertEquals("BIL", captor.value.value().getArkivtema())
+		assertEquals("BIL", captor.value.value().getArkivtema(), "Should have correct tema")
+		assertEquals(0.0, Metrics.mottattErrorGet("BIL"), "Should not cause errors")
+		assertEquals(1.0, Metrics.mottattSoknadGet("BIL"), "Should set counter to 1")
 	}
 
 	private fun mockReceiver(): Receiver {
