@@ -24,6 +24,8 @@ class ReceiverTests {
 
 	@Test
 	fun `When receiving REST call, message is put on Kafka`() {
+		val errorsBefore = Metrics.mottattErrorGet("BIL")
+		val sentInBefore = Metrics.mottattSoknadGet("BIL")
 		val melding = opprettBilInnsendingMedBareSoknadOgKvittering()
 
 		receiver.receiveMessage(melding)
@@ -33,8 +35,8 @@ class ReceiverTests {
 		assertEquals(topic, captor.value.topic(), "Should send to the right topic")
 		assertEquals(1, captor.value.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
 		assertEquals("BIL", captor.value.value().getArkivtema(), "Should have correct tema")
-		assertEquals(0.0, Metrics.mottattErrorGet("BIL"), "Should not cause errors")
-		assertEquals(1.0, Metrics.mottattSoknadGet("BIL"), "Should set counter to 1")
+		assertEquals(errorsBefore + 0.0, Metrics.mottattErrorGet("BIL"), "Should not cause errors")
+		assertEquals(sentInBefore + 1.0, Metrics.mottattSoknadGet("BIL"), "Should set counter to 1")
 	}
 
 	private fun mockReceiver(): Receiver {
