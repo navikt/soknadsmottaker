@@ -31,8 +31,7 @@ spec:
       cpu: 200m
       memory: 256Mi
   ingresses:
-    - "https://soknadsmottaker-q0.nais.preprod.local"
-    - "https://soknadsmottaker-q0.dev-fss.nais.io"
+    - "https://soknadsmottaker-q0.dev.adeo.no"
   vault:
     enabled: true
     paths:
