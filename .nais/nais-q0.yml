@@ -8,7 +8,7 @@ metadata:
 spec:
   image: {{image}}
   port: 8090
-  liveliness:
+  liveness:
     path: /internal/health
     initialDelay: 20
     failureThreshold: 10
