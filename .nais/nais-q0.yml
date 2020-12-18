@@ -9,12 +9,12 @@ spec:
   image: {{image}}
   port: 8090
   liveness:
-    path: /internal/health
+    path: /internal/isAlive
     initialDelay: 20
     failureThreshold: 10
     timeout: 1
   readiness:
-    path: /internal/health
+    path: /internal/isReady
     initialDelay: 20
     timeout: 1
   prometheus:

@@ -7,7 +7,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareS
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.Metrics
+import no.nav.soknad.arkivering.soknadsmottaker.supervise.InnsendtMetrics
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -20,12 +20,14 @@ class ReceiverTests {
 	private val topic = "privat-soknadInnsendt-v1-default"
 
 	private val kafkaMock: KafkaTemplate<String, Soknadarkivschema> = mock()
-	private val receiver = mockReceiver()
+
+	private val metrics: InnsendtMetrics = InnsendtMetrics()
+	private val receiver = mockReceiver(metrics)
 
 	@Test
 	fun `When receiving REST call, message is put on Kafka`() {
-		val errorsBefore = Metrics.mottattErrorGet("BIL")
-		val sentInBefore = Metrics.mottattSoknadGet("BIL")
+		val errorsBefore = metrics.mottattErrorGet("BIL")
+		val sentInBefore =  metrics.mottattSoknadGet("BIL")
 		val melding = opprettBilInnsendingMedBareSoknadOgKvittering()
 
 		receiver.receiveMessage(melding)
@@ -35,13 +37,20 @@ class ReceiverTests {
 		assertEquals(topic, captor.value.topic(), "Should send to the right topic")
 		assertEquals(1, captor.value.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
 		assertEquals("BIL", captor.value.value().getArkivtema(), "Should have correct tema")
-		assertEquals(errorsBefore + 0.0, Metrics.mottattErrorGet("BIL"), "Should not cause errors")
-		assertEquals(sentInBefore + 1.0, Metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
+		assertEquals(getDouble(errorsBefore) + 0.0, metrics.mottattErrorGet("BIL"), "Should not cause errors")
+		assertEquals(getDouble(sentInBefore) + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
+
+		metrics.unregister()
 	}
 
-	private fun mockReceiver(): Receiver {
+	private fun getDouble(d: Double?) : Double {
+		if (d == null) return 0.0
+		else return d
+	}
+
+	private fun mockReceiver(metrics: InnsendtMetrics): Receiver {
 		val kafkaSender = KafkaSender(kafkaMock)
-		val orderService = ArchiverService(kafkaSender, AppConfiguration())
+		val orderService = ArchiverService(kafkaSender, AppConfiguration(), metrics)
 		return Receiver(orderService)
 	}
 

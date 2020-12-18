@@ -1,16 +1,21 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.Metrics
+//import no.nav.soknad.arkivering.soknadsmottaker.supervise.Metrics
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
 import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
+import no.nav.soknad.arkivering.soknadsmottaker.supervise.InnsendtMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.supervise.MicroMetrics
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ArchiverService(private val kafkaSender: KafkaSender, appConfiguration: AppConfiguration) {
+class ArchiverService(private val kafkaSender: KafkaSender
+		, appConfiguration: AppConfiguration
+		, private val metrics: InnsendtMetrics) {
+
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val topic = appConfiguration.kafkaConfig.topic
 
@@ -19,9 +24,10 @@ class ArchiverService(private val kafkaSender: KafkaSender, appConfiguration: Ap
 			val kafkaMessage = convertMessage(request)
 			publishToKafka(kafkaMessage)
 
-			Metrics.mottattSoknadInc(request.tema)
+			metrics.mottattSoknadInc(request.tema)
+			MicroMetrics.mottattSoknadInc(request.tema)
 		} catch (error: Exception) {
-			Metrics.mottattErrorInc(request.tema)
+			metrics.mottattErrorInc(request.tema)
 			throw error
 		}
 	}
