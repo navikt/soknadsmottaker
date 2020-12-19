@@ -23,7 +23,7 @@ internal object MicroMetrics {
 
 	private fun registerCounter(name: String, help: String, label: String): Counter {
 		logger.info("Registrerer counter $name med label $label")
-		return Counter.builder(SOKNAD_NAMESPACE+"."+name).description(help).tag(label,"all").register(reg)
+		return Counter.builder(SOKNAD_NAMESPACE+"_"+name).description(help).tag(label,"all").register(reg)
 	}
 
 	fun mottattSoknadInc(tema: String) {
