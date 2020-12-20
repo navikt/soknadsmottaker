@@ -1,15 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
-import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.InnsendtMetrics
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.MicroMetrics
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class ArchiverServiceTests {

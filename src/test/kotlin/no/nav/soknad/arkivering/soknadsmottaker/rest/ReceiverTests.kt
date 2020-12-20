@@ -1,6 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import com.nhaarman.mockitokotlin2.capture
+import io.prometheus.client.CollectorRegistry
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
@@ -21,7 +22,7 @@ class ReceiverTests {
 
 	private val kafkaMock: KafkaTemplate<String, Soknadarkivschema> = mock()
 
-	private val metrics: InnsendtMetrics = InnsendtMetrics()
+	private val metrics: InnsendtMetrics = InnsendtMetrics(CollectorRegistry.defaultRegistry)
 	private val receiver = mockReceiver(metrics)
 
 	@Test
@@ -37,10 +38,8 @@ class ReceiverTests {
 		assertEquals(topic, captor.value.topic(), "Should send to the right topic")
 		assertEquals(1, captor.value.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
 		assertEquals("BIL", captor.value.value().getArkivtema(), "Should have correct tema")
-/*
 		assertEquals(getDouble(errorsBefore) + 0.0, metrics.mottattErrorGet("BIL"), "Should not cause errors")
 		assertEquals(getDouble(sentInBefore) + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
-*/
 
 		metrics.unregister()
 	}

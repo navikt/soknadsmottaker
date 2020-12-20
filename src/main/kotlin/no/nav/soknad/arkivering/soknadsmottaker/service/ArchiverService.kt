@@ -6,7 +6,6 @@ import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
 import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
 import no.nav.soknad.arkivering.soknadsmottaker.supervise.InnsendtMetrics
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.MicroMetrics
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
@@ -21,11 +20,11 @@ class ArchiverService(private val kafkaSender: KafkaSender
 
 	fun archive(request: SoknadInnsendtDto) {
 		try {
+			metrics.mottattSoknadInc("ALL")
 			val kafkaMessage = convertMessage(request)
 			publishToKafka(kafkaMessage)
 
 			metrics.mottattSoknadInc(request.tema)
-			MicroMetrics.mottattSoknadInc(request.tema)
 		} catch (error: Exception) {
 			metrics.mottattErrorInc(request.tema)
 			throw error

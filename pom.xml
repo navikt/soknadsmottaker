@@ -115,10 +115,6 @@
 			<version>${swagger.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-core</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.natpryce</groupId>
 			<artifactId>konfig</artifactId>
 			<version>${konfig.version}</version>
