@@ -7,7 +7,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) // This is a stateful component so it must be singleton
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Component
 class InnsendtMetrics(private val registry: CollectorRegistry) {
 
