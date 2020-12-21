@@ -2,16 +2,17 @@ server:
   port: 8090
 
 management:
-  endpoint:
-    health:
-      show-details: always
+  endpoint.health.show-details: always
   endpoints.web:
-    exposure:
-      include: info, health, metrics
+    exposure.include: info, health, metrics, prometheus
     base-path: "/internal"
-    path-mapping:
-      info: "/isAlive"
+  metrics.export.prometheus.enabled: true
+  health:
+    db:
+      enabled: true
   metrics:
-    export:
-      prometheus:
-        enabled: true
+    web:
+      server:
+        request:
+          autotime:
+            enabled: true

@@ -8,7 +8,7 @@ metadata:
 spec:
   image: {{image}}
   port: 8090
-  liveliness:
+  liveness:
     path: /internal/isAlive
     initialDelay: 20
     failureThreshold: 10
@@ -18,7 +18,7 @@ spec:
     initialDelay: 20
     timeout: 1
   prometheus:
-    enable: true
+    enabled: true
     path: /internal/prometheus
   replicas:
     min: 2
