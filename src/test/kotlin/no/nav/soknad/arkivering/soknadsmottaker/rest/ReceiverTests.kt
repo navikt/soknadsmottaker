@@ -38,15 +38,10 @@ class ReceiverTests {
 		assertEquals(topic, captor.value.topic(), "Should send to the right topic")
 		assertEquals(1, captor.value.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
 		assertEquals("BIL", captor.value.value().getArkivtema(), "Should have correct tema")
-		assertEquals(getDouble(errorsBefore) + 0.0, metrics.mottattErrorGet("BIL"), "Should not cause errors")
-		assertEquals(getDouble(sentInBefore) + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
+		assertEquals(errorsBefore!! + 0.0, metrics.mottattErrorGet("BIL"), "Should not cause errors")
+		assertEquals(sentInBefore!! + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
 
 		metrics.unregister()
-	}
-
-	private fun getDouble(d: Double?) : Double {
-		if (d == null) return 0.0
-		else return d
 	}
 
 	private fun mockReceiver(metrics: InnsendtMetrics): Receiver {

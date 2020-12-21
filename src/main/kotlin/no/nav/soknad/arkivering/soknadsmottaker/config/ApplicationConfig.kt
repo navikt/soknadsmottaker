@@ -59,9 +59,6 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 	@org.springframework.context.annotation.Configuration
 	class ConfigConfig {
 		@Bean
-		fun appConfiguration() : AppConfiguration {
-			val appConfiguration = AppConfiguration()
-			return appConfiguration
-		}
+		fun appConfiguration() = AppConfiguration()
 	}
 }
