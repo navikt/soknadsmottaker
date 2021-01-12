@@ -18,6 +18,7 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SASLMEC" to "",
 		"APPLICATION_PROFILE" to "",
 		"KAFKA_TOPIC" to "privat-soknadInnsendt-v1-default",
+		"KAFKA_METRICS_TOPIC" to "privat-soknadInnsendt-metrics",
 		"REST_HENVENDELSE" to "avsender",
 		"REST_PASSORD" to "password"
 	)
@@ -47,6 +48,7 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
 		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
 		val topic: String = "KAFKA_TOPIC".configProperty(),
+		val metricsTopic: String = "KAFKA_METRICS_TOPIC".configProperty(),
 		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";"
 	)
 

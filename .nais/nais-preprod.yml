@@ -59,3 +59,5 @@ spec:
       value: dev
     - name: KAFKA_TOPIC
       value: privat-soknadInnsendt-v1-default
+    - name: KAFKA_METRICS_TOPIC
+      value: privat-soknadInnsendt-metrics

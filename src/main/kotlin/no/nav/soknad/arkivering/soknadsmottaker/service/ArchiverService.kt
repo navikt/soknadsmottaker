@@ -1,5 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
@@ -10,29 +12,39 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ArchiverService(private val kafkaSender: KafkaSender
-		, appConfiguration: AppConfiguration
-		, private val metrics: InnsendtMetrics) {
+class ArchiverService(
+	private val kafkaSender: KafkaSender,
+	private val appConfiguration: AppConfiguration,
+	private val metrics: InnsendtMetrics
+) {
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val topic = appConfiguration.kafkaConfig.topic
 
 	fun archive(request: SoknadInnsendtDto) {
+		val startTime = System.currentTimeMillis()
+		val key = UUID.randomUUID().toString()
 		try {
 			val kafkaMessage = convertMessage(request)
-			publishToKafka(kafkaMessage)
+			publishToKafka(kafkaMessage, key)
 
 			metrics.mottattSoknadInc(request.tema)
 		} catch (error: Exception) {
 			metrics.mottattErrorInc(request.tema)
 			throw error
+		} finally {
+			GlobalScope.launch {
+				kafkaSender.publishMetric(
+					appConfiguration.kafkaConfig.metricsTopic, key,
+					"{\"application\":\"soknadsmottaker\",\"action\":\"publish to kafka\",\"startTime\":$startTime,\"duration\":${System.currentTimeMillis() - startTime}}"
+				)
+			}
 		}
 	}
 
 	private fun convertMessage(request: SoknadInnsendtDto) = InputTransformer(request).apply()
 
-	private fun publishToKafka(data: Soknadarkivschema) {
-		val key = UUID.randomUUID().toString()
+	private fun publishToKafka(data: Soknadarkivschema, key: String) {
 		logger.info("Publishing to topic '$topic'. Key: '$key'. MeldingId '${data.getBehandlingsid()}'")
 
 		kafkaSender.publish(topic, key, data)
