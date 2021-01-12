@@ -2,8 +2,10 @@ package no.nav.soknad.arkivering.soknadsmottaker.dto
 
 import java.time.LocalDateTime
 
-data class SoknadInnsendtDto(val innsendingsId: String, val ettersendelse: Boolean, val personId: String, val tema: String,
-														 val innsendtDato: LocalDateTime, val innsendteDokumenter: List<InnsendtDokumentDto>)
+data class SoknadInnsendtDto(
+	val innsendingsId: String, val ettersendelse: Boolean, val personId: String, val tema: String,
+	val innsendtDato: LocalDateTime, val innsendteDokumenter: List<InnsendtDokumentDto>
+)
 
 data class InnsendtDokumentDto private constructor(val skjemaNummer: String, val erHovedSkjema: Boolean? = false,
 															 val tittel: String? = "Ikke spesifisert", val varianter: List<InnsendtVariantDto>) {
@@ -29,4 +31,3 @@ data class InnsendtVariantDto private constructor (val uuid: String, val mimeTyp
 		)
 	}
 }
-

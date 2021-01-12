@@ -36,7 +36,8 @@ class InputTransformerTest {
 
 		val transformertSoknad = transformereSoknad()
 		val mottattHoveddokument = transformertSoknad.getMottatteDokumenter().find { it.getErHovedskjema() }
-		val variantFormatForHoveddokument = mottattHoveddokument?.getMottatteVarianter()?.find { it.getUuid() == forventetUuidHoveddokument }
+		val variantFormatForHoveddokument =
+			mottattHoveddokument?.getMottatteVarianter()?.find { it.getUuid() == forventetUuidHoveddokument }
 
 		assertEquals(forventetUuidHoveddokument, variantFormatForHoveddokument?.getUuid())
 		assertEquals(filNavnBil, variantFormatForHoveddokument?.getFilnavn())
@@ -51,7 +52,8 @@ class InputTransformerTest {
 
 		val forventetUuidKvittering = uuidBilKvittering
 		val mottattKvittering = transformertSoknad.getMottatteDokumenter().find { !it.getErHovedskjema() }
-		val variantFormatForKvittering = mottattKvittering?.getMottatteVarianter()?.find { it.getUuid() == forventetUuidKvittering }
+		val variantFormatForKvittering =
+			mottattKvittering?.getMottatteVarianter()?.find { it.getUuid() == forventetUuidKvittering }
 
 		assertEquals(forventetUuidKvittering, variantFormatForKvittering?.getUuid())
 		assertEquals(filnavnKvitteering, variantFormatForKvittering?.getFilnavn())

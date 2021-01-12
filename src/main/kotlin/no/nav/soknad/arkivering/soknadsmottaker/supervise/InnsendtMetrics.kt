@@ -13,65 +13,63 @@ class InnsendtMetrics(private val registry: CollectorRegistry) {
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	final val SOKNAD_NAMESPACE = "soknadinnsending"
-	final private val APP = "soknadsMottaker"
-	final val NAME = "innsendte"
-	final private val HELP = "Number of applications and documents received and published to Kafka stream"
-	final private val LABEL_NAME = "tema"
-	final private val APP_NAME = "app"
-	final private val ERROR_NAME = "innsendt_feil"
-	final private val ERROR = "error"
-	final private val OK = "ok"
-	final private val ALL = "all"
-	final private val HELP_ERROR = "Number of applications and documents that could not be published to Kafka stream"
+	private final val soknadNamespace = "soknadinnsending"
+	private final val app = "soknadsMottaker"
+	private final val name = "innsendte"
+	private final val help = "Number of applications and documents received and published to Kafka stream"
+	private final val labelName = "tema"
+	private final val appName = "app"
+	private final val errorName = "innsendt_feil"
+	private final val error = "error"
+	private final val ok = "ok"
+	private final val all = "all"
+	private final val helpError = "Number of applications and documents that could not be published to Kafka stream"
 
-	final private val innsendtCounter = mutableMapOf<String, Counter>()
+	private final val innsendtCounter = mutableMapOf<String, Counter>()
 
 	init {
 		try {
-			innsendtCounter[OK] = registerCounter(NAME, HELP)
-			innsendtCounter[ERROR] = registerCounter(ERROR_NAME, HELP_ERROR)
-		} catch (ex: Exception) {
-			logger.warn("Error while defining counters")
+			innsendtCounter[ok] = registerCounter(name, help)
+			innsendtCounter[error] = registerCounter(errorName, helpError)
+		} catch (e: Exception) {
+			logger.warn("Error while defining counters", e)
 		}
 	}
 
 	private fun registerCounter(name: String, help: String): Counter {
 		return Counter.build()
-			.namespace(SOKNAD_NAMESPACE)
+			.namespace(soknadNamespace)
 			.name(name)
 			.help(help)
-			.labelNames(LABEL_NAME, APP_NAME)
+			.labelNames(labelName, appName)
 			.register(registry)
 	}
 
 
 	fun mottattSoknadInc(tema: String) {
-		val counter = innsendtCounter.get(OK)
-		counter?.labels(tema, APP)?.inc()
-		counter?.labels(ALL, APP)?.inc()
-
+		val counter = innsendtCounter[ok]
+		counter?.labels(tema, app)?.inc()
+		counter?.labels(all, app)?.inc()
 	}
 
 	fun mottattSoknadGet(tema: String): Double? {
-		val counter = innsendtCounter.get(OK)
-		return counter?.labels(tema, APP)?.get()
+		val counter = innsendtCounter[ok]
+		return counter?.labels(tema, app)?.get()
 	}
 
 	fun mottattErrorInc(tema: String) {
-		val counter = innsendtCounter.get(ERROR)
-		counter?.labels(tema, APP)?.inc()
-		counter?.labels(ALL, APP)?.inc()
+		val counter = innsendtCounter[error]
+		counter?.labels(tema, app)?.inc()
+		counter?.labels(all, app)?.inc()
 	}
 
 	fun mottattErrorGet(tema: String): Double? {
-		val counter = innsendtCounter.get(ERROR)
-		return counter?.labels(tema, APP)?.get()
+		val counter = innsendtCounter[error]
+		return counter?.labels(tema, app)?.get()
 	}
 
 	fun unregister() {
-		innsendtCounter[OK]?.clear()
-		innsendtCounter[ERROR]?.clear()
+		innsendtCounter[ok]?.clear()
+		innsendtCounter[error]?.clear()
 	}
-
 }
