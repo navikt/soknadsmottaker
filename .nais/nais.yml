@@ -60,3 +60,5 @@ spec:
       value: prod
     - name: KAFKA_TOPIC
       value: privat-soknadInnsendt-v1
+    - name: KAFKA_METRICS_TOPIC
+      value: privat-soknadInnsendt-metrics-v1

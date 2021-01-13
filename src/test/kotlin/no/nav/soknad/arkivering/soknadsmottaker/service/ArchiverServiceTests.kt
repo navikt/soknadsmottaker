@@ -33,7 +33,7 @@ class ArchiverServiceTests {
 		println(config)
 		assertEquals(config.kafkaConfig.username, "kafkaproducer")
 		assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-v1-default")
-		assertEquals(config.kafkaConfig.metricsTopic, "privat-soknadInnsendt-metrics")
+		assertEquals(config.kafkaConfig.metricsTopic, "privat-soknadInnsendt-metrics-v1-default")
 		assertEquals(config.restConfig.user, "avsender")
 		assertEquals(config.restConfig.password, "password")
 	}
