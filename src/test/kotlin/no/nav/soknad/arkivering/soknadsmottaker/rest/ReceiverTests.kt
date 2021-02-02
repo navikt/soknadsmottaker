@@ -5,6 +5,7 @@ import io.prometheus.client.CollectorRegistry
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
+import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettSoknadUtenFilnavnSatt
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
@@ -29,7 +30,7 @@ class ReceiverTests {
 	fun `When receiving REST call, message is put on Kafka`() {
 		val errorsBefore = metrics.mottattErrorGet("BIL")
 		val sentInBefore =  metrics.mottattSoknadGet("BIL")
-		val melding = opprettBilInnsendingMedBareSoknadOgKvittering()
+		val melding = opprettSoknadUtenFilnavnSatt()
 
 		receiver.receiveMessage(melding)
 

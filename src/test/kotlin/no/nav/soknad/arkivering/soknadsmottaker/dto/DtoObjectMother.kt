@@ -1,6 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.dto
 
 import java.time.LocalDateTime
+import java.util.*
 
 //forsendelse informasjon
 private const val innsendingsidIdForBilForsendelse = "IS123456"
@@ -44,14 +45,33 @@ fun opprettBilInnsendingMedBareSoknadOgKvittering(): SoknadInnsendtDto {
 	return SoknadInnsendtDto(innsendingsidIdForBilForsendelse, erEttersendelseBil, personIDBil, temaBil, innsendtDatoBil, listeAvDokumenter)
 }
 
+fun opprettSoknadUtenFilnavnSatt(): SoknadInnsendtDto {
+	val soknad: InnsendtVariantDto = opprettHoveddokumentVariant()
+	val kvittering: InnsendtVariantDto = opprettKvitteringVariant()
+	val annet: InnsendtVariantDto = opprettAnnetDokumentVariant()
+	val soknadsDokument: InnsendtDokumentDto = innsendtHovedskjemaDokument(soknad)
+	val kvitteringDokument: InnsendtDokumentDto = innsendtKvitteringDokument(kvittering)
+	val annetDokument: InnsendtDokumentDto = innsendtAnnetDokument(annet)
+
+	val listeAvDokumenter = mutableListOf(kvitteringDokument, soknadsDokument, annetDokument)
+	return SoknadInnsendtDto(innsendingsidIdForBilForsendelse, erEttersendelseBil, personIDBil, temaBil, innsendtDatoBil, listeAvDokumenter)
+
+}
+
 private fun opprettKvitteringVariant() =
 	InnsendtVariantDto(uuidBilKvittering, mimeTypeBil, filnavnKvitteering, filstorrelseVedlegg, variantformatBilKvittering, filtypeBilKvittering)
 
 fun opprettHoveddokumentVariant() =
 	InnsendtVariantDto(uuidBil, mimeTypeBil, filNavnBil, filStorrelseBil, variantformatBilHovedskjema, filtypeBilHoveskjema)
 
+private fun opprettAnnetDokumentVariant() =
+	InnsendtVariantDto(UUID.randomUUID().toString(), mimeTypeBil, null, null, variantformatBilKvittering, filtypeBilKvittering)
+
 fun innsendtHovedskjemaDokument(variantHovedskjemaBil: InnsendtVariantDto) =
 	InnsendtDokumentDto(skjemanummerBil, erHovedSkjemaBil, tittelBil, listOf(variantHovedskjemaBil))
 
 private fun innsendtKvitteringDokument(variantKvitteringBil: InnsendtVariantDto) =
 	InnsendtDokumentDto(skjemanummerKvittering, erIkkeHovedskjemaBil, tittelKvitteering, listOf(variantKvitteringBil))
+
+private fun innsendtAnnetDokument(variantAnnet: InnsendtVariantDto) =
+	InnsendtDokumentDto(skjemanummerKvittering, erIkkeHovedskjemaBil, tittelKvitteering, listOf(variantAnnet))
