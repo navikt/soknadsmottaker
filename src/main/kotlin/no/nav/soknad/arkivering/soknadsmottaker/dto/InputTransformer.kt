@@ -15,10 +15,10 @@ class InputTransformer(private val input: SoknadInnsendtDto) {
 		konverterTilMottatteDokumenterList(innsendteDokumenter)
 	)
 
-	private fun InnsendtDokumentDto.toMottattDokumentView() = MottattDokument(skjemaNummer, erHovedSkjema, tittel,
+	private fun InnsendtDokumentDto.toMottattDokumentView() = MottattDokument(skjemaNummer, erHovedSkjema, tittel ?: "Ikke tilgjengelig",
 		konverterTilMotattVarianterListe(varianter))
 
-	private fun InnsendtVariantDto.toMottattVariantView() = MottattVariant(uuid, filNavn, filtype, variantformat)
+	private fun InnsendtVariantDto.toMottattVariantView() = MottattVariant(uuid, filNavn ?: "Ikke tilgjengelig", filtype, variantformat)
 
 	private fun konverterTilMotattVarianterListe(list: List<InnsendtVariantDto>) = list.map { it.toMottattVariantView() }
 
