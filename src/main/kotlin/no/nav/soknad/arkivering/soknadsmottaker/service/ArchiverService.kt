@@ -2,6 +2,7 @@ package no.nav.soknad.arkivering.soknadsmottaker.service
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
@@ -36,7 +37,7 @@ class ArchiverService(
 			GlobalScope.launch {
 				kafkaSender.publishMetric(
 					appConfiguration.kafkaConfig.metricsTopic, key,
-					"{\"application\":\"soknadsmottaker\",\"action\":\"publish to kafka\",\"startTime\":$startTime,\"duration\":${System.currentTimeMillis() - startTime}}"
+					InnsendingMetrics("soknadsmottaker", "publish to kafka", startTime, System.currentTimeMillis() - startTime)
 				)
 			}
 		}
@@ -45,10 +46,10 @@ class ArchiverService(
 	private fun convertMessage(request: SoknadInnsendtDto) = InputTransformer(request).apply()
 
 	private fun publishToKafka(data: Soknadarkivschema, key: String) {
-		logger.info("Publishing to topic '$topic'. Key: '$key'. MeldingId '${data.getBehandlingsid()}'")
+		logger.info("Publishing to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'")
 
 		kafkaSender.publish(topic, key, data)
 
-		logger.info("Published to topic '$topic'. Key: '$key'. MeldingId '${data.getBehandlingsid()}'")
+		logger.info("Published to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'")
 	}
 }

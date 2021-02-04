@@ -2,6 +2,7 @@ package no.nav.soknad.arkivering.soknadsmottaker.config
 
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG
 import io.confluent.kafka.serializers.KafkaAvroSerializer
+import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.*
@@ -51,12 +52,10 @@ class KafkaConfig(private val appConfiguration: AppConfiguration) {
 	}
 
 	@Bean
-	fun metricProducerFactory(): ProducerFactory<String, String> {
+	fun metricProducerFactory(): ProducerFactory<String, InnsendingMetrics> {
 		logger.info("Start av metricProducerFactory")
 
-		val configs = getKafkaConfig(appConfiguration.kafkaConfig).also {
-			it[VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
-		}
+		val configs = getKafkaConfig(appConfiguration.kafkaConfig)
 		return DefaultKafkaProducerFactory(configs)
 	}
 
