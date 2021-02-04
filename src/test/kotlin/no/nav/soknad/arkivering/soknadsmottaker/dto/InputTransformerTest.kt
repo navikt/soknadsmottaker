@@ -12,21 +12,21 @@ class InputTransformerTest {
 	fun `Sjekk at innsendt soknad transformeres til mottatt soknad og sjekk informasjontransformering`() {
 		val transformertSoknad = transformereSoknad()
 
-		assertEquals(innsendtSoknad.innsendingsId, transformertSoknad.getBehandlingsid())
-		assertEquals(innsendtSoknad.personId, transformertSoknad.getFodselsnummer())
-		assertEquals(innsendtSoknad.tema, transformertSoknad.getArkivtema())
-		assertEquals(innsendtSoknad.innsendtDato.toEpochSecond(ZoneOffset.UTC), transformertSoknad.getInnsendtDato())
-		assertEquals(innsendtSoknad.innsendteDokumenter.size, transformertSoknad.getMottatteDokumenter().size)
+		assertEquals(innsendtSoknad.innsendingsId, transformertSoknad.behandlingsid)
+		assertEquals(innsendtSoknad.personId, transformertSoknad.fodselsnummer)
+		assertEquals(innsendtSoknad.tema, transformertSoknad.arkivtema)
+		assertEquals(innsendtSoknad.innsendtDato.toEpochSecond(ZoneOffset.UTC), transformertSoknad.innsendtDato)
+		assertEquals(innsendtSoknad.innsendteDokumenter.size, transformertSoknad.mottatteDokumenter.size)
 	}
 
 	@Test
 	fun `Innsendt dokumentformat blir transformert til mottatt dokument`() {
 		val transformertSoknad = transformereSoknad()
-		val motattHoveddokument = transformertSoknad.getMottatteDokumenter().find { it.getErHovedskjema() }
+		val motattHoveddokument = transformertSoknad.mottatteDokumenter.find { it.erHovedskjema }
 
-		assertEquals(skjemanummerBil, motattHoveddokument?.getSkjemanummer())
-		assertEquals(true, motattHoveddokument?.getErHovedskjema())
-		assertEquals(tittelBil, motattHoveddokument?.getTittel())
+		assertEquals(skjemanummerBil, motattHoveddokument?.skjemanummer)
+		assertEquals(true, motattHoveddokument?.erHovedskjema)
+		assertEquals(tittelBil, motattHoveddokument?.tittel)
 	}
 
 	@Test
@@ -35,14 +35,14 @@ class InputTransformerTest {
 		val forventetUuidHoveddokument = uuidBil
 
 		val transformertSoknad = transformereSoknad()
-		val mottattHoveddokument = transformertSoknad.getMottatteDokumenter().find { it.getErHovedskjema() }
+		val mottattHoveddokument = transformertSoknad.mottatteDokumenter.find { it.erHovedskjema }
 		val variantFormatForHoveddokument =
-			mottattHoveddokument?.getMottatteVarianter()?.find { it.getUuid() == forventetUuidHoveddokument }
+			mottattHoveddokument?.mottatteVarianter?.find { it.uuid == forventetUuidHoveddokument }
 
-		assertEquals(forventetUuidHoveddokument, variantFormatForHoveddokument?.getUuid())
-		assertEquals(filNavnBil, variantFormatForHoveddokument?.getFilnavn())
-		assertEquals(variantformatBilHovedskjema, variantFormatForHoveddokument?.getVariantformat())
-		assertEquals(filtypeBilHoveskjema, variantFormatForHoveddokument?.getFiltype())
+		assertEquals(forventetUuidHoveddokument, variantFormatForHoveddokument?.uuid)
+		assertEquals(filNavnBil, variantFormatForHoveddokument?.filnavn)
+		assertEquals(variantformatBilHovedskjema, variantFormatForHoveddokument?.variantformat)
+		assertEquals(filtypeBilHoveskjema, variantFormatForHoveddokument?.filtype)
 	}
 
 	@Test
@@ -51,28 +51,28 @@ class InputTransformerTest {
 		val transformertSoknad = transformereSoknad()
 
 		val forventetUuidKvittering = uuidBilKvittering
-		val mottattKvittering = transformertSoknad.getMottatteDokumenter().find { !it.getErHovedskjema() }
+		val mottattKvittering = transformertSoknad.mottatteDokumenter.find { !it.erHovedskjema }
 		val variantFormatForKvittering =
-			mottattKvittering?.getMottatteVarianter()?.find { it.getUuid() == forventetUuidKvittering }
+			mottattKvittering?.mottatteVarianter?.find { it.uuid == forventetUuidKvittering }
 
-		assertEquals(forventetUuidKvittering, variantFormatForKvittering?.getUuid())
-		assertEquals(filnavnKvitteering, variantFormatForKvittering?.getFilnavn())
-		assertEquals(variantformatBilKvittering, variantFormatForKvittering?.getVariantformat())
-		assertEquals(filtypeBilKvittering, variantFormatForKvittering?.getFiltype())
+		assertEquals(forventetUuidKvittering, variantFormatForKvittering?.uuid)
+		assertEquals(filnavnKvitteering, variantFormatForKvittering?.filnavn)
+		assertEquals(variantformatBilKvittering, variantFormatForKvittering?.variantformat)
+		assertEquals(filtypeBilKvittering, variantFormatForKvittering?.filtype)
 	}
 
 	@Test
 	fun `Ettersendelse=true gives the right Soknadstype`() {
 		val transformertSoknad = transformereSoknad(innsendtSoknad.copy(ettersendelse = true))
 
-		assertEquals(Soknadstyper.ETTERSENDING, transformertSoknad.getSoknadstype())
+		assertEquals(Soknadstyper.ETTERSENDING, transformertSoknad.soknadstype)
 	}
 
 	@Test
 	fun `Ettersendelse=false gives the right Soknadstype`() {
 		val transformertSoknad = transformereSoknad(innsendtSoknad.copy(ettersendelse = false))
 
-		assertEquals(Soknadstyper.SOKNAD, transformertSoknad.getSoknadstype())
+		assertEquals(Soknadstyper.SOKNAD, transformertSoknad.soknadstype)
 	}
 
 	private fun transformereSoknad(soknad: SoknadInnsendtDto = innsendtSoknad) = InputTransformer(soknad).apply()
