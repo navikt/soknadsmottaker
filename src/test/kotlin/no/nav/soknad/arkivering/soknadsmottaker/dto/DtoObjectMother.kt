@@ -42,7 +42,14 @@ fun opprettBilInnsendingMedBareSoknadOgKvittering(): SoknadInnsendtDto {
 	val kvitteringDokument: InnsendtDokumentDto = innsendtKvitteringDokument(kvittering)
 
 	val listeAvDokumenter = mutableListOf(kvitteringDokument, soknadsDokument)
-	return SoknadInnsendtDto(innsendingsidIdForBilForsendelse, erEttersendelseBil, personIDBil, temaBil, innsendtDatoBil, listeAvDokumenter)
+	return SoknadInnsendtDto(
+		innsendingsidIdForBilForsendelse,
+		erEttersendelseBil,
+		personIDBil,
+		temaBil,
+		innsendtDatoBil,
+		listeAvDokumenter
+	)
 }
 
 fun opprettSoknadUtenFilnavnSatt(): SoknadInnsendtDto {
@@ -54,18 +61,45 @@ fun opprettSoknadUtenFilnavnSatt(): SoknadInnsendtDto {
 	val annetDokument: InnsendtDokumentDto = innsendtAnnetDokument(annet)
 
 	val listeAvDokumenter = mutableListOf(kvitteringDokument, soknadsDokument, annetDokument)
-	return SoknadInnsendtDto(innsendingsidIdForBilForsendelse, erEttersendelseBil, personIDBil, temaBil, innsendtDatoBil, listeAvDokumenter)
-
+	return SoknadInnsendtDto(
+		innsendingsidIdForBilForsendelse,
+		erEttersendelseBil,
+		personIDBil,
+		temaBil,
+		innsendtDatoBil,
+		listeAvDokumenter
+	)
 }
 
 private fun opprettKvitteringVariant() =
-	InnsendtVariantDto(uuidBilKvittering, mimeTypeBil, filnavnKvitteering, filstorrelseVedlegg, variantformatBilKvittering, filtypeBilKvittering)
+	InnsendtVariantDto(
+		uuidBilKvittering,
+		mimeTypeBil,
+		filnavnKvitteering,
+		filstorrelseVedlegg,
+		variantformatBilKvittering,
+		filtypeBilKvittering
+	)
 
 fun opprettHoveddokumentVariant() =
-	InnsendtVariantDto(uuidBil, mimeTypeBil, filNavnBil, filStorrelseBil, variantformatBilHovedskjema, filtypeBilHoveskjema)
+	InnsendtVariantDto(
+		uuidBil,
+		mimeTypeBil,
+		filNavnBil,
+		filStorrelseBil,
+		variantformatBilHovedskjema,
+		filtypeBilHoveskjema
+	)
 
 private fun opprettAnnetDokumentVariant() =
-	InnsendtVariantDto(UUID.randomUUID().toString(), mimeTypeBil, null, null, variantformatBilKvittering, filtypeBilKvittering)
+	InnsendtVariantDto(
+		UUID.randomUUID().toString(),
+		mimeTypeBil,
+		null,
+		null,
+		variantformatBilKvittering,
+		filtypeBilKvittering
+	)
 
 fun innsendtHovedskjemaDokument(variantHovedskjemaBil: InnsendtVariantDto) =
 	InnsendtDokumentDto(skjemanummerBil, erHovedSkjemaBil, tittelBil, listOf(variantHovedskjemaBil))

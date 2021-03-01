@@ -1,7 +1,8 @@
 package no.nav.soknad.arkivering.soknadsmottaker.config
 
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG
 import io.confluent.kafka.serializers.KafkaAvroSerializer
+import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.*
@@ -19,7 +20,7 @@ import org.springframework.kafka.core.ProducerFactory
 class KafkaConfig(private val appConfiguration: AppConfiguration) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	fun setKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig): ProducerFactory<String, Soknadarkivschema> {
+	fun getKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig): HashMap<String, Any> {
 		val configProps = HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.servers
 			it[SCHEMA_REGISTRY_URL_CONFIG] = kafkaConfig.schemaRegistryUrl
@@ -34,21 +35,33 @@ class KafkaConfig(private val appConfiguration: AppConfiguration) {
 
 		logger.info("Ferdig med setKafkaConfig. Kafka servers=${configProps[BOOTSTRAP_SERVERS_CONFIG]}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}, topic=${kafkaConfig.topic}")
 		val password = when {
-			"".equals(kafkaConfig.password, true) || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
+			kafkaConfig.password == "" || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
 			else -> "*Noe hemmelig fra Vault*"
 		}
 		logger.info("Passord='$password'")
 
-		return DefaultKafkaProducerFactory(configProps)
+		return configProps
 	}
 
 	@Bean
 	fun producerFactory(): ProducerFactory<String, Soknadarkivschema> {
 		logger.info("Start av producerFactory")
 
-		return setKafkaConfig(appConfiguration.kafkaConfig)
+		val configs = getKafkaConfig(appConfiguration.kafkaConfig)
+		return DefaultKafkaProducerFactory(configs)
+	}
+
+	@Bean
+	fun metricProducerFactory(): ProducerFactory<String, InnsendingMetrics> {
+		logger.info("Start av metricProducerFactory")
+
+		val configs = getKafkaConfig(appConfiguration.kafkaConfig)
+		return DefaultKafkaProducerFactory(configs)
 	}
 
 	@Bean
 	fun kafkaTemplate() = KafkaTemplate(producerFactory())
+
+	@Bean
+	fun metricKafkaTemplate() = KafkaTemplate(metricProducerFactory())
 }
