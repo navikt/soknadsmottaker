@@ -15,5 +15,5 @@ class IsAlive {
 	fun ping() = "pong"
 
 	@GetMapping("/isReady")
-	fun isReady() ="Ready for actions"
+	fun isReady() = "Ready for actions"
 }

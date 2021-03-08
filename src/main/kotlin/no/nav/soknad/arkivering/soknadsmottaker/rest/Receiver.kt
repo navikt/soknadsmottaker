@@ -15,7 +15,16 @@ class Receiver(private val archiverService: ArchiverService) {
 
 	@PostMapping("/save")
 	fun receiveMessage(@RequestBody request: SoknadInnsendtDto) {
-		logger.info("Received request '$request'")
+		logger.info("Received request '${print(request)}'")
 		archiverService.archive(request)
+	}
+
+
+	private fun print(dto: SoknadInnsendtDto): String {
+		val fnrMasked = SoknadInnsendtDto(
+			dto.innsendingsId, dto.ettersendelse, "",
+			dto.tema, dto.innsendtDato, dto.innsendteDokumenter
+		)
+		return fnrMasked.toString()
 	}
 }
