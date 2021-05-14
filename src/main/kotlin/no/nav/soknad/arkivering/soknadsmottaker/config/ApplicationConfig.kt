@@ -17,8 +17,8 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
 		"APPLICATION_PROFILE" to "",
-		"KAFKA_TOPIC" to "privat-soknadInnsendt-v1-default",
-		"KAFKA_METRICS_TOPIC" to "privat-soknadInnsendt-metrics-v1-default",
+		"KAFKA_TOPIC" to "privat-soknadInnsendt-v1-teamsoknad",
+		"KAFKA_METRICS_TOPIC" to "privat-soknadInnsendt-metrics-v1-teamsoknad",
 		"REST_HENVENDELSE" to "avsender",
 		"REST_PASSORD" to "password"
 	)
