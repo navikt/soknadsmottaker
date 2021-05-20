@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: soknadsmottaker
-  namespace: default
+  namespace: team-soknad
   labels:
     team: team-soknad
 spec:
@@ -58,6 +58,6 @@ spec:
     - name: APPLICATION_PROFILE
       value: dev
     - name: KAFKA_TOPIC
-      value: privat-soknadInnsendt-v1-default
+      value: privat-soknadInnsendt-v1-teamsoknad
     - name: KAFKA_METRICS_TOPIC
-      value: privat-soknadInnsendt-metrics-v1-default
+      value: privat-soknadInnsendt-metrics-v1-teamsoknad

@@ -54,10 +54,10 @@ jobs:
           name: docker_tag
           path: .docker_tag
 
-  deploy-preprod-default:
-    name: Deploy to preprod
+  deploy-preprod-teamsoknad:
+    name: Deploy to team-soknad
     needs: bygg-app
-    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/q0-pipeline'
+    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Download tag file
@@ -189,4 +189,3 @@ jobs:
           VAR: app_version=${{env.TAG}}
           DRY_RUN: false
           IMAGE: docker.pkg.github.com/${{ github.repository }}/soknadsmottaker:${{env.TAG}}
-

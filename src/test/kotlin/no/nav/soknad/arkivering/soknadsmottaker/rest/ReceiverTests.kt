@@ -20,8 +20,8 @@ import org.springframework.kafka.core.KafkaTemplate
 
 class ReceiverTests {
 
-	private val topic = "privat-soknadInnsendt-v1-default"
-	private val metricsTopic = "privat-soknadInnsendt-metrics-v1-default"
+	private val topic = "privat-soknadInnsendt-v1-teamsoknad"
+	private val metricsTopic = "privat-soknadInnsendt-metrics-v1-teamsoknad"
 
 	private val kafkaMock: KafkaTemplate<String, Soknadarkivschema> = mock()
 	private val metricsKafkaMock: KafkaTemplate<String, InnsendingMetrics> = mock()

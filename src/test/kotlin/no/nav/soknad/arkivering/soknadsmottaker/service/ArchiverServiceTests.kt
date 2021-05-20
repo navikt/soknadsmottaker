@@ -30,10 +30,9 @@ class ArchiverServiceTests {
 
 	@Test
 	fun `Sjekker innlesning av miljovariable`() {
-		println(config)
 		assertEquals(config.kafkaConfig.username, "kafkaproducer")
-		assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-v1-default")
-		assertEquals(config.kafkaConfig.metricsTopic, "privat-soknadInnsendt-metrics-v1-default")
+		assertEquals(config.kafkaConfig.topic, "privat-soknadInnsendt-v1-teamsoknad")
+		assertEquals(config.kafkaConfig.metricsTopic, "privat-soknadInnsendt-metrics-v1-teamsoknad")
 		assertEquals(config.restConfig.user, "avsender")
 		assertEquals(config.restConfig.password, "password")
 	}
