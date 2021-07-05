@@ -22,7 +22,7 @@ class Receiver(private val archiverService: ArchiverService) {
 
 	private fun print(dto: SoknadInnsendtDto): String {
 		val fnrMasked = SoknadInnsendtDto(
-			dto.innsendingsId, dto.ettersendelse, "",
+			dto.innsendingsId, dto.ettersendelse, "***",
 			dto.tema, dto.innsendtDato, dto.innsendteDokumenter
 		)
 		return fnrMasked.toString()
