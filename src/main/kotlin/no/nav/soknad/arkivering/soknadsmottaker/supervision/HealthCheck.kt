@@ -1,4 +1,4 @@
-package no.nav.soknad.arkivering.soknadsmottaker.supervise
+package no.nav.soknad.arkivering.soknadsmottaker.supervision
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(value = ["/internal"])
-class IsAlive {
+class HealthCheck {
 
 	@GetMapping("/isAlive")
 	fun isAlive() = "Ok"

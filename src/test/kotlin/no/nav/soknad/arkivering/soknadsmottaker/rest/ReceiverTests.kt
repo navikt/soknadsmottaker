@@ -9,7 +9,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettSoknadUtenFilnavnSatt
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.InnsendtMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
