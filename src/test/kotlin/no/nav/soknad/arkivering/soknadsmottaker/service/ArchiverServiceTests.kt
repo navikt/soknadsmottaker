@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import io.prometheus.client.CollectorRegistry
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.InnsendtMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

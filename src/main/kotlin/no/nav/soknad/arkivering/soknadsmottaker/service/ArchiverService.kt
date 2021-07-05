@@ -1,13 +1,11 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
 import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.InnsendtMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
@@ -26,6 +24,7 @@ class ArchiverService(
 		val startTime = System.currentTimeMillis()
 		val key = UUID.randomUUID().toString()
 		try {
+
 			val kafkaMessage = convertMessage(request)
 			publishToKafka(kafkaMessage, key)
 
@@ -34,22 +33,34 @@ class ArchiverService(
 			metrics.mottattErrorInc(request.tema)
 			throw error
 		} finally {
-			GlobalScope.launch {
-				kafkaSender.publishMetric(
-					appConfiguration.kafkaConfig.metricsTopic, key,
-					InnsendingMetrics("soknadsmottaker", "publish to kafka", startTime, System.currentTimeMillis() - startTime)
-				)
-			}
+			tryPublishingMetrics(key, startTime)
 		}
 	}
 
 	private fun convertMessage(request: SoknadInnsendtDto) = InputTransformer(request).apply()
 
 	private fun publishToKafka(data: Soknadarkivschema, key: String) {
-		logger.info("Publishing to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'")
+		try {
+			kafkaSender.publish(topic, key, data)
+			logger.info("Published to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'")
 
-		kafkaSender.publish(topic, key, data)
+		} catch (t: Throwable) {
+			logger.error("Failed to publish to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'", t)
+			throw t
+		}
+	}
 
-		logger.info("Published to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'")
+
+	private fun tryPublishingMetrics(key: String, startTime: Long) {
+		try {
+			val duration = System.currentTimeMillis() - startTime
+
+			kafkaSender.publishMetric(
+				appConfiguration.kafkaConfig.metricsTopic, key,
+				InnsendingMetrics("soknadsmottaker", "publish to kafka", startTime, duration)
+			)
+		} catch (e: Exception) {
+			logger.error("Caught exception when publishing metric", e)
+		}
 	}
 }
