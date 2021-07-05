@@ -83,7 +83,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
-          RESOURCE: .nais/nais-preprod.yml
+          RESOURCE: .nais/nais-teamsoknad.yml
           VAR: app_version=${{env.TAG}}
           DRY_RUN: false
           IMAGE: docker.pkg.github.com/${{ github.repository }}/soknadsmottaker:${{env.TAG}}
