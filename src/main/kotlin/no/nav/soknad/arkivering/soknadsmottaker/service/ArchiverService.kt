@@ -20,13 +20,12 @@ class ArchiverService(
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val topic = appConfiguration.kafkaConfig.topic
 
-	fun archive(request: SoknadInnsendtDto) {
+	fun archive(key: String, request: SoknadInnsendtDto) {
 		val startTime = System.currentTimeMillis()
-		val key = UUID.randomUUID().toString()
 		try {
 
 			val kafkaMessage = convertMessage(request)
-			publishToKafka(kafkaMessage, key)
+			publishToKafka(key, kafkaMessage)
 
 			metrics.mottattSoknadInc(request.tema)
 		} catch (error: Exception) {
@@ -39,13 +38,13 @@ class ArchiverService(
 
 	private fun convertMessage(request: SoknadInnsendtDto) = InputTransformer(request).apply()
 
-	private fun publishToKafka(data: Soknadarkivschema, key: String) {
+	private fun publishToKafka(key: String, data: Soknadarkivschema) {
 		try {
 			kafkaSender.publish(topic, key, data)
-			logger.info("Published to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'")
+			logger.info("$key: Published to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'")
 
 		} catch (t: Throwable) {
-			logger.error("Failed to publish to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'", t)
+			logger.error("$key: Failed to publish to topic '$topic'. Key: '$key'. MeldingId '${data.behandlingsid}'", t)
 			throw t
 		}
 	}
@@ -60,7 +59,7 @@ class ArchiverService(
 				InnsendingMetrics("soknadsmottaker", "publish to kafka", startTime, duration)
 			)
 		} catch (e: Exception) {
-			logger.error("Caught exception when publishing metric", e)
+			logger.error("$key: Caught exception when publishing metric", e)
 		}
 	}
 }
