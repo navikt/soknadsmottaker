@@ -7,9 +7,10 @@ import com.nhaarman.mockitokotlin2.verify
 import io.prometheus.client.CollectorRegistry
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
-import no.nav.soknad.arkivering.soknadsmottaker.supervise.InnsendtMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class ArchiverServiceTests {
 
@@ -22,7 +23,7 @@ class ArchiverServiceTests {
 		val metrics = InnsendtMetrics(CollectorRegistry.defaultRegistry)
 		val archiverService = ArchiverService(kafkaSender, config, metrics)
 
-		archiverService.archive(opprettBilInnsendingMedBareSoknadOgKvittering())
+		archiverService.archive(UUID.randomUUID().toString(), opprettBilInnsendingMedBareSoknadOgKvittering())
 
 		verify(kafkaSender, times(1)).publish(any(), any(), any())
 	}

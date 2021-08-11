@@ -1,4 +1,4 @@
-package no.nav.soknad.arkivering.soknadsmottaker.supervise
+package no.nav.soknad.arkivering.soknadsmottaker.supervision
 
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.Counter
@@ -13,19 +13,19 @@ class InnsendtMetrics(private val registry: CollectorRegistry) {
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	private final val soknadNamespace = "soknadinnsending"
-	private final val app = "soknadsMottaker"
-	private final val name = "innsendte"
-	private final val help = "Number of applications and documents received and published to Kafka stream"
-	private final val labelName = "tema"
-	private final val appName = "app"
-	private final val errorName = "innsendt_feil"
-	private final val error = "error"
-	private final val ok = "ok"
-	private final val all = "all"
-	private final val helpError = "Number of applications and documents that could not be published to Kafka stream"
+	private val soknadNamespace = "soknadinnsending"
+	private val app = "soknadsMottaker"
+	private val name = "innsendte"
+	private val help = "Number of applications and documents received and published to Kafka stream"
+	private val labelName = "tema"
+	private val appName = "app"
+	private val errorName = "innsendt_feil"
+	private val error = "error"
+	private val ok = "ok"
+	private val all = "all"
+	private val helpError = "Number of applications and documents that could not be published to Kafka stream"
 
-	private final val innsendtCounter = mutableMapOf<String, Counter>()
+	private val innsendtCounter = mutableMapOf<String, Counter>()
 
 	init {
 		try {
