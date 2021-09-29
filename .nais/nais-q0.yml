@@ -31,6 +31,7 @@ spec:
       cpu: 200m
       memory: 256Mi
   ingresses:
+    - "https://soknadsmottaker-q0.dev.intern.nav.no"
     - "https://soknadsmottaker-q0.dev.adeo.no"
   vault:
     enabled: true
