@@ -32,7 +32,6 @@ spec:
       memory: 256Mi
   ingresses:
     - "https://soknadsmottaker.dev.intern.nav.no"
-    - "https://soknadsmottaker.dev.adeo.no"
   vault:
     enabled: true
     paths:
