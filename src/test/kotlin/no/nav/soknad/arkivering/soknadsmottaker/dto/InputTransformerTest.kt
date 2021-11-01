@@ -1,7 +1,9 @@
 package no.nav.soknad.arkivering.soknadsmottaker.dto
 
+import com.google.gson.Gson
 import no.nav.soknad.arkivering.avroschemas.Soknadstyper
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset
 
@@ -76,4 +78,25 @@ class InputTransformerTest {
 	}
 
 	private fun transformereSoknad(soknad: SoknadInnsendtDto = innsendtSoknad) = InputTransformer(soknad).apply()
+
+	@Test
+	fun konverterTilJson() {
+		val gson = Gson()
+		val application = gson.toJson(innsendtSoknad)
+
+		assertTrue(application != null)
+
+
+	}
+
+	@Test
+	fun konverterListeAvSoknaderTilJson() {
+		val gson = Gson()
+		val applications = gson.toJson(listOf(innsendtSoknad))
+
+		assertTrue(applications != null)
+
+
+	}
+
 }
