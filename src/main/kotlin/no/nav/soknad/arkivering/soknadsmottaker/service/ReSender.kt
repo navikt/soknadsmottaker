@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
+import kotlinx.coroutines.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
@@ -19,6 +20,14 @@ class ReSender(private val archiverService: ArchiverService,
 	private val failedApplications = appConfiguration.reSendList.applicationString
 
 	init {
+		// Rett etter ny deploy av appen vil fortsatt en av de gamle poddene være leader, må vente litt før disse er drept
+		GlobalScope.launch { start() }
+	}
+
+	@Synchronized
+	private suspend fun start() = withContext(Dispatchers.IO) {
+		delay(appConfiguration.reSendList.secondsAfterStartupBeforeStarting * 1000L)
+
 		val gson = Gson()
 		if (!failedApplications.isBlank() && isLeader() ) {
 			val myType = object : TypeToken<List<SoknadInnsendtDto>>() {}.type

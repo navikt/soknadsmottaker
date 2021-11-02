@@ -21,7 +21,8 @@ private val defaultProperties = ConfigurationMap(
 		"REST_HENVENDELSE" to "avsender",
 		"REST_PASSORD" to "password",
 
-		"RESENDING_LIST" to ""
+		"RESENDING_LIST" to "",
+		"SECONDS_BEFORE_LEADER_CHECK" to "1"
 	)
 )
 
@@ -57,7 +58,8 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 	)
 
 	data class ReSendList(
-		val applicationString: String = readFileAsText("/var/run/secrets/nais.io/resend/RESENDING_LIST", "RESENDING_LIST".configProperty())
+		val applicationString: String = readFileAsText("/var/run/secrets/nais.io/resend/RESENDING_LIST", "RESENDING_LIST".configProperty()),
+		val secondsAfterStartupBeforeStarting: Int = readFileAsText("/var/run/secrets/nais.io/resend/SECONDS_BEFORE_LEADER_CHECK", "SECONDS_BEFORE_LEADER_CHECK".configProperty()).toInt()
 	)
 
 
