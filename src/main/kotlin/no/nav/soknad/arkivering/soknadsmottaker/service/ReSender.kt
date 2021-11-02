@@ -37,6 +37,7 @@ class ReSender(private val archiverService: ArchiverService,
 			return false
 		}
 		try {
+			logger.info("Elector_path=$electorPath")
 			val jsonString = URL(electorPath).readText()
 			logger.info("Elector_path som jsonstring=${jsonString}")
 			val leader = JSONObject(jsonString).getString("name")
@@ -45,7 +46,7 @@ class ReSender(private val archiverService: ArchiverService,
 			logger.info("isLeader=${hostname.equals(leader, true)}")
 			return hostname.equals(leader, true)
 		} catch (exception: Exception) {
-			logger.warn("Sjekk om leader feilet med:", exception.message)
+			logger.warn("Sjekk om leader feilet med:", exception)
 			return false
 		}
 	}
