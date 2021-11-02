@@ -38,7 +38,8 @@ class ReSender(private val archiverService: ArchiverService,
 		}
 		try {
 			logger.info("Elector_path=$electorPath")
-			val jsonString = URL(electorPath).readText()
+			val fullUrl = if (electorPath.contains(":/")) electorPath else "http://"+electorPath
+			val jsonString = URL(fullUrl).readText()
 			logger.info("Elector_path som jsonstring=${jsonString}")
 			val leader = JSONObject(jsonString).getString("name")
 			val hostname =
