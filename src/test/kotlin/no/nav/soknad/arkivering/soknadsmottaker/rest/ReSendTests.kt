@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.prometheus.client.CollectorRegistry
+import kotlinx.coroutines.delay
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
@@ -28,6 +29,7 @@ import org.springframework.util.concurrent.SettableListenableFuture
 import java.io.ByteArrayOutputStream
 import java.net.URL
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 
 class ReSendTests {
 
@@ -58,6 +60,9 @@ class ReSendTests {
 
 		val appConfiguration = AppConfiguration()
 		startResender(metrics, appConfiguration)
+
+		// Vent til resender har kjørt
+		TimeUnit.SECONDS.sleep(2)
 
 		Assertions.assertTrue(record.isCaptured)
 		Assertions.assertEquals(topic, record.captured.topic(), "Should send to the right topic")
@@ -121,6 +126,9 @@ class ReSendTests {
 
 		val appConfiguration = AppConfiguration()
 		startResender(metrics, appConfiguration)
+
+		// Vent til resender har kjørt
+		TimeUnit.SECONDS.sleep(2)
 
 		Assertions.assertTrue(!record.isCaptured)
 

@@ -22,7 +22,7 @@ private val defaultProperties = ConfigurationMap(
 		"REST_PASSORD" to "password",
 
 		"RESENDING_LIST" to "",
-		"SECONDS_BEFORE_LEADER_CHECK" to "1"
+		"SECONDS_BEFORE_LEADER_CHECK" to "0"
 	)
 )
 
