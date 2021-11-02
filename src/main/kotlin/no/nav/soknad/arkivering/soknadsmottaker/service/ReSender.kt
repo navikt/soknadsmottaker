@@ -29,6 +29,7 @@ class ReSender(private val archiverService: ArchiverService,
 	}
 
 	final fun isLeader(): Boolean {
+		logger.info("Sjekk om leader")
 		val electorPath = System.getenv("ELECTOR_PATH") ?: System.getProperty("ELECTOR_PATH")
 		if (electorPath.isNullOrBlank()) return false
 		try {

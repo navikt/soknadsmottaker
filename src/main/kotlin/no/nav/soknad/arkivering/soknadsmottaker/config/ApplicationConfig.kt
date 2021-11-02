@@ -57,7 +57,7 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 	)
 
 	data class ReSendList(
-		val applicationString: String = readFileAsText("/var/run/secrets/nais.io/kv/applications", "RESENDING_LIST".configProperty())
+		val applicationString: String = readFileAsText("/var/run/secrets/nais.io/resend/RESENDING_LIST", "RESENDING_LIST".configProperty())
 	)
 
 
