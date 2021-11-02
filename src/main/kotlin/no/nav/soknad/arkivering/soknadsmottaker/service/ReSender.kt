@@ -24,6 +24,7 @@ class ReSender(private val archiverService: ArchiverService,
 			val myType = object : TypeToken<List<SoknadInnsendtDto>>() {}.type
 			val applications = gson.fromJson<List<SoknadInnsendtDto>>(failedApplications, myType)
 			// For hver SoknadInnsendtDto send til archiverService
+			logger.info("Antall søknader som må re-sendes=${applications.size}")
 			applications.forEach {s -> logAndSend(s)}
 		}
 	}
@@ -31,14 +32,20 @@ class ReSender(private val archiverService: ArchiverService,
 	final fun isLeader(): Boolean {
 		logger.info("Sjekk om leader")
 		val electorPath = System.getenv("ELECTOR_PATH") ?: System.getProperty("ELECTOR_PATH")
-		if (electorPath.isNullOrBlank()) return false
+		if (electorPath.isNullOrBlank()) {
+			logger.info("ELECTOR_PATH er null eller blank")
+			return false
+		}
 		try {
 			val jsonString = URL(electorPath).readText()
+			logger.info("Elector_path som jsonstring=${jsonString}")
 			val leader = JSONObject(jsonString).getString("name")
 			val hostname =
 				if (appConfiguration.kafkaConfig.profiles.equals("", true)) "localhost" else InetAddress.getLocalHost().hostName
+			logger.info("isLeader=${hostname.equals(leader, true)}")
 			return hostname.equals(leader, true)
 		} catch (exception: Exception) {
+			logger.warn("Sjekk om leader feilet med:", exception.message)
 			return false
 		}
 	}
