@@ -28,17 +28,16 @@ class ReSender(private val archiverService: ArchiverService,
 	private suspend fun start() = withContext(Dispatchers.IO) {
 		delay(appConfiguration.reSendList.secondsAfterStartupBeforeStarting * 1000L)
 
-		val gson = Gson()
-		if (!failedApplications.isBlank() && isLeader() ) {
-			val myType = object : TypeToken<List<SoknadInnsendtDto>>() {}.type
-			val applications = gson.fromJson<List<SoknadInnsendtDto>>(failedApplications, myType)
+		if (failedApplications.isNotBlank() && isLeader() ) {
+			val dtoType = object : TypeToken<List<SoknadInnsendtDto>>() {}.type
+			val applications = Gson().fromJson<List<SoknadInnsendtDto>>(failedApplications, dtoType)
 			// For hver SoknadInnsendtDto send til archiverService
 			logger.info("Antall søknader som må re-sendes=${applications.size}")
-			applications.forEach {s -> logAndSend(s)}
+			applications.forEach { logAndSend(it) }
 		}
 	}
 
-	final fun isLeader(): Boolean {
+	private fun isLeader(): Boolean {
 		logger.info("Sjekk om leader")
 		val electorPath = System.getenv("ELECTOR_PATH") ?: System.getProperty("ELECTOR_PATH")
 		if (electorPath.isNullOrBlank()) {
@@ -47,14 +46,17 @@ class ReSender(private val archiverService: ArchiverService,
 		}
 		try {
 			logger.info("Elector_path=$electorPath")
-			val fullUrl = if (electorPath.contains(":/")) electorPath else "http://"+electorPath
+			val fullUrl = if (electorPath.contains(":/")) electorPath else "http://$electorPath"
 			val jsonString = URL(fullUrl).readText()
-			logger.info("Elector_path som jsonstring=${jsonString}")
+			logger.info("Elector_path som jsonstring=$jsonString")
+
 			val leader = JSONObject(jsonString).getString("name")
 			val hostname =
 				if (appConfiguration.kafkaConfig.profiles.equals("", true)) "localhost" else InetAddress.getLocalHost().hostName
+
 			logger.info("isLeader=${hostname.equals(leader, true)}")
 			return hostname.equals(leader, true)
+
 		} catch (exception: Exception) {
 			logger.warn("Sjekk om leader feilet med:", exception)
 			return false
@@ -74,5 +76,4 @@ class ReSender(private val archiverService: ArchiverService,
 		)
 		return fnrMasked.toString()
 	}
-
 }
