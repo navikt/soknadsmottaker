@@ -42,6 +42,9 @@ spec:
         kvPath: /kv/prod/fss/soknadsmottaker/default
       - mountPath: /var/run/secrets/nais.io/appdynamics
         kvPath: /apikey/appdynamics/prod
+      - mountPath: /var/run/secrets/nais.io/resend
+        kvPath: /kv/prod/fss/soknadsmottaker/resend
+  leaderElection: true
 
   env:
     - name: KAFKA_BOOTSTRAP_SERVERS
