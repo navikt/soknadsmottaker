@@ -17,6 +17,9 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
 
+		"BASICAUTH_USERNAME" to "sender",
+		"BASICAUTH_PASSWORD" to "password",
+
 		"APPLICATION_PROFILE" to "",
 		"REST_HENVENDELSE" to "avsender",
 		"REST_PASSORD" to "password",
@@ -54,7 +57,10 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 
 	data class RestConfig(
 		val user: String = readFileAsText("/var/run/secrets/nais.io/kv/restUser", "REST_HENVENDELSE".configProperty()),
-		val password: String = readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty())
+		val restPassword: String = readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty()),
+
+		val username: String = readFileAsText("/secrets/innsending-data/username", "BASICAUTH_USERNAME".configProperty()),
+		val password: String = readFileAsText("/secrets/innsending-data/password", "BASICAUTH_PASSWORD".configProperty())
 	)
 
 	data class ReSendList(
