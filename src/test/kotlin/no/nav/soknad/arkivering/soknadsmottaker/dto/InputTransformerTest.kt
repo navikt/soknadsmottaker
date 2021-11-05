@@ -1,9 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.dto
 
-import com.google.gson.Gson
 import no.nav.soknad.arkivering.avroschemas.Soknadstyper
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset
 
