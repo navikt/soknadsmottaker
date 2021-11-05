@@ -78,25 +78,4 @@ class InputTransformerTest {
 	}
 
 	private fun transformereSoknad(soknad: SoknadInnsendtDto = innsendtSoknad) = InputTransformer(soknad).apply()
-
-	@Test
-	fun konverterTilJson() {
-		val gson = Gson()
-		val application = gson.toJson(innsendtSoknad)
-
-		assertTrue(application != null)
-
-
-	}
-
-	@Test
-	fun konverterListeAvSoknaderTilJson() {
-		val gson = Gson()
-		val applications = gson.toJson(listOf(innsendtSoknad))
-
-		assertTrue(applications != null)
-
-
-	}
-
 }
