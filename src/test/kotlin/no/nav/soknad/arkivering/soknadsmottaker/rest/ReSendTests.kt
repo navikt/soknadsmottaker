@@ -17,16 +17,13 @@ import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
-import org.springframework.util.concurrent.ListenableFuture
 import org.springframework.util.concurrent.SettableListenableFuture
 import java.io.ByteArrayOutputStream
-import java.net.URL
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
@@ -42,8 +39,8 @@ class ReSendTests {
 
 	@Test
 	fun `When ReSender starts applications is resent`() {
-		val elector_path = getResource("/elector_path.json").toString()
-		System.setProperty("ELECTOR_PATH", elector_path)
+		val electorPath = getResource("/elector_path.json").toString()
+		System.setProperty("ELECTOR_PATH", electorPath)
 		System.setProperty("RESENDING_LIST", getBytesFromFile("/resend-applications.json"))
 
 		val errorsBefore = metrics.mottattErrorGet("TSO")
@@ -63,45 +60,32 @@ class ReSendTests {
 		// Vent til resender har kjørt
 		TimeUnit.SECONDS.sleep(2)
 
-		Assertions.assertTrue(record.isCaptured)
-		Assertions.assertEquals(topic, record.captured.topic(), "Should send to the right topic")
-		Assertions.assertEquals(1, record.captured.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
-		Assertions.assertEquals("TSO", record.captured.value().arkivtema, "Should have correct tema")
-		Assertions.assertEquals(errorsBefore!! + 0.0, metrics.mottattErrorGet("TSO"), "Should not cause errors")
-		Assertions.assertEquals(sentInBefore!! + 1.0, metrics.mottattSoknadGet("TSO"), "Should increase counter by 1")
+		assertTrue(record.isCaptured)
+		assertEquals(topic, record.captured.topic(), "Should send to the right topic")
+		assertEquals(1, record.captured.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
+		assertEquals("TSO", record.captured.value().arkivtema, "Should have correct tema")
+		assertEquals(errorsBefore!! + 0.0, metrics.mottattErrorGet("TSO"), "Should not cause errors")
+		assertEquals(sentInBefore!! + 1.0, metrics.mottattSoknadGet("TSO"), "Should increase counter by 1")
 
-		Assertions.assertEquals(metricsTopic, metricRecord.captured.topic(), "Should send metrics to the right topic")
-		Assertions.assertEquals(
-			1,
-			metricRecord.captured.headers().headers(MESSAGE_ID).count(),
-			"Metrics should have a MESSAGE_ID header"
-		)
-		Assertions.assertEquals(
-			"soknadsmottaker",
-			metricRecord.captured.value().application,
-			"Metrics should have correct application name"
-		)
-		Assertions.assertEquals(
-			"publish to kafka",
-			metricRecord.captured.value().action,
-			"Metrics should have correct action"
-		)
-		Assertions.assertTrue(
-			metricRecord.captured.value().startTime <= System.currentTimeMillis(),
-			"Metrics should have correct startTime"
-		)
-		Assertions.assertTrue(
-			metricRecord.captured.value().duration <= metricRecord.captured.value().startTime,
-			"Metrics should have a duration"
-		)
+		assertEquals(metricsTopic, metricRecord.captured.topic(), "Should send metrics to the right topic")
+		assertEquals(1, metricRecord.captured.headers().headers(MESSAGE_ID).count(),
+			"Metrics should have a MESSAGE_ID header")
+		assertEquals("soknadsmottaker", metricRecord.captured.value().application,
+			"Metrics should have correct application name")
+		assertEquals("publish to kafka", metricRecord.captured.value().action,
+			"Metrics should have correct action")
+		assertTrue(metricRecord.captured.value().startTime <= System.currentTimeMillis(),
+			"Metrics should have correct startTime")
+		assertTrue(metricRecord.captured.value().duration <= metricRecord.captured.value().startTime,
+			"Metrics should have a duration")
 
 		metrics.unregister()
 	}
 
 	@Test
 	fun `When not Leader, ReSender sends no applications`() {
-		val elector_path = getResource("/not_leader.json").toString()
-		System.setProperty("ELECTOR_PATH", elector_path)
+		val electorPath = getResource("/not_leader.json").toString()
+		System.setProperty("ELECTOR_PATH", electorPath)
 		System.setProperty("RESENDING_LIST", getBytesFromFile("/resend-applications.json"))
 
 		val melding = opprettSoknadUtenFilnavnSatt()
@@ -111,16 +95,10 @@ class ReSendTests {
 		val metricRecord = slot<ProducerRecord<String, InnsendingMetrics>>()
 
 		every { kafkaMock.send(capture(record)) } returns setFuture(
-			makeSendResult(
-				topic,
-				InputTransformer(melding).apply()
-			)
+			makeSendResult(topic, InputTransformer(melding).apply())
 		)
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(
-			makeSendResult(
-				metricsTopic,
-				metricMessage
-			)
+			makeSendResult(metricsTopic, metricMessage)
 		)
 
 		val appConfiguration = AppConfiguration()
@@ -129,7 +107,7 @@ class ReSendTests {
 		// Vent til resender har kjørt
 		TimeUnit.SECONDS.sleep(2)
 
-		Assertions.assertTrue(!record.isCaptured)
+		assertTrue(!record.isCaptured)
 
 		metrics.unregister()
 	}
@@ -141,12 +119,8 @@ class ReSendTests {
 		)
 	}
 
-	private fun <T> setFuture(v: SendResult<String, T>): ListenableFuture<SendResult<String, T>> {
-		val setableFuture: SettableListenableFuture<SendResult<String, T>> =
-			SettableListenableFuture()
-		setableFuture.set(v)
-		return setableFuture
-	}
+	private fun <T> setFuture(v: SendResult<String, T>) =
+		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
 
 	private fun startResender(metrics: InnsendtMetrics, appConfiguration: AppConfiguration): ReSender {
 		val kafkaSender = KafkaSender(kafkaMock, metricsKafkaMock)
@@ -154,12 +128,8 @@ class ReSendTests {
 		return ReSender(orderService, appConfiguration)
 	}
 
-	private inline fun <reified T : Any> mock() = Mockito.mock(T::class.java)!!
-	private inline fun <reified T> argumentCaptor(): ArgumentCaptor<T> = ArgumentCaptor.forClass(T::class.java)
 
-	fun getResource(fileName: String): URL {
-		return this::class.java.getResource(fileName)
-	}
+	private fun getResource(fileName: String) = this::class.java.getResource(fileName)!!
 
 	private fun getBytesFromFile(path: String): String {
 		val resourceAsStream = this::class.java.getResourceAsStream(path)
@@ -171,6 +141,4 @@ class ReSendTests {
 		}
 		return outputStream.toString(Charset.defaultCharset())
 	}
-
-
 }

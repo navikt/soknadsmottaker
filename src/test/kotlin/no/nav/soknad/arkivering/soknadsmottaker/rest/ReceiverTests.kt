@@ -1,6 +1,5 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import com.nhaarman.mockitokotlin2.capture
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -21,14 +20,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito.*
 import org.springframework.kafka.KafkaException
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
-import org.springframework.util.concurrent.ListenableFuture
 import org.springframework.util.concurrent.SettableListenableFuture
-
 
 class ReceiverTests {
 
@@ -64,25 +59,15 @@ class ReceiverTests {
 		assertEquals(sentInBefore!! + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
 
 		assertEquals(metricsTopic, metricRecord.captured.topic(), "Should send metrics to the right topic")
-		assertEquals(
-			1,
-			metricRecord.captured.headers().headers(MESSAGE_ID).count(),
-			"Metrics should have a MESSAGE_ID header"
-		)
-		assertEquals(
-			"soknadsmottaker",
-			metricRecord.captured.value().application,
-			"Metrics should have correct application name"
-		)
+		assertEquals(1, metricRecord.captured.headers().headers(MESSAGE_ID).count(),
+			"Metrics should have a MESSAGE_ID header")
+		assertEquals("soknadsmottaker", metricRecord.captured.value().application,
+			"Metrics should have correct application name")
 		assertEquals("publish to kafka", metricRecord.captured.value().action, "Metrics should have correct action")
-		assertTrue(
-			metricRecord.captured.value().startTime <= System.currentTimeMillis(),
-			"Metrics should have correct startTime"
-		)
-		assertTrue(
-			metricRecord.captured.value().duration <= metricRecord.captured.value().startTime,
-			"Metrics should have a duration"
-		)
+		assertTrue(metricRecord.captured.value().startTime <= System.currentTimeMillis(),
+			"Metrics should have correct startTime")
+		assertTrue(metricRecord.captured.value().duration <= metricRecord.captured.value().startTime,
+			"Metrics should have a duration")
 
 		metrics.unregister()
 	}
@@ -95,7 +80,7 @@ class ReceiverTests {
 		val record = slot<ProducerRecord<String, Soknadarkivschema>>()
 		val metricRecord = slot<ProducerRecord<String, InnsendingMetrics>>()
 
-		every { kafkaMock.send(capture(record)) } throws KafkaException("Send failed")
+		every { kafkaMock.send(capture(record)) } throws KafkaException("Mocked Exception")
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, metricMessage))
 
 		assertThrows<KafkaException> {
@@ -109,25 +94,16 @@ class ReceiverTests {
 		metrics.unregister()
 	}
 
-	private fun <T> makeSendResult(topic: String, melding: T): SendResult<String, T> {
-		return SendResult(
+	private fun <T> makeSendResult(topic: String, melding: T) = SendResult(
 			ProducerRecord(topic, "123", melding),
 			RecordMetadata(TopicPartition(topic, 1), 1L,1L,1L,1L,1,1))
-	}
 
-	private fun <T> setFuture(v: SendResult<String, T>): ListenableFuture<SendResult<String, T>> {
-		val setableFuture: SettableListenableFuture<SendResult<String, T>> =
-			SettableListenableFuture()
-		setableFuture.set(v)
-		return setableFuture
-	}
+	private fun <T> setFuture(v: SendResult<String, T>) =
+		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
 
 	private fun mockReceiver(metrics: InnsendtMetrics): Receiver {
 		val kafkaSender = KafkaSender(kafkaMock, metricsKafkaMock)
 		val orderService = ArchiverService(kafkaSender, AppConfiguration(), metrics)
 		return Receiver(orderService)
 	}
-
-	private inline fun <reified T : Any> mock() = mock(T::class.java)!!
-	private inline fun <reified T> argumentCaptor(): ArgumentCaptor<T> = ArgumentCaptor.forClass(T::class.java)
 }
