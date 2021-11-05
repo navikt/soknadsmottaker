@@ -1,0 +1,64 @@
+[
+	{
+		"innsendingsId": "10017MM7X",
+		"ettersendelse": "false",
+		"personId": "12345678901",
+		"tema": "TSO",
+		"innsendtDato":
+		{
+			"date":
+			{
+				"year": "2021",
+				"month": "10",
+				"day": "12"
+			},
+			"time":
+			{
+				"hour": "06",
+				"minute": "04",
+				"second": "23",
+				"nano": "675757000"
+			}
+		},
+		"innsendteDokumenter": [
+				{
+					"skjemaNummer": "NAV 11-12.10",
+					"erHovedSkjema": "true",
+					"tittel": "Kjøreliste for godkjent bruk av egen bil",
+					"varianter": [
+							{
+								"uuid": "2eaf2d0a-2ec8-4ef5-8eab-55d655094c08",
+								"mimeType": "application/pdf",
+								"filNavn": "NAV 11-12.10.pdfa",
+								"filStorrelse": "30920",
+								"variantformat": "ARKIV",
+								"filtype": "PDF/A"
+							},
+							{
+								"uuid": "b7ceee6a-2c10-40ee-a27d-df2675d467ce",
+								"mimeType": "application/xml",
+								"filNavn": "RefusjonDagligreise.xml",
+								"filStorrelse": "1060",
+								"variantformat": "ORIGINAL",
+								"filtype": "XML"
+							}
+					]
+				},
+				{
+					"skjemaNummer": "L7",
+					"erHovedSkjema": "false",
+					"tittel": "Kvitteringsside for dokumentinnsending",
+					"varianter": [
+							{
+								"uuid": "6532f8ea-66c6-4212-a6e9-6fc28576bece",
+								"mimeType": "application/pdf",
+								"filNavn": "L7",
+								"filStorrelse": "45886",
+								"variantformat": "ARKIV",
+								"filtype": "PDF"
+							}
+					]
+				}
+		]
+	}
+]

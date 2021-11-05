@@ -1,0 +1,74 @@
+[
+		{
+		"innsendingsId":"10017oRUL",
+		"ettersendelse":true,
+		"personId":"12345678910",
+		"tema":"BAR",
+		"innsendtDato":
+		{
+			"date":
+			{
+				"year": "2021",
+				"month": "10",
+				"day": "14"
+			},
+			"time":
+			{
+				"hour": "22",
+				"minute": "13",
+				"second": "47",
+				"nano": "675757000"
+			}
+		},
+		"innsendteDokumenter":
+		[
+			{"skjemaNummer":"NAV 33-00.09",
+				"erHovedSkjema":true,
+				"tittel":"Søknad om utvidet barnetrygd",
+				"varianter":
+				[
+					{
+						"uuid":"01450a4f-44e6-4ab4-a5ca-11b8a565af47",
+						"mimeType":"application/pdf",
+						"filNavn":"NAV 33-00.09",
+						"filStorrelse":"null",
+						"variantformat":"ARKIV",
+						"filtype":"PDFA"
+					}
+				]
+			},
+			{
+				"skjemaNummer":"L7",
+				"erHovedSkjema":false,
+				"tittel":"Kvitteringsside for dokumentinnsending",
+				"varianter":
+				[
+					{
+						"uuid":"e123cb65-108d-407c-88a5-11121f1c129a",
+						"mimeType":"application/pdf",
+						"filNavn":"L7",
+						"filStorrelse":"null",
+						"variantformat":"ARKIV",
+						"filtype":"PDFA"
+					}
+				]
+			},
+			{
+				"skjemaNummer":"O3",
+				"erHovedSkjema":false,
+				"tittel":"Meklingsattest",
+				"varianter":
+				[
+					{
+						"uuid":"5f84ad74-dfb1-4380-9317-734320b9c454",
+						"mimeType":"application/pdf",
+						"filNavn":"O3",
+						"filStorrelse":"null",
+						"variantformat":"ARKIV",
+						"filtype":"PDF"
+					}
+				]
+			}
+		]
+	}
+]

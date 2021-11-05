@@ -19,7 +19,10 @@ private val defaultProperties = ConfigurationMap(
 
 		"APPLICATION_PROFILE" to "",
 		"REST_HENVENDELSE" to "avsender",
-		"REST_PASSORD" to "password"
+		"REST_PASSORD" to "password",
+
+		"RESENDING_LIST" to "",
+		"SECONDS_BEFORE_LEADER_CHECK" to "0"
 	)
 )
 
@@ -34,7 +37,7 @@ private fun String.configProperty(): String = appConfig[Key(this, stringType)]
 
 fun readFileAsText(fileName: String, default: String = "") = try { File(fileName).readText(Charsets.UTF_8) } catch (e: Exception ) { default }
 
-data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val restConfig: RestConfig = RestConfig()) {
+data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val restConfig: RestConfig = RestConfig(), val reSendList: ReSendList = ReSendList()) {
 	data class KafkaConfig(
 		val profiles: String = "APPLICATION_PROFILE".configProperty(),
 		val username: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/username", "SOKNADSMOTTAKER_USERNAME".configProperty()),
@@ -53,6 +56,12 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val user: String = readFileAsText("/var/run/secrets/nais.io/kv/restUser", "REST_HENVENDELSE".configProperty()),
 		val password: String = readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty())
 	)
+
+	data class ReSendList(
+		val applicationString: String = readFileAsText("/var/run/secrets/nais.io/resend/RESENDING_LIST", "RESENDING_LIST".configProperty()),
+		val secondsAfterStartupBeforeStarting: Int = readFileAsText("/var/run/secrets/nais.io/resend/SECONDS_BEFORE_LEADER_CHECK", "SECONDS_BEFORE_LEADER_CHECK".configProperty()).toInt()
+	)
+
 
 	@org.springframework.context.annotation.Configuration
 	class ConfigConfig {

@@ -4,15 +4,18 @@ import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeaders
+import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Component
 class KafkaSender(
 	private val kafkaTemplate: KafkaTemplate<String, Soknadarkivschema>,
 	private val metricKafkaTemplate: KafkaTemplate<String, InnsendingMetrics>
 ) {
+	private val logger = LoggerFactory.getLogger(javaClass)
 
 	fun publish(topic: String, key: String, value: Soknadarkivschema) {
 		publish(topic, key, value, kafkaTemplate)
@@ -28,8 +31,11 @@ class KafkaSender(
 		headers.add(MESSAGE_ID, UUID.randomUUID().toString().toByteArray())
 		headers.forEach { h -> producerRecord.headers().add(h) }
 
-		kafkaTemplate.send(producerRecord)
+		val future = kafkaTemplate.send(producerRecord)
+		future.get(10, TimeUnit.SECONDS)
+		logger.info("$key: Published to $topic")
 	}
 }
+
 
 const val MESSAGE_ID = "MESSAGE_ID"
