@@ -11,8 +11,8 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_METRICS_TOPIC" to "privat-soknadInnsendt-metrics-v1-teamsoknad",
 		"SCHEMA_REGISTRY_URL" to "http://localhost:8081",
 		"KAFKA_BOOTSTRAP_SERVERS" to "localhost:29092",
-		"SOKNADSMOTTAKER_USERNAME" to "kafkaproducer",
-		"SOKNADSMOTTAKER_PASSWORD" to "",
+		"KAFKA_USERNAME" to "kafkaproducer",
+		"KAFKA_PASSWORD" to "",
 		"KAFKA_SECURITY" to "",
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
@@ -42,10 +42,9 @@ fun readFileAsText(fileName: String, default: String = "") = try { File(fileName
 
 data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val restConfig: RestConfig = RestConfig(), val reSendList: ReSendList = ReSendList()) {
 	data class KafkaConfig(
-		val profiles: String = "APPLICATION_PROFILE".configProperty(),
-		val username: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/username", "SOKNADSMOTTAKER_USERNAME".configProperty()),
-		val password: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/password", "SOKNADSMOTTAKER_PASSWORD".configProperty()),
-		val servers: String = readFileAsText("/var/run/secrets/nais.io/kv/kafkaBootstrapServers", "KAFKA_BOOTSTRAP_SERVERS".configProperty()),
+		val username: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/username", "KAFKA_USERNAME".configProperty()),
+		val password: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/password", "KAFKA_PASSWORD".configProperty()),
+		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
 		val schemaRegistryUrl: String = "SCHEMA_REGISTRY_URL".configProperty(),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
 		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
@@ -56,14 +55,12 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 	)
 
 	data class RestConfig(
-		val user: String = readFileAsText("/var/run/secrets/nais.io/kv/restUser", "REST_HENVENDELSE".configProperty()),
-		val restPassword: String = readFileAsText("/var/run/secrets/nais.io/kv/restPassword", "REST_PASSORD".configProperty()),
-
 		val username: String = readFileAsText("/secrets/innsending-data/username", "BASICAUTH_USERNAME".configProperty()),
 		val password: String = readFileAsText("/secrets/innsending-data/password", "BASICAUTH_PASSWORD".configProperty())
 	)
 
 	data class ReSendList(
+		val profile: String = "APPLICATION_PROFILE".configProperty(),
 		val applicationString: String = readFileAsText("/var/run/secrets/nais.io/resend/RESENDING_LIST", "RESENDING_LIST".configProperty()),
 		val secondsAfterStartupBeforeStarting: Int = readFileAsText("/var/run/secrets/nais.io/resend/SECONDS_BEFORE_LEADER_CHECK", "SECONDS_BEFORE_LEADER_CHECK".configProperty()).toInt()
 	)

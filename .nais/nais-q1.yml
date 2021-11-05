@@ -39,8 +39,6 @@ spec:
         kvPath: /serviceuser/data/dev/srvsoknadsmottaker
       - mountPath: /secrets/innsending-data
         kvPath: secret/team-soknad/innsending/basicauth
-      - mountPath: /var/run/secrets/nais.io/kv
-        kvPath: /kv/preprod/fss/soknadsmottaker/default
       - mountPath: /var/run/secrets/nais.io/appdynamics
         kvPath: /apikey/appdynamics/dev
       - mountPath: /var/run/secrets/nais.io/resend
