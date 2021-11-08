@@ -33,7 +33,7 @@ class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfi
 	fun configureGlobal(auth: AuthenticationManagerBuilder) {
 		auth.inMemoryAuthentication()
 			.withUser(config.restConfig.username)
-			.password("{noop}${config.restConfig.password.trim()}")
+			.password("{noop}${config.restConfig.password}")
 			.roles("ADMIN")
 	}
 }
