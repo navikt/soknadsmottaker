@@ -14,50 +14,41 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.kafka.core.ProducerFactory
 
 @Configuration
 class KafkaConfig(private val appConfiguration: AppConfiguration) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	fun getKafkaConfig(kafkaConfig: AppConfiguration.KafkaConfig): HashMap<String, Any> {
+	fun getKafkaConfig(): HashMap<String, Any> {
+		val config = appConfiguration.kafkaConfig
+
 		val configProps = HashMap<String, Any>().also {
-			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.servers
-			it[SCHEMA_REGISTRY_URL_CONFIG] = kafkaConfig.schemaRegistryUrl
-			if ("TRUE" == kafkaConfig.secure) {
-				it[SECURITY_PROTOCOL_CONFIG] = kafkaConfig.protocol
-				it[SASL_JAAS_CONFIG] = kafkaConfig.saslJaasConfig
-				it[SASL_MECHANISM] = kafkaConfig.salsmec
+			it[BOOTSTRAP_SERVERS_CONFIG] = config.servers
+			it[SCHEMA_REGISTRY_URL_CONFIG] = config.schemaRegistryUrl
+			if ("TRUE" == config.secure) {
+				it[SECURITY_PROTOCOL_CONFIG] = config.protocol
+				it[SASL_JAAS_CONFIG] = config.saslJaasConfig
+				it[SASL_MECHANISM] = config.salsmec
 			}
 			it[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
 			it[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
 		}
 
-		logger.info("Ferdig med setKafkaConfig. Kafka servers=${configProps[BOOTSTRAP_SERVERS_CONFIG]}, User=${kafkaConfig.username}, profile=${kafkaConfig.profiles}, topic=${kafkaConfig.topic}")
 		val password = when {
-			kafkaConfig.password == "" || "test".equals(kafkaConfig.password, true) -> kafkaConfig.password
-			else -> "*Noe hemmelig fra Vault*"
+			config.password == "" || "test".equals(config.password, true) -> config.password
+			else -> "*Secret from Vault*"
 		}
-		logger.info("Passord='$password'")
+		logger.info("Will use the following KafkaConfig: Bootstrap servers='${configProps[BOOTSTRAP_SERVERS_CONFIG]}', " +
+			"User='${config.username}', password='$password', topic='${config.topic}'")
 
 		return configProps
 	}
 
 	@Bean
-	fun producerFactory(): ProducerFactory<String, Soknadarkivschema> {
-		logger.info("Start av producerFactory")
-
-		val configs = getKafkaConfig(appConfiguration.kafkaConfig)
-		return DefaultKafkaProducerFactory(configs)
-	}
+	fun producerFactory() = DefaultKafkaProducerFactory<String, Soknadarkivschema>(getKafkaConfig())
 
 	@Bean
-	fun metricProducerFactory(): ProducerFactory<String, InnsendingMetrics> {
-		logger.info("Start av metricProducerFactory")
-
-		val configs = getKafkaConfig(appConfiguration.kafkaConfig)
-		return DefaultKafkaProducerFactory(configs)
-	}
+	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(getKafkaConfig())
 
 	@Bean
 	fun kafkaTemplate() = KafkaTemplate(producerFactory())

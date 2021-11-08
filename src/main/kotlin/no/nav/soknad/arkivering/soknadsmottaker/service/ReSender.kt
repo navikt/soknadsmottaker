@@ -1,8 +1,8 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import kotlinx.coroutines.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.*
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
 import org.json.JSONObject
@@ -52,7 +52,7 @@ class ReSender(private val archiverService: ArchiverService,
 
 			val leader = JSONObject(jsonString).getString("name")
 			val hostname =
-				if (appConfiguration.kafkaConfig.profiles.equals("", true)) "localhost" else InetAddress.getLocalHost().hostName
+				if (appConfiguration.reSendList.profile.equals("", true)) "localhost" else InetAddress.getLocalHost().hostName
 
 			logger.info("isLeader=${hostname.equals(leader, true)}")
 			return hostname.equals(leader, true)
