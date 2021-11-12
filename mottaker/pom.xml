@@ -14,6 +14,7 @@
 
 	<properties>
 		<arkivering-schemas.version>6b4ceead30</arkivering-schemas.version>
+		<kafka-streams-avro-serde.version>6.2.1</kafka-streams-avro-serde.version>
 		<confluent.version>6.2.0</confluent.version>
 		<json.version>20210307</json.version>
 		<gson.version>2.8.5</gson.version>
@@ -84,6 +85,11 @@
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.confluent</groupId>
+			<artifactId>kafka-streams-avro-serde</artifactId>
+			<version>${kafka-streams-avro-serde.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.confluent</groupId>

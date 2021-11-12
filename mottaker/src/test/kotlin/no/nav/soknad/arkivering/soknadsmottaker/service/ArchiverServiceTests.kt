@@ -25,12 +25,13 @@ class ArchiverServiceTests {
 		every { kafkaSender.publishMetric(any(), any(), any()) } returns Unit
 
 		val metrics = InnsendtMetrics(CollectorRegistry.defaultRegistry)
-		val archiverService = ArchiverService(kafkaSender, config, metrics)
+		val archiverService = ArchiverService(kafkaSender, metrics)
 
-		archiverService.archive(UUID.randomUUID().toString(), opprettBilInnsendingMedBareSoknadOgKvittering())
+		val key = UUID.randomUUID().toString()
+		archiverService.archive(key, opprettBilInnsendingMedBareSoknadOgKvittering())
 
-		verify { kafkaSender.publish(topic, any(), any()) }
-		verify { kafkaSender.publishMetric(metricsTopic, any(), any()) }
+		verify { kafkaSender.publish(key, any(), any()) }
+		verify { kafkaSender.publishMetric(key, any(), any()) }
 	}
 
 	@Test

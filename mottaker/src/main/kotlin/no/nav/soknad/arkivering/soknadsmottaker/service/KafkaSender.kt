@@ -1,39 +1,65 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
+import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
+import org.apache.kafka.clients.CommonClientConfigs
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.clients.producer.RecordMetadata
+import org.apache.kafka.common.config.SaslConfigs
+import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.header.internals.RecordHeaders
-import org.slf4j.LoggerFactory
-import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.stereotype.Component
+import org.apache.kafka.common.serialization.StringSerializer
+import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-@Component
-class KafkaSender(
-	private val kafkaTemplate: KafkaTemplate<String, Soknadarkivschema>,
-	private val metricKafkaTemplate: KafkaTemplate<String, InnsendingMetrics>
-) {
-	private val logger = LoggerFactory.getLogger(javaClass)
+@Service
+class KafkaSender(private val appConfiguration: AppConfiguration) {
 
-	fun publish(topic: String, key: String, value: Soknadarkivschema) {
-		publish(topic, key, value, kafkaTemplate)
+	private val kafkaSoknadarkivchemaProducer = KafkaProducer<String, Soknadarkivschema>(kafkaConfigMap())
+	private val kafkaMetricsProducer = KafkaProducer<String, InnsendingMetrics>(kafkaConfigMap())
+
+	fun publish(key: String, value: Soknadarkivschema, headers: Headers = RecordHeaders()) {
+		val topic = appConfiguration.kafkaConfig.topic
+		val kafkaProducer = kafkaSoknadarkivchemaProducer
+		putDataOnTopic(key, value, headers, topic, kafkaProducer)
 	}
 
-	fun publishMetric(topic: String, key: String, value: InnsendingMetrics) {
-		publish(topic, key, value, metricKafkaTemplate)
+	fun publishMetric(key: String, value: InnsendingMetrics, headers: Headers = RecordHeaders()) {
+		val topic = appConfiguration.kafkaConfig.metricsTopic
+		val kafkaProducer = kafkaMetricsProducer
+		putDataOnTopic(key, value, headers, topic, kafkaProducer)
 	}
 
-	private fun <T> publish(topic: String, key: String, value: T, kafkaTemplate: KafkaTemplate<String, T>) {
+	private fun <T> putDataOnTopic(key: String?, value: T, headers: Headers, topic: String,
+																 kafkaProducer: KafkaProducer<String, T>): RecordMetadata {
+
 		val producerRecord = ProducerRecord(topic, key, value)
-		val headers = RecordHeaders()
 		headers.add(MESSAGE_ID, UUID.randomUUID().toString().toByteArray())
 		headers.forEach { h -> producerRecord.headers().add(h) }
 
-		val future = kafkaTemplate.send(producerRecord)
-		future.get(10, TimeUnit.SECONDS)
-		logger.info("$key: Published to $topic")
+		return kafkaProducer
+			.send(producerRecord)
+			.get(9000, TimeUnit.MILLISECONDS) // Blocking call
+	}
+
+	private fun kafkaConfigMap(): MutableMap<String, Any> {
+		return HashMap<String, Any>().also {
+			it[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = appConfiguration.kafkaConfig.schemaRegistryUrl
+			it[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = appConfiguration.kafkaConfig.servers
+			it[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+			it[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = SpecificAvroSerializer::class.java
+			if (appConfiguration.kafkaConfig.secure == "TRUE") {
+				it[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = appConfiguration.kafkaConfig.protocol
+				it[SaslConfigs.SASL_JAAS_CONFIG] = appConfiguration.kafkaConfig.saslJaasConfig
+				it[SaslConfigs.SASL_MECHANISM] = appConfiguration.kafkaConfig.salsmec
+			}
+		}
 	}
 }
 
