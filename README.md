@@ -1,16 +1,15 @@
-Soknadsmottaker
-================
-Applikasjonen tilbyr en REST-tjeneste for å motta metadata om innsendte søknader/dokumentinnsendinger.
-Mottatte data mappes til en Avro-melding og legges på en egen Kafkastrøm.
+# Soknadsmottaker
+When a user applies for a benefit (_sender inn en søknad_), one or more documents are sent in to NAV. This component acts as a REST-endpoint to which the systems that the user uses can send metadata about the benefit. The documents themselves are sent to a different system, [Soknadsfillager](https://www.github.com/navikt/soknadsfillager).
 
-This application provides a REST endpoint to which data can be sent. The data will be converted, serialized as an Avro message and put on a Kafka topic.
+When Soknadsmottaker receives data, it will be converted, serialized as an Avro message and put on a Kafka topic.
+
 For a description of the whole archiving system, see [the documentation](https://github.com/navikt/archiving-infrastructure/wiki).
 
 # Dependencies
 This component requires the following to work:
 * [soknadarkiv-schema](https://github.com/navikt/soknadarkiv-schema) (Avro schema definitions)
-* Kafka broker (for providing a Kafka topic to send to)
-* Shared secret for logging on to the application in order to send application data to the REST endpoint. The application reads the shared secret from Vault, restPassword and restUser.
+* Kafka broker (for providing Kafka topics to send to)
+* Shared secrets on Vault.
 
 
 ## Inquiries
