@@ -16,7 +16,7 @@
 	<description>Mottar soknader</description>
 
 	<properties>
-		<arkivering-schemas.version>9e47d9bd</arkivering-schemas.version>
+		<arkivering-schemas.version>6b4ceead30</arkivering-schemas.version>
 		<confluent.version>6.2.0</confluent.version>
 		<json.version>20210307</json.version>
 		<gson.version>2.8.5</gson.version>
@@ -100,8 +100,8 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>no.nav.soknad.arkivering</groupId>
-			<artifactId>avro-schemas</artifactId>
+			<groupId>com.github.navikt</groupId>
+			<artifactId>soknadarkiv-schema</artifactId>
 			<version>${arkivering-schemas.version}</version>
 		</dependency>
 
@@ -201,11 +201,9 @@
 
 	<repositories>
 		<repository>
-			<id>github</id>
-			<name>nav github</name>
-			<url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
 		</repository>
-
 		<repository>
 			<id>confluent</id>
 			<url>https://packages.confluent.io/maven</url>
