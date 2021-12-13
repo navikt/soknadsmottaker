@@ -24,7 +24,7 @@
 		<konfig.version>1.6.10.0</konfig.version>
 		<prometheus-simpleclient.version>0.11.0</prometheus-simpleclient.version>
 		<logstash.version>6.6</logstash.version>
-		<coroutines.version>1.5.0</coroutines.version>
+		<coroutines.version>1.5.2-native-mt</coroutines.version>
 		<mockk.version>1.12.0</mockk.version>
 
 		<kotlin.version>1.5.10</kotlin.version>
