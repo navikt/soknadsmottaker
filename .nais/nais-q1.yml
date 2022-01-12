@@ -40,8 +40,9 @@ spec:
       - mountPath: /secrets/innsending-data
         kvPath: secret/team-soknad/innsending/basicauth
       - mountPath: /var/run/secrets/nais.io/resend
-        kvPath: /kv/preprod/fss/soknadsmottaker/resend/q1
+        kvPath: /kv/preprod/fss/soknadsmottaker/resend
   leaderElection: true
+
   env:
     - name: KAFKA_BOOTSTRAP_SERVERS
       value: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
