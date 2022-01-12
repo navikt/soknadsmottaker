@@ -40,7 +40,7 @@ spec:
       - mountPath: /secrets/innsending-data
         kvPath: secret/team-soknad/innsending/basicauth
       - mountPath: /var/run/secrets/nais.io/resend
-        kvPath: /kv/preprod/fss/soknadsmottaker/resend
+        kvPath: /kv/preprod/fss/soknadsmottaker/resend/team-soknad
   leaderElection: true
 
   env:
