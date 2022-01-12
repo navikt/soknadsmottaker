@@ -40,8 +40,6 @@ spec:
         kvPath: /serviceuser/data/prod/srvsoknadsmottaker
       - mountPath: /secrets/innsending-data
         kvPath: secret/team-soknad/innsending/basicauth
-      - mountPath: /var/run/secrets/nais.io/appdynamics
-        kvPath: /apikey/appdynamics/prod
       - mountPath: /var/run/secrets/nais.io/resend
         kvPath: /kv/prod/fss/soknadsmottaker/resend
   leaderElection: true
