@@ -6,6 +6,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
@@ -15,10 +16,23 @@ class Receiver(private val archiverService: ArchiverService) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
 	@PostMapping("/save")
-	fun receiveMessage(@RequestBody request: SoknadInnsendtDto) {
-		val key = UUID.randomUUID().toString()
+	fun receiveMessage(
+		@RequestHeader("innsendingKey") innsendingKey: String?,
+		@RequestBody request: SoknadInnsendtDto
+	) {
+
+		val key = getOrMakeKey(innsendingKey)
 		logger.info("$key: Received request '${print(request)}'")
 		archiverService.archive(key, request)
+	}
+
+	private fun getOrMakeKey(innsendingKey: String?): String {
+		return if (innsendingKey == null) {
+			val key = UUID.randomUUID().toString()
+			logger.debug("$key: Did not receive an innsendingKey, generated a new one instead.")
+			key
+		} else
+			innsendingKey
 	}
 
 
