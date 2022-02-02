@@ -115,7 +115,7 @@ class ReSendTests {
 		private fun <T> makeSendResult(topic: String, melding: T): SendResult<String, T> {
 		return SendResult(
 			ProducerRecord(topic, "123", melding),
-			RecordMetadata(TopicPartition(topic, 1), 1L,1L,1L,1L,1,1)
+			RecordMetadata(TopicPartition(topic, 1), 1L, 1, 1L, 1, 1)
 		)
 	}
 
@@ -131,6 +131,7 @@ class ReSendTests {
 
 	private fun getResource(fileName: String) = this::class.java.getResource(fileName)!!
 
+	@Suppress("SameParameterValue")
 	private fun getBytesFromFile(path: String): String {
 		val resourceAsStream = this::class.java.getResourceAsStream(path)
 		val outputStream = ByteArrayOutputStream()

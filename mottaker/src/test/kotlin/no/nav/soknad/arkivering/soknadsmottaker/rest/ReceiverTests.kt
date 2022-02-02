@@ -24,6 +24,7 @@ import org.springframework.kafka.KafkaException
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
 import org.springframework.util.concurrent.SettableListenableFuture
+import java.util.*
 
 class ReceiverTests {
 
@@ -49,7 +50,7 @@ class ReceiverTests {
 		every { kafkaMock.send(capture(record)) } returns setFuture(makeSendResult(topic, InputTransformer(melding).apply()))
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, metricMessage))
 
-		receiver.receiveMessage(melding)
+		receiver.receiveMessage(UUID.randomUUID().toString(), melding)
 
 		assertTrue(record.isCaptured)
 		assertEquals(topic, record.captured.topic(), "Should send to the right topic")
@@ -84,7 +85,7 @@ class ReceiverTests {
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, metricMessage))
 
 		assertThrows<KafkaException> {
-			receiver.receiveMessage(melding)
+			receiver.receiveMessage(UUID.randomUUID().toString(), melding)
 		}
 
 		assertTrue(record.isCaptured)
@@ -96,7 +97,7 @@ class ReceiverTests {
 
 	private fun <T> makeSendResult(topic: String, melding: T) = SendResult(
 			ProducerRecord(topic, "123", melding),
-			RecordMetadata(TopicPartition(topic, 1), 1L,1L,1L,1L,1,1))
+			RecordMetadata(TopicPartition(topic, 1), 1L, 1, 1L, 1, 1))
 
 	private fun <T> setFuture(v: SendResult<String, T>) =
 		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }

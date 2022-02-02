@@ -1,6 +1,5 @@
-package no.nav.soknad.arkivering.soknadsmottaker.rest
+package no.nav.soknad.arkivering.soknadsmottaker.config
 
-import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Configuration
