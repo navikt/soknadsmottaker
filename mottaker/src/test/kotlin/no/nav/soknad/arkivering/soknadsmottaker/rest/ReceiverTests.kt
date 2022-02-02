@@ -97,7 +97,7 @@ class ReceiverTests {
 
 	private fun <T> makeSendResult(topic: String, melding: T) = SendResult(
 			ProducerRecord(topic, "123", melding),
-			RecordMetadata(TopicPartition(topic, 1), 1L,1L,1L,1L,1,1))
+			RecordMetadata(TopicPartition(topic, 1), 1L, 1, 1L, 1, 1))
 
 	private fun <T> setFuture(v: SendResult<String, T>) =
 		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
