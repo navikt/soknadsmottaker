@@ -48,10 +48,11 @@ components:
         innsendingId:
           type: string
           description: >
-            Unik id for forsendelsen. Denne **må** være unik. Idn brukes på flere måter;
-            dels før sporing gjennom verdikjeden, dels som key på Kafka-topicen som Soknadsarkiverer leser, dels blir
-            idn sendt in til Joark. Hvis idn ikke er unik så vil Soknadsarkiverer ikke kunne gjøre jobben sin, og Joark
-            vil refusere innsendingen då den har duplikatkontroll. Idn er kallt `eksternReferanseId` i Joark.
+            Unik id for forsendelsen. Denne **må** være unik. Id brukes på flere måter;
+            dels for sporing gjennom verdikjeden, dels som key på Kafka-topicen som Soknadsarkiverer leser. I tillegg
+            blir id sendt inn til Joark. Id blir lagret i joark sin journalpost i kolonnen `eksternReferanseId`. Hvis id
+            ikke er unik vil Joark svare med, `HttpStatus=Conflict`. Dette for å hindre at samme forsendelse arkiveres
+            flere ganger.
           example: 2f9b8d25-1056-4827-8ddd-cedab7fafaaf
         erEttersendelse:
           type: boolean
@@ -69,7 +70,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/DocumentData"
-          description: Hver Soknad kan ha flere dokumenter. Denne listen beskriver metadata om dokumentene.
+          description: Hver Soknad kan ha flere vedlegg. Denne listen beskriver metadata om disse dokumentene.
 
     DocumentData:
       type: object
@@ -86,8 +87,8 @@ components:
         erHovedskjema:
           type: boolean
           description: >
-            Markerer hvis dette er hovedskjemaet for innsendingen. Et og endast et dokument må
-            ha `erHovedskjema = true` satt.
+            Markerer hvis dette er hovedskjemaet for innsendingen. Kun ett dokument kan være markert med
+            `erHovedskjema = true`.
           example: true
         tittel:
           type: string
@@ -98,7 +99,8 @@ components:
           items:
             $ref: "#/components/schemas/Varianter"
           description: >
-            Hvert dokument kan ha flere varianter av samme dokument; for eksempel én PDF/A og et original.
+            Det kan sendes inn flere varianter av samme dokument; for eksempel kan én søknaden sendes inn med en PDF/A
+            og en json variant av søknaden.
             Denne lista inneholder metadata, der hver variant representerer en fysisk fil.
 
     Varianter:
@@ -119,7 +121,7 @@ components:
           example: application/pdf
         filnavn:
           type: string
-          description: Filnavn som bruker angitt, eller som blitt generert for brukeren.
+          description: Navn for systemdefinerte filer, eller navn spesifisert av bruker.
           example: tilleggsstonader.xml
         filtype:
           type: string
