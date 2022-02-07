@@ -17,12 +17,10 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
 
-		"BASICAUTH_USERNAME" to "sender",
+		"BASICAUTH_USERNAME" to "innsending",
 		"BASICAUTH_PASSWORD" to "password",
 
 		"APPLICATION_PROFILE" to "",
-		"REST_HENVENDELSE" to "avsender",
-		"REST_PASSORD" to "password",
 
 		"RESENDING_LIST" to "",
 		"SECONDS_BEFORE_LEADER_CHECK" to "0"

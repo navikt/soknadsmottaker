@@ -38,7 +38,7 @@ class ArchiverServiceTests {
 		assertEquals(topic, config.kafkaConfig.topic)
 		assertEquals(metricsTopic, config.kafkaConfig.metricsTopic)
 		assertEquals("kafkaproducer", config.kafkaConfig.username)
-		assertEquals("sender", config.restConfig.username)
+		assertEquals("innsending", config.restConfig.username)
 		assertEquals("password", config.restConfig.password)
 	}
 }
