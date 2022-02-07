@@ -1,0 +1,36 @@
+[
+	{
+		"innsendingId": "apa",
+		"erEttersendelse": false,
+		"personId": "123",
+		"tema": "BIL",
+		"dokumenter": [{
+			"skjemanummer": "NAV 1-2.3",
+			"erHovedskjema": true,
+			"tittel": "Apa bepa",
+			"varianter": [{
+				"id": "bepa",
+				"mediaType": "application/pdf",
+				"filnavn": "tilleggsstonader.xml",
+				"filtype": "XML"
+			}]
+		}]
+	},
+	{
+		"innsendingId": "cepa",
+		"erEttersendelse": true,
+		"personId": "456",
+		"tema": "AAP",
+		"dokumenter": [{
+			"skjemanummer": "NAV 4-5.6",
+			"erHovedskjema": true,
+			"tittel": "Cepa depa",
+			"varianter": [{
+				"id": "depa",
+				"mediaType": "application/pdf",
+				"filnavn": "tilleggsstonader.xml",
+				"filtype": "XML"
+			}]
+		}]
+	}
+]
