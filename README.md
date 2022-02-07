@@ -5,6 +5,15 @@ When Soknadsmottaker receives data, it will be converted, serialized as an Avro 
 
 For a description of the whole archiving system, see [the documentation](https://github.com/navikt/archiving-infrastructure/wiki).
 
+## Rest-API
+The Rest-API can be accessed here:
+
+* [localhost](http://localhost:8090/swagger-ui/index.html)
+* [q0](https://soknadsmottaker-q0.dev.intern.nav.no/swagger-ui/index.html)
+* [q1](https://soknadsmottaker-q1.dev.intern.nav.no/swagger-ui/index.html)
+* [teamsoknad (dev-fss)](https://soknadsmottaker.dev.intern.nav.no/swagger-ui/index.html)
+* [prod](https://soknadsmottaker.intern.nav.no/swagger-ui/index.html)
+
 # Dependencies
 This component requires the following to work:
 * [soknadarkiv-schema](https://github.com/navikt/soknadarkiv-schema) (Avro schema definitions)
