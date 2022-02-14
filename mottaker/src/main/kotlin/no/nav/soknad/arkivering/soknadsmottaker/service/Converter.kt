@@ -24,22 +24,22 @@ fun convertDocument(document: DocumentData) = MottattDokument(
 	document.skjemanummer,
 	document.erHovedskjema,
 	document.tittel,
-	convertVarianter(document.varianter, document.erHovedskjema)
+	convertVarianter(document.varianter)
 )
 
-fun convertVarianter(list: List<Varianter>, erHovedskjema: Boolean) = list.map { convertVariant(it, erHovedskjema) }
-fun convertVariant(varianter: Varianter, erHovedskjema: Boolean) = MottattVariant(
+fun convertVarianter(list: List<Varianter>) = list.map { convertVariant(it) }
+fun convertVariant(varianter: Varianter) = MottattVariant(
 	varianter.id,
 	varianter.filnavn,
 	varianter.filtype,
-	getVariantformat(varianter.mediaType, erHovedskjema)
+	getVariantformat(varianter.mediaType)
 )
 
-private fun getVariantformat(mediaType: String, erHovedskjema: Boolean): String {
-	return if (erHovedskjema)
+private fun getVariantformat(mediaType: String): String {
+	return if ("application/pdf".equals(mediaType, ignoreCase = true))
 		"ARKIV"
-	else if ("application/json".equals(mediaType, ignoreCase = true) || "application/xml".equals(mediaType, ignoreCase = true))
-		"ORIGINAL"
-	else
+	else if ("application/pdf-fullversjon".equals(mediaType, ignoreCase = true))
 		"FULLVERSJON"
+	else
+		"ORIGINAL"
 }

@@ -12,9 +12,9 @@ fun createSoknad() = Soknad(
 	createDocuments()
 )
 
-fun createDocuments(erHovedskjema: Boolean = true, variants: List<Varianter> = createVariants()) = listOf(DocumentData(
+fun createDocuments(variants: List<Varianter> = createVariants()) = listOf(DocumentData(
 	"NAV 10-07.40",
-	erHovedskjema,
+	true,
 	"Søknad om stønad til anskaffelse av motorkjøretøy",
 	variants
 ))

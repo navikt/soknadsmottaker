@@ -49,17 +49,17 @@ class ConverterTests {
 
 	@Test
 	fun `Can convert Variantformat`() {
-		val result0 = convert(soknad)
+		val result0 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/pdf")))))
 		assertTrue(soknad.dokumenter[0].erHovedskjema)
 		assertEquals("ARKIV", result0.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
 
-		val result1 = convert(soknad.copy(dokumenter = createDocuments(false, listOf(createVariant()))))
+		val result1 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/pdf-fullversjon")))))
 		assertEquals("FULLVERSJON", result1.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
 
-		val result2 = convert(soknad.copy(dokumenter = createDocuments(false, listOf(createVariant("application/json")))))
+		val result2 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/json")))))
 		assertEquals("ORIGINAL", result2.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
 
-		val result3 = convert(soknad.copy(dokumenter = createDocuments(false, listOf(createVariant("application/xml")))))
+		val result3 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/xml")))))
 		assertEquals("ORIGINAL", result3.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
 	}
 }
