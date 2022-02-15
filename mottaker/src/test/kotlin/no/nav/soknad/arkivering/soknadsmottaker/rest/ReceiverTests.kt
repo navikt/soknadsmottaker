@@ -7,12 +7,12 @@ import io.prometheus.client.CollectorRegistry
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
-import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
-import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettSoknadUtenFilnavnSatt
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
+import no.nav.soknad.arkivering.soknadsmottaker.service.convert
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
@@ -24,7 +24,6 @@ import org.springframework.kafka.KafkaException
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
 import org.springframework.util.concurrent.SettableListenableFuture
-import java.util.*
 
 class ReceiverTests {
 
@@ -41,16 +40,15 @@ class ReceiverTests {
 	fun `When receiving REST call, message is put on Kafka`() {
 		val errorsBefore = metrics.mottattErrorGet("BIL")
 		val sentInBefore = metrics.mottattSoknadGet("BIL")
-		val melding = opprettSoknadUtenFilnavnSatt()
-		val metricMessage = InnsendingMetrics()
+		val soknad = createSoknad()
 
 		val record = slot<ProducerRecord<String, Soknadarkivschema>>()
 		val metricRecord = slot<ProducerRecord<String, InnsendingMetrics>>()
 
-		every { kafkaMock.send(capture(record)) } returns setFuture(makeSendResult(topic, InputTransformer(melding).apply()))
-		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, metricMessage))
+		every { kafkaMock.send(capture(record)) } returns setFuture(makeSendResult(topic, convert(soknad)))
+		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, InnsendingMetrics()))
 
-		receiver.receiveMessage(UUID.randomUUID().toString(), melding)
+		receiver.receive(soknad)
 
 		assertTrue(record.isCaptured)
 		assertEquals(topic, record.captured.topic(), "Should send to the right topic")
@@ -75,7 +73,7 @@ class ReceiverTests {
 
 	@Test
 	fun `Exception is thrown if message is not put on Kafka`() {
-		val melding = opprettSoknadUtenFilnavnSatt()
+		val soknad = createSoknad()
 		val metricMessage = InnsendingMetrics()
 
 		val record = slot<ProducerRecord<String, Soknadarkivschema>>()
@@ -85,7 +83,7 @@ class ReceiverTests {
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, metricMessage))
 
 		assertThrows<KafkaException> {
-			receiver.receiveMessage(UUID.randomUUID().toString(), melding)
+			receiver.receive(soknad)
 		}
 
 		assertTrue(record.isCaptured)
@@ -102,9 +100,9 @@ class ReceiverTests {
 	private fun <T> setFuture(v: SendResult<String, T>) =
 		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
 
-	private fun mockReceiver(metrics: InnsendtMetrics): Receiver {
+	private fun mockReceiver(metrics: InnsendtMetrics): RestApi {
 		val kafkaSender = KafkaSender(kafkaMock, metricsKafkaMock)
-		val orderService = ArchiverService(kafkaSender, AppConfiguration(), metrics)
-		return Receiver(orderService)
+		val archiverService = ArchiverService(kafkaSender, AppConfiguration(), metrics)
+		return RestApi(archiverService)
 	}
 }

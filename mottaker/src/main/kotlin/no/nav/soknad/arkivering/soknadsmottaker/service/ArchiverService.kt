@@ -3,8 +3,7 @@ package no.nav.soknad.arkivering.soknadsmottaker.service
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
-import no.nav.soknad.arkivering.soknadsmottaker.dto.InputTransformer
-import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
+import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -19,7 +18,7 @@ class ArchiverService(
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val topic = appConfiguration.kafkaConfig.topic
 
-	fun archive(key: String, request: SoknadInnsendtDto) {
+	fun archive(key: String, request: Soknad) {
 		val startTime = System.currentTimeMillis()
 		try {
 
@@ -35,7 +34,7 @@ class ArchiverService(
 		}
 	}
 
-	private fun convertMessage(request: SoknadInnsendtDto) = InputTransformer(request).apply()
+	private fun convertMessage(request: Soknad) = convert(request)
 
 	private fun publishToKafka(key: String, data: Soknadarkivschema) {
 		try {

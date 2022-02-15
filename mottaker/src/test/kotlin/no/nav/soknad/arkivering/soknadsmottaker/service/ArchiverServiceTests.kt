@@ -5,9 +5,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.prometheus.client.CollectorRegistry
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
-import no.nav.soknad.arkivering.soknadsmottaker.dto.opprettBilInnsendingMedBareSoknadOgKvittering
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
-import org.junit.jupiter.api.Assertions.assertEquals
+import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -27,18 +26,9 @@ class ArchiverServiceTests {
 		val metrics = InnsendtMetrics(CollectorRegistry.defaultRegistry)
 		val archiverService = ArchiverService(kafkaSender, config, metrics)
 
-		archiverService.archive(UUID.randomUUID().toString(), opprettBilInnsendingMedBareSoknadOgKvittering())
+		archiverService.archive(UUID.randomUUID().toString(), createSoknad())
 
 		verify { kafkaSender.publish(topic, any(), any()) }
 		verify { kafkaSender.publishMetric(metricsTopic, any(), any()) }
-	}
-
-	@Test
-	fun `Reads environment variables correctly`() {
-		assertEquals(topic, config.kafkaConfig.topic)
-		assertEquals(metricsTopic, config.kafkaConfig.metricsTopic)
-		assertEquals("kafkaproducer", config.kafkaConfig.username)
-		assertEquals("innsending", config.restConfig.username)
-		assertEquals("password", config.restConfig.password)
 	}
 }

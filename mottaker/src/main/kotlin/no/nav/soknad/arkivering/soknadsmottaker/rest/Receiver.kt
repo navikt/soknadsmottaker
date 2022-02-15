@@ -1,7 +1,12 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import io.micrometer.core.annotation.Timed
+import no.nav.soknad.arkivering.soknadsmottaker.dto.InnsendtDokumentDto
+import no.nav.soknad.arkivering.soknadsmottaker.dto.InnsendtVariantDto
 import no.nav.soknad.arkivering.soknadsmottaker.dto.SoknadInnsendtDto
+import no.nav.soknad.arkivering.soknadsmottaker.model.DocumentData
+import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
+import no.nav.soknad.arkivering.soknadsmottaker.model.Varianter
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,6 +20,8 @@ import java.util.*
 class Receiver(private val archiverService: ArchiverService) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
+	@Deprecated("Replaced in favour of OpenAPI generated API code",
+		replaceWith = ReplaceWith("RestApi.receive()"))
 	@PostMapping("/save")
 	fun receiveMessage(
 		@RequestHeader("innsendingKey") innsendingKey: String?,
@@ -23,7 +30,8 @@ class Receiver(private val archiverService: ArchiverService) {
 
 		val key = getOrMakeKey(innsendingKey)
 		logger.info("$key: Received request '${print(request)}'")
-		archiverService.archive(key, request)
+		val soknad = convertToSoknad(request)
+		archiverService.archive(key, soknad)
 	}
 
 	private fun getOrMakeKey(innsendingKey: String?): String {
@@ -44,3 +52,23 @@ class Receiver(private val archiverService: ArchiverService) {
 		return fnrMasked.toString()
 	}
 }
+
+fun convertToSoknad(request: SoknadInnsendtDto) =
+	Soknad(request.innsendingsId, request.ettersendelse, request.personId, request.tema,
+		convertDocuments(request.innsendteDokumenter))
+
+fun convertDocuments(list: List<InnsendtDokumentDto>) = list.map { convertDocument(it) }
+fun convertDocument(document: InnsendtDokumentDto) = DocumentData(
+	document.skjemaNummer,
+	document.erHovedSkjema ?: false,
+	document.tittel ?: "UNTITLED",
+	convertVarianter(document.varianter)
+)
+
+fun convertVarianter(list: List<InnsendtVariantDto>) = list.map { convertVariant(it) }
+fun convertVariant(varianter: InnsendtVariantDto) = Varianter(
+	varianter.uuid,
+	varianter.mimeType ?: "UNSET",
+	varianter.filNavn ?: "NO_TITLE",
+	varianter.filtype
+)
