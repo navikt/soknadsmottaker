@@ -13,7 +13,7 @@
 	<description>Receives benefit applications</description>
 
 	<properties>
-		<arkivering-schemas.version>6b4ceead30</arkivering-schemas.version>
+		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
 		<confluent.version>7.0.1</confluent.version>
 		<springdoc.version>1.6.5</springdoc.version>
 		<konfig.version>1.6.10.0</konfig.version>
