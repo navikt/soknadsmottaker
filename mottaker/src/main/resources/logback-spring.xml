@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<springProfile name="prod,dev">
+		<!-- Secure log config -->
+		<appender name="secureLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>/secure-logs/secure.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+				<fileNamePattern>/secure-logs/secure.log.%i</fileNamePattern>
+				<minIndex>1</minIndex>
+				<maxIndex>1</maxIndex>
+			</rollingPolicy>
+			<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+				<maxFileSize>50MB</maxFileSize>
+			</triggeringPolicy>
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+		</appender>
+		<logger name="secureLogger" level="INFO" additivity="false">
+			<appender-ref ref="secureLog"/>
+		</logger>
+
+		<appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+		</appender>
+
+		<logger name="org.apache" level="${log.level.org.apache:-INFO}"/>
+		<logger name="org.apache.kafka" level="${log.level.org.apache.kafka:-INFO}"/>
+		<logger name="org.springframework" level="${log.level.org.springframework:-INFO}"/>
+		<logger name="ch.qos.logback" level="${log.level.ch.qos.logback:-INFO}"/>
+
+		<logger name="io" level="INFO"/>
+		<logger name="org" level="INFO"/>
+		<logger name="com" level="INFO"/>
+		<logger name="no.nav" level="INFO"/>
+		<logger name="no.nav.soknad.arkivering" level="DEBUG"/>
+
+		<root level="INFO">
+			<appender-ref ref="STDOUT_JSON"/>
+		</root>
+	</springProfile>
+
+	<springProfile name="docker">
+		<appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+		</appender>
+
+		<logger name="org.apache" level="${log.level.org.apache:-INFO}"/>
+		<logger name="org.apache.kafka" level="${log.level.org.apache.kafka:-INFO}"/>
+		<logger name="org.springframework" level="${log.level.org.springframework:-INFO}"/>
+		<logger name="ch.qos.logback" level="${log.level.ch.qos.logback:-INFO}"/>
+
+		<logger name="io" level="INFO"/>
+		<logger name="org" level="INFO"/>
+		<logger name="com" level="INFO"/>
+		<logger name="no.nav" level="INFO"/>
+		<logger name="no.nav.soknad.arkivering" level="DEBUG"/>
+
+		<root level="INFO">
+			<appender-ref ref="STDOUT_JSON"/>
+		</root>
+	</springProfile>
+</configuration>
