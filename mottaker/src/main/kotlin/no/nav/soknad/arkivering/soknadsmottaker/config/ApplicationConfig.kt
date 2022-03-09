@@ -18,9 +18,7 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SASLMEC" to "",
 
 		"BASICAUTH_USERNAME" to "innsending",
-		"BASICAUTH_PASSWORD" to "password",
-
-		"APPLICATION_PROFILE" to ""
+		"BASICAUTH_PASSWORD" to "password"
 	)
 )
 

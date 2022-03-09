@@ -32,6 +32,8 @@ spec:
       memory: 256Mi
   ingresses:
     - "https://soknadsmottaker.dev.intern.nav.no"
+  secureLogs:
+    enabled: true
   vault:
     enabled: true
     paths:
@@ -51,7 +53,7 @@ spec:
       value: SASL_SSL
     - name: KAFKA_SASLMEC
       value: PLAIN
-    - name: APPLICATION_PROFILE
+    - name: SPRING_PROFILES_ACTIVE
       value: dev
     - name: KAFKA_TOPIC
       value: privat-soknadInnsendt-v1-teamsoknad

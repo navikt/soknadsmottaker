@@ -21,6 +21,37 @@ This component requires the following to work:
 * Shared secrets on Vault.
 
 
+## Secure logs
+The application will log the requests it receives, but mask the personId / fødselsnummer / fnr. For debugging and resending purposes, the fnr is needed. It can be found in the secure logs of the application.
+
+### Kibana
+The secure logs can be accessed from Kibana. Change index in Kibana from `logstash-*` to `tjenestekall-*` in the left menu, as in the screenshot below. If you lack access, it is most likely because you are not in the AD-group. See [the nais documentation](https://doc.nais.io/observability/logs/#3-put-people-into-the-ad-group) for solutions.
+
+![Change Kibana index from logstash to tjenestekall in the left menu](kibana_securelogs.png "Change Kibana index from logstash to tjenestekall in the left menu")
+
+### Kubectl
+The secure logs can be accessed from the terminal using kubectl as shown below. Remember to look in all pods for the log line that you search for.
+```
+$ kubectl -n team-soknad get pods | grep soknadsmottaker
+soknadsmottaker-86745fb779-lndkn    3/3    Running    0    2d18h
+soknadsmottaker-86745fb779-r7ffk    3/3    Running    0    2d18h
+
+$ kubectl -n team-soknad exec --stdin --tty soknadsmottaker-86745fb779-lndkn -- /bin/bash
+Defaulting container name to soknadsmottaker.
+Use 'kubectl describe pod/soknadsmottaker-86745fb779-lndkn -n team-soknad' to see all of the containers in this pod.
+
+apprunner@soknadsmottaker-86745fb779-lndkn:/app$ ls -la /secure-logs/
+total 14344
+drwxrwxrwx. 2 root      root          4096 feb.  22 15:35 .
+drwxr-xr-x. 1 root      root          4096 feb.  22 15:35 ..
+-rw-r--r--. 1 apprunner apprunner 14666703 feb.  25 10:17 secure.log
+-rw-r--r--. 1      1065      1065        0 feb.  22 15:35 secure-logs-mlog.pos
+-rw-r--r--. 1      1065      1065       58 feb.  25 10:17 secure-logs.pos
+
+apprunner@soknadsmottaker-86745fb779-lndkn:/app$ cat /secure-logs/secure.log
+<LOG CONTENT>
+```
+
 ## Resending requests
 If a Soknad for some reason fails to be sent through the whole archiving chain, a last resort is to manually resend it, as explained below. Save your data into a json-file called "soknader.json" (an example can be seen [here](mottaker/src/main/resources/soknader.json)), and run the script below (requires curl and [jq](https://github.com/stedolan/jq)).
 
