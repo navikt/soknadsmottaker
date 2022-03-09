@@ -29,7 +29,7 @@ class Receiver(private val archiverService: ArchiverService) {
 	) {
 
 		val key = getOrMakeKey(innsendingKey)
-		logger.info("$key: Received request '${print(request)}'")
+		logger.info("$key: Received legacy request '${print(request)}'")
 		val soknad = convertToSoknad(request)
 		archiverService.archive(key, soknad)
 	}
