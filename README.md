@@ -25,7 +25,7 @@ This component requires the following to work:
 The application will log the requests it receives, but mask the personId / fødselsnummer / fnr. For debugging and resending purposes, the fnr is needed. It can be found in the secure logs of the application.
 
 ### Kibana
-The secure logs can be accessed from Kibana. Change index in Kibana from `logstash-*` to `tjenestekall-*` in the left menu, as in the screenshot below. If you lack access, it is most likely because you are not in the AD-group. See [the nais documentation](https://doc.nais.io/observability/logs/#3-put-people-into-the-ad-group) for solutions.
+The secure logs can be accessed from [Kibana](https://logs.adeo.no/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(message,envclass,level,application,host),filters:!(),index:'tjenestekall-*',interval:auto,query:(language:lucene,query:'envclass:q%20AND%20application:soknadsmottaker'),sort:!())). Change index in Kibana from `logstash-*` to `tjenestekall-*` in the left menu, as in the screenshot below. If you lack access, it is most likely because you are not in the AD-group. See [the nais documentation](https://doc.nais.io/observability/logs/#3-put-people-into-the-ad-group) for details.
 
 ![Change Kibana index from logstash to tjenestekall in the left menu](kibana_securelogs.png "Change Kibana index from logstash to tjenestekall in the left menu")
 
