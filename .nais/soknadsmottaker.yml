@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: soknadsmottaker
-  namespace: team-soknad
+  namespace: {{namespace}}
   labels:
     team: team-soknad
 spec:
@@ -31,22 +31,24 @@ spec:
       cpu: 200m
       memory: 256Mi
   ingresses:
-    - "https://soknadsmottaker.dev.intern.nav.no"
+  {{#each ingress}}
+    - "{{this}}"
+  {{/each}}
   secureLogs:
     enabled: true
   vault:
     enabled: true
     paths:
       - mountPath: /var/run/secrets/nais.io/serviceuser
-        kvPath: /serviceuser/data/dev/srvsoknadsmottaker
+        kvPath: {{service-user-path}}
       - mountPath: /secrets/innsending-data
         kvPath: secret/team-soknad/innsending/basicauth
 
   env:
     - name: KAFKA_BOOTSTRAP_SERVERS
-      value: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
+      value: {{kafka-bootstrap-servers}}
     - name: SCHEMA_REGISTRY_URL
-      value: https://kafka-schema-registry.nais.preprod.local
+      value: {{schema-registry-url}}
     - name: KAFKA_SECURITY
       value: 'TRUE'
     - name: KAFKA_SECPROT
@@ -54,8 +56,8 @@ spec:
     - name: KAFKA_SASLMEC
       value: PLAIN
     - name: SPRING_PROFILES_ACTIVE
-      value: dev
+      value: {{profile}}
     - name: KAFKA_TOPIC
-      value: privat-soknadInnsendt-v1-teamsoknad
+      value: {{kafka-main-topic}}
     - name: KAFKA_METRICS_TOPIC
-      value: privat-soknadInnsendt-metrics-v1-teamsoknad
+      value: {{kafka-metrics-topic}}
