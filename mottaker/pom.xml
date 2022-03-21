@@ -13,6 +13,7 @@
 	<description>Receives benefit applications</description>
 
 	<properties>
+		<brukernotifikasjon-schemas.version>v2.5.1</brukernotifikasjon-schemas.version>
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
 		<confluent.version>7.0.1</confluent.version>
 		<springdoc.version>1.6.5</springdoc.version>
@@ -97,6 +98,11 @@
 			<groupId>com.github.navikt</groupId>
 			<artifactId>soknadarkiv-schema</artifactId>
 			<version>${arkivering-schemas.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.navikt</groupId>
+			<artifactId>brukernotifikasjon-schemas</artifactId>
+			<version>${brukernotifikasjon-schemas.version}</version>
 		</dependency>
 
 		<dependency>
