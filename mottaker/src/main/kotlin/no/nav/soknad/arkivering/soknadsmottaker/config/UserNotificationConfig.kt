@@ -38,7 +38,7 @@ class UserNotificationConfig(private val appConfiguration: AppConfiguration) {
 				it[KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE] = "USER_INFO"
 				it[SaslConfigs.SASL_MECHANISM] = "PLAIN"
 				it[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SSL"
-				it[SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG] = "PKCS12"
+				it[SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG] = "jks"
 				it[SslConfigs.SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
 				it[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = appConfig.credstorePassword
 				it[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = appConfig.credstorePassword
