@@ -22,9 +22,9 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SCHEMA_REGISTRY_PASSWORD" to "",
 		"KAFKA_SCHEMA_REGISTRY" to "",
 		"KAFKA_BROKERS" to "",
-		"KAFKA_CA_PATH" to "",
-		"KAFKA_PRIVATE_KEY_PATH" to "",
 		"KAFKA_CREDSTORE_PASSWORD" to "",
+		"KAFKA_TRUSTSTORE_PATH" to "",
+		"KAFKA_KEYSTORE_PATH" to "",
 
 		"BASICAUTH_USERNAME" to "innsending",
 		"BASICAUTH_PASSWORD" to "password"
@@ -60,8 +60,8 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val aivenRegisteryPassword: String = "KAFKA_SCHEMA_REGISTRY_PASSWORD".configProperty(),
 		val aivenRegisteryUrl: String = "KAFKA_SCHEMA_REGISTRY".configProperty(),
 		val aivenServers: String= "KAFKA_BROKERS".configProperty(),
-		val trustStorePath: String = "KAFKA_CA_PATH".configProperty(),
-		val privateKeyPath: String = "KAFKA_PRIVATE_KEY_PATH".configProperty(),
+		val trustStorePath: String = "KAFKA_TRUSTSTORE_PATH".configProperty(),
+		val privateKeyPath: String = "KAFKA_KEYSTORE_PATH".configProperty(),
 		val credstorePassword: String = "KAFKA_CREDSTORE_PASSWORD".configProperty()
 
 		)
