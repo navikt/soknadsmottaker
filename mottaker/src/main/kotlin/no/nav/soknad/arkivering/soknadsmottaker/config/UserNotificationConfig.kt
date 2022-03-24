@@ -18,7 +18,6 @@ import org.springframework.kafka.core.KafkaTemplate
 
 @Configuration
 class UserNotificationConfig(private val appConfiguration: AppConfiguration) {
-	private val logger = LoggerFactory.getLogger(javaClass)
 
 	fun getKafkaAivenConfig(): HashMap<String, Any> {
 		val appConfig = appConfiguration.kafkaConfig

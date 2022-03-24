@@ -79,7 +79,7 @@ class NotificationService(
 
 	}
 
-	fun removeNotification(key: String, soknad: SoknadRef) {
+	fun cancelNotification(key: String, soknad: SoknadRef) {
 		val eventId = if (isIdFromHenvendelse(key)) createULIDEventId(key, soknad.erEttersendelse) else	key
 		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
 		val hendelsestidspunkt = toLocalDate(soknad.endringsDato)
@@ -106,7 +106,7 @@ class NotificationService(
 
 	private fun nyOppgaveNotifikasjon(title: String, lenke: String, hendelsestidspunkt: LocalDateTime): OppgaveInput {
 		val dagerSidenhendelsen = hendelsestidspunkt.until(LocalDateTime.now(), ChronoUnit.DAYS)
-		val synligFremTil = LocalDateTime.now().plusDays(levetidOpprettetSoknad-dagerSidenhendelsen)
+		val synligFremTil = LocalDateTime.now().plusDays(levetidEttersending-dagerSidenhendelsen)
 		return OppgaveInputBuilder()
 			.withTekst(title)
 			.withLink(URL(lenke))

@@ -221,7 +221,7 @@ components:
         - soknadRef
         - brukernotifikasjonInfo
       properties:
-        soknad:
+        soknadRef:
           type: object
           items:
             $ref: "#/components/schemas/SoknadRef"
@@ -279,19 +279,19 @@ components:
       properties:
         type:
           type: string
-          description: >
+          description:
             Spesifiserer type Brukernotifikasjon som skal publiseres.
           example:
             Oppgave eller Beskjed
         notifikasjonsTittel:
           type: string
-          description: >
+          description:
             Tittel tekst på Brukernotifikasjon.
           example:
             Du har påbegynt en søknad om Fremmøteskjema ved deltakelse på kurs
         lenke:
           type: string
-          description: >
+          description:
             Lenke for å åpne søknad/ettersendingssøknad eller starte ettersending fra Brukernotifikasjon.
           example:
             https://tjenester.nav.no/soknaddagpenger-innsending/soknad/10014Qi1G,
@@ -299,7 +299,7 @@ components:
             https://tjenester-q1.nav.no/dokumentinnsending/oversikt/10014Qi1G
         antallAktiveDager:
           type: string
-          description: >
+          description:
             Antall dager Brukernotifikasjonen skal vises.
           example: 56
 
