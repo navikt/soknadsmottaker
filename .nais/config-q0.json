@@ -8,5 +8,6 @@
 	"schema-registry-url": "https://kafka-schema-registry.nais.preprod.local",
 	"profile": "dev",
 	"kafka-main-topic": "privat-soknadInnsendt-v1-q0",
-	"kafka-metrics-topic": "privat-soknadInnsendt-metrics-v1-q0"
+	"kafka-metrics-topic": "privat-soknadInnsendt-metrics-v1-q0",
+	"kafka-pool": "nav-dev"
 }
