@@ -1,5 +1,5 @@
 {
-	"namespace": "q1",
+	"namespace": "team-soknad",
 	"ingress": [
 		"https://soknadsmottaker-q1.dev.intern.nav.no"
 	],
