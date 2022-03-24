@@ -41,6 +41,8 @@ class NotificationService(
 
 
 	private fun <T> publish(topic: String, key: NokkelInput, value: T, kafkaTemplate: KafkaTemplate<NokkelInput, T>) {
+		val fullTopic = nameSpace+topic
+		logger.info("${key.getEventId()}: På gruppering ${key.getGrupperingsId()} skal publisere notifikasjon på topic $fullTopic")
 		val producerRecord = ProducerRecord(nameSpace+topic, key, value)
 		val headers = RecordHeaders()
 		headers.add(MESSAGE_ID, UUID.randomUUID().toString().toByteArray())
@@ -48,7 +50,7 @@ class NotificationService(
 
 		val future = kafkaTemplate.send(producerRecord)
 		future.get(10, TimeUnit.SECONDS)
-		logger.info("$key: Published to $topic")
+		logger.info("${key.getEventId()}: Published to $topic")
 	}
 
 

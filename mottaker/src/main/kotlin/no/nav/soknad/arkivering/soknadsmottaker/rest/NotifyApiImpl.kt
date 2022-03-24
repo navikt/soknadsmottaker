@@ -58,7 +58,7 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 	)
 	override fun cancelNotification(soknadRef: SoknadRef): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
-		logger.info("$key: Request to delete notification for deleted Application")
+		logger.info("$key: Request to publish done notification")
 		notificationService.cancelNotification(key, soknadRef)
 		return ResponseEntity(HttpStatus.OK)
 	}
