@@ -32,7 +32,7 @@ class UserNotificationConfig(private val appConfiguration: AppConfiguration) {
 			it[ProducerConfig.MAX_BLOCK_MS_CONFIG] = 30000
 			it[ProducerConfig.ACKS_CONFIG] = "all"
 			it[ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG] = "false"
-			if (appConfig.secure == "TRUE") {
+			if (appConfig.secure == "FALSE") {
 				it[KafkaAvroSerializerConfig.USER_INFO_CONFIG] = "${appConfig.aivenRegisteryUsername}:${appConfig.aivenRegisteryPassword}"
 				it[KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE] = "USER_INFO"
 				it[SaslConfigs.SASL_MECHANISM] = "PLAIN"

@@ -43,8 +43,6 @@ spec:
         kvPath: {{service-user-path}}
       - mountPath: /secrets/innsending-data
         kvPath: secret/team-soknad/innsending/basicauth
-  kafka:
-    pool: {{ kafka-pool }}
   env:
     - name: KAFKA_BOOTSTRAP_SERVERS
       value: {{kafka-bootstrap-servers}}

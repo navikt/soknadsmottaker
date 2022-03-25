@@ -38,7 +38,7 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 		val key = soknadRef.innsendingId
 		log(key, soknadRef)
 		val brukerNotifikasjonInfo = addNotification.brukernotifikasjonInfo[0]
-		notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
+		//notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
 		return ResponseEntity(HttpStatus.OK)
 	}
 
@@ -59,7 +59,7 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 	override fun cancelNotification(soknadRef: SoknadRef): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
 		logger.info("$key: Request to publish done notification")
-		notificationService.cancelNotification(key, soknadRef)
+		//notificationService.cancelNotification(key, soknadRef)
 		return ResponseEntity(HttpStatus.OK)
 	}
 
