@@ -57,7 +57,7 @@ jobs:
   deploy-preprod-teamsoknad:
     name: Deploy to team-soknad
     needs: bygg-app
-    if: github.ref != 'refs/heads/main'
+    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/q1-pipeline'
     runs-on: ubuntu-latest
     steps:
       - name: Download tag file

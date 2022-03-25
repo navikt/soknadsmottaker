@@ -9,5 +9,5 @@
 	"profile": "dev",
 	"kafka-main-topic": "privat-soknadInnsendt-v1-teamsoknad",
 	"kafka-metrics-topic": "privat-soknadInnsendt-metrics-v1-teamsoknad",
-	"kafka-pool": "nav-dev"
+	"kafka-pool": ""
 }
