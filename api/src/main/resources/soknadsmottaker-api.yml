@@ -222,17 +222,9 @@ components:
         - brukernotifikasjonInfo
       properties:
         soknadRef:
-          type: object
-          items:
-            $ref: "#/components/schemas/SoknadRef"
-          description:
-            Soknaden opprettet.
+          $ref: "#/components/schemas/SoknadRef"
         brukernotifikasjonInfo:
-          type: object
-          items:
-            $ref: "#/components/schemas/NotificationInfo"
-          description:
-            Informasjon spesifikk for brukernotifikasjonen som skal publiseres.
+          $ref: "#/components/schemas/NotificationInfo"
 
     SoknadRef:
       type: object

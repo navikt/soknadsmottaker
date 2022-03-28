@@ -27,7 +27,9 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_KEYSTORE_PATH" to "",
 
 		"BASICAUTH_USERNAME" to "innsending",
-		"BASICAUTH_PASSWORD" to "password"
+		"BASICAUTH_PASSWORD" to "password",
+
+		"NAIS_NAMESPACE" to "default"
 	)
 )
 
@@ -56,6 +58,7 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";",
 
 		// Kafka på Aiven config
+		val namespace: String = "NAIS_NAMESPACE".configProperty(),
 		val aivenRegisteryUsername: String = "KAFKA_SCHEMA_REGISTRY_USER".configProperty(),
 		val aivenRegisteryPassword: String = "KAFKA_SCHEMA_REGISTRY_PASSWORD".configProperty(),
 		val aivenRegisteryUrl: String = "KAFKA_SCHEMA_REGISTRY".configProperty(),

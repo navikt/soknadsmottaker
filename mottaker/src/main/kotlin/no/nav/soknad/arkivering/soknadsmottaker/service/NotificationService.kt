@@ -8,6 +8,7 @@ import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
 import no.nav.brukernotifikasjon.schemas.input.DoneInput
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
+import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.model.NotificationInfo
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -27,13 +28,15 @@ import java.util.concurrent.TimeUnit
 class NotificationService(
 	private val kafkaBeskjedTemplate: KafkaTemplate<NokkelInput, BeskjedInput>,
 	private val kafkaOppgaveTemplate: KafkaTemplate<NokkelInput, OppgaveInput>,
-	private val kafkaDoneTemplate: KafkaTemplate<NokkelInput, DoneInput>
+	private val kafkaDoneTemplate: KafkaTemplate<NokkelInput, DoneInput>,
+	private val appConfiguration: AppConfiguration
 ) {
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
 	val appNavn = "soknadsmottaker"
-	val nameSpace = "min-side."
+	val allowedNamespace: List<String> = listOf("team-soknad")
+	val notificationNamespace = "min-side."
 
 	private val securityLevel = 4 // Forutsetter at brukere har logget seg på f.eks. bankId slik at nivå 4 er oppnådd
 	private var levetidOpprettetSoknad: Long = (System.getProperty("publiserSoknadEndring.levetid.opprettetsoknad") ?: "56").toLong()
@@ -41,18 +44,23 @@ class NotificationService(
 
 
 	private fun <T> publish(topic: String, key: NokkelInput, value: T, kafkaTemplate: KafkaTemplate<NokkelInput, T>) {
-		val fullTopic = nameSpace+topic
+		val fullTopic = notificationNamespace+topic
 		logger.info("${key.getEventId()}: På gruppering ${key.getGrupperingsId()} skal publisere notifikasjon på topic $fullTopic")
 		val producerRecord = ProducerRecord(fullTopic, key, value)
 		val headers = RecordHeaders()
 		headers.add(MESSAGE_ID, UUID.randomUUID().toString().toByteArray())
 		headers.forEach { h -> producerRecord.headers().add(h) }
 
-		val future = kafkaTemplate.send(producerRecord)
-		future.get(10, TimeUnit.SECONDS)
-		logger.info("${key.getEventId()}: Published to $topic")
+		if (correctNamespace(appConfiguration.kafkaConfig.namespace)) {
+			val future = kafkaTemplate.send(producerRecord)
+			future.get(10, TimeUnit.SECONDS)
+			logger.info("${key.getEventId()}: Published to $topic")
+		}
 	}
 
+	private fun correctNamespace(currentNamespace: String): Boolean {
+		return allowedNamespace.contains(currentNamespace)
+	}
 
 	fun newNotification(key: String, soknad: SoknadRef, brukerNotifikasjonInfo: NotificationInfo) {
 		val eventId = if (isIdFromHenvendelse(key)) createULIDEventId(key, soknad.erEttersendelse) else	key
@@ -126,7 +134,7 @@ class NotificationService(
 
 	private fun createNotificationKey(enventId: String, fnr: String, groupId: String): NokkelInput {
 		return NokkelInputBuilder()
-			.withNamespace(nameSpace)
+			.withNamespace(notificationNamespace)
 			.withAppnavn(appNavn)
 			.withEventId(enventId)
 			.withFodselsnummer(fnr)

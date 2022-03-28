@@ -34,10 +34,10 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 		consumes = ["application/json"]
 	)
 	override fun newNotification(addNotification: AddNotification): ResponseEntity<Unit> {
-		val soknadRef = addNotification.soknadRef!![0]
+		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
-		log(key, soknadRef)
-		val brukerNotifikasjonInfo = addNotification.brukernotifikasjonInfo[0]
+		log(key, "Request to publish message or task notification for", soknadRef)
+		val brukerNotifikasjonInfo = addNotification.brukernotifikasjonInfo
 		notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
 		return ResponseEntity(HttpStatus.OK)
 	}
@@ -58,20 +58,20 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 	)
 	override fun cancelNotification(soknadRef: SoknadRef): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
-		logger.info("$key: Request to publish done notification")
+		log(key,"Request to publish done notification for", soknadRef)
 		notificationService.cancelNotification(key, soknadRef)
 		return ResponseEntity(HttpStatus.OK)
 	}
 
-	private fun log(key: String, soknad: SoknadRef) {
+	private fun log(key: String, message: String, soknad: SoknadRef) {
 		val fnrMasked = SoknadRef(
 			soknad.innsendingId,
 			soknad.erEttersendelse,
-			"**fnr can be found in secure logs**",
 			soknad.groupId,
+			"**fnr can be found in secure logs**",
 			soknad.endringsDato
 		)
-		logger.info("$key: Request to publish notification for new Application '$fnrMasked'")
-		secureLogger.info("$key: Request to publish notification for new Application '$soknad'")
+		logger.info("$key: $message '$fnrMasked'")
+		secureLogger.info("$key: message '$soknad'")
 	}
 }
