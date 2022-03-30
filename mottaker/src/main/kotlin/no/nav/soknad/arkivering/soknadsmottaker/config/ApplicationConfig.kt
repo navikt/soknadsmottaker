@@ -17,8 +17,18 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_SECPROT" to "",
 		"KAFKA_SASLMEC" to "",
 
+		"KAFKA_SCHEMA_REGISTRY_USER" to "",
+		"KAFKA_SCHEMA_REGISTRY_PASSWORD" to "",
+		"KAFKA_SCHEMA_REGISTRY" to "",
+		"KAFKA_BROKERS" to "",
+		"KAFKA_CREDSTORE_PASSWORD" to "",
+		"KAFKA_TRUSTSTORE_PATH" to "",
+		"KAFKA_KEYSTORE_PATH" to "",
+
 		"BASICAUTH_USERNAME" to "innsending",
-		"BASICAUTH_PASSWORD" to "password"
+		"BASICAUTH_PASSWORD" to "password",
+
+		"NAIS_NAMESPACE" to "default"
 	)
 )
 
@@ -44,8 +54,19 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
 		val topic: String = "KAFKA_TOPIC".configProperty(),
 		val metricsTopic: String = "KAFKA_METRICS_TOPIC".configProperty(),
-		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";"
-	)
+		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";",
+
+		// Kafka på Aiven config
+		val namespace: String = "NAIS_NAMESPACE".configProperty(),
+		val aivenRegisteryUsername: String = "KAFKA_SCHEMA_REGISTRY_USER".configProperty(),
+		val aivenRegisteryPassword: String = "KAFKA_SCHEMA_REGISTRY_PASSWORD".configProperty(),
+		val aivenRegisteryUrl: String = "KAFKA_SCHEMA_REGISTRY".configProperty(),
+		val aivenServers: String= "KAFKA_BROKERS".configProperty(),
+		val trustStorePath: String = "KAFKA_TRUSTSTORE_PATH".configProperty(),
+		val privateKeyPath: String = "KAFKA_KEYSTORE_PATH".configProperty(),
+		val credstorePassword: String = "KAFKA_CREDSTORE_PASSWORD".configProperty()
+
+		)
 
 	data class RestConfig(
 		val username: String = readFileAsText("/secrets/innsending-data/username", "BASICAUTH_USERNAME".configProperty()),

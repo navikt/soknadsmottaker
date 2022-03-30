@@ -9,5 +9,6 @@
 	"schema-registry-url": "https://kafka-schema-registry.nais.adeo.no",
 	"profile": "prod",
 	"kafka-main-topic": "privat-soknadInnsendt-v1",
-	"kafka-metrics-topic": "privat-soknadInnsendt-metrics-v1"
+	"kafka-metrics-topic": "privat-soknadInnsendt-metrics-v1",
+	"kafka-pool": "nav-prod"
 }
