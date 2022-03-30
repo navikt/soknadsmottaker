@@ -2,7 +2,6 @@ package no.nav.soknad.arkivering.soknadsmottaker.config
 
 import com.natpryce.konfig.*
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
-import io.swagger.v3.oas.annotations.servers.Servers
 import org.springframework.context.annotation.Bean
 import java.io.File
 

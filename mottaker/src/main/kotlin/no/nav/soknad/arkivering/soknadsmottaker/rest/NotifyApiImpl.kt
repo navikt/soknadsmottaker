@@ -72,6 +72,6 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 			soknad.endringsDato
 		)
 		logger.info("$key: $message '$fnrMasked'")
-		secureLogger.info("$key: message '$soknad'")
+		secureLogger.info("$key: $message '$soknad'")
 	}
 }
