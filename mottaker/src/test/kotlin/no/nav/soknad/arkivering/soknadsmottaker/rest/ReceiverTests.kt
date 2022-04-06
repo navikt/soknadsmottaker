@@ -4,6 +4,10 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.prometheus.client.CollectorRegistry
+import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
+import no.nav.brukernotifikasjon.schemas.input.DoneInput
+import no.nav.brukernotifikasjon.schemas.input.NokkelInput
+import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
@@ -32,6 +36,9 @@ class ReceiverTests {
 
 	private val kafkaMock = mockk<KafkaTemplate<String, Soknadarkivschema>>()
 	private val metricsKafkaMock = mockk<KafkaTemplate<String, InnsendingMetrics>>()
+	private val beskjedKafkaMock = mockk<KafkaTemplate<NokkelInput, BeskjedInput>>()
+	private val oppgaveKafkaMock = mockk<KafkaTemplate<NokkelInput, OppgaveInput>>()
+	private val doneKafkaMock = mockk<KafkaTemplate<NokkelInput, DoneInput>>()
 
 	private val metrics = InnsendtMetrics(CollectorRegistry(true))
 	private val receiver = mockReceiver(metrics)
@@ -101,7 +108,7 @@ class ReceiverTests {
 		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
 
 	private fun mockReceiver(metrics: InnsendtMetrics): RestApi {
-		val kafkaSender = KafkaSender(kafkaMock, metricsKafkaMock)
+		val kafkaSender = KafkaSender(kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock)
 		val archiverService = ArchiverService(kafkaSender, AppConfiguration(), metrics)
 		return RestApi(archiverService)
 	}
