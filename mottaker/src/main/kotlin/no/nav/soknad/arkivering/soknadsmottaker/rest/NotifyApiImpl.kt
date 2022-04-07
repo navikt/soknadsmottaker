@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class NotifyApiImpl (private val notificationService: NotificationService): NotifyApi  {
+class NotifyApiImpl(private val notificationService: NotificationService) : NotifyApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
 	/**
-	 * The following annotations are copied from [NotifyApiImpl.newNotification].
+	 * The following annotations are copied from [NotifyApi.newNotification].
 	 */
 	@Operation(
 		summary = "Message in order to publish user notification",
@@ -43,12 +43,12 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 	}
 
 	/**
-	 * The following annotations are copied from [NotifyApiImpl.cancelNotification].
+	 * The following annotations are copied from [NotifyApi.cancelNotification].
 	 */
 	@Operation(
 		summary = "Message in order to cancel a published user notification",
 		operationId = "cancelNotification",
-		description = "After an application is sent in or deleted previous user notification shall be canceld.")
+		description = "After an application is sent in or deleted previous user notification shall be canceled.")
 	@ApiResponses(
 		value = [ApiResponse(responseCode = "200", description = "Successful operation")])
 	@RequestMapping(
@@ -58,7 +58,7 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 	)
 	override fun cancelNotification(soknadRef: SoknadRef): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
-		log(key,"Request to publish done notification for", soknadRef)
+		log(key, "Request to publish done notification for", soknadRef)
 		notificationService.cancelNotification(key, soknadRef)
 		return ResponseEntity(HttpStatus.OK)
 	}
@@ -68,8 +68,8 @@ class NotifyApiImpl (private val notificationService: NotificationService): Noti
 			soknad.innsendingId,
 			soknad.erEttersendelse,
 			soknad.groupId,
-			"**fnr can be found in secure logs**",
-			soknad.endringsDato
+			personId = "**fnr can be found in secure logs**",
+			soknad.tidpunktEndret
 		)
 		logger.info("$key: $message '$fnrMasked'")
 		secureLogger.info("$key: $message '$soknad'")

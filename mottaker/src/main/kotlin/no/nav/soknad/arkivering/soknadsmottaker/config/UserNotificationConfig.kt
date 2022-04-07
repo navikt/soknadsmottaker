@@ -10,7 +10,6 @@ import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
-import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
@@ -25,10 +24,8 @@ class UserNotificationConfig(private val appConfiguration: AppConfiguration) {
 		val configProps = java.util.HashMap<String, Any>().also {
 			it[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = appConfig.aivenServers
 			it[KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG] = appConfig.aivenRegisteryUrl
-			//it[ProducerConfig.CLIENT_ID_CONFIG] = type + NetUtil.getHostname(InetSocketAddress(0)
 			it[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
 			it[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
-			//it[ProducerConfig.TRANSACTIONAL_ID_CONFIG] = buildTransactionIdName(type, eventSource)
 			it[ProducerConfig.MAX_BLOCK_MS_CONFIG] = 30000
 			it[ProducerConfig.ACKS_CONFIG] = "all"
 			it[ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG] = "false"

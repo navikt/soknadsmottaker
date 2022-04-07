@@ -43,7 +43,7 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		val fnrMasked = Soknad(
 			soknad.innsendingId,
 			soknad.erEttersendelse,
-			"**fnr can be found in secure logs**",
+			personId = "**fnr can be found in secure logs**",
 			soknad.tema,
 			soknad.dokumenter
 		)
