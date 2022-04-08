@@ -23,9 +23,9 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	 * The following annotations are copied from [NotifyApi.newNotification].
 	 */
 	@Operation(
-		summary = "Message in order to publish user notification",
+		summary = "Message in order to publish to Kafka hosted on Aiven user notification - Beskjed or Oppgave",
 		operationId = "newNotification",
-		description = "When creating an application, an user notification with link to the application shall be published.")
+		description = "Depending on input, a message or a task user notification with a link to continue work is to be published")
 	@ApiResponses(
 		value = [ApiResponse(responseCode = "200", description = "Successful operation")])
 	@RequestMapping(
@@ -46,9 +46,9 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	 * The following annotations are copied from [NotifyApi.cancelNotification].
 	 */
 	@Operation(
-		summary = "Message in order to cancel a published user notification",
+		summary = "Message in order to publish message in order to cancel an user notification",
 		operationId = "cancelNotification",
-		description = "After an application is sent in or deleted previous user notification shall be canceled.")
+		description = "After an application is sent in or deleted previous added user notification shall be canceled")
 	@ApiResponses(
 		value = [ApiResponse(responseCode = "200", description = "Successful operation")])
 	@RequestMapping(
