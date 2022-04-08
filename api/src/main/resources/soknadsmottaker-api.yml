@@ -291,7 +291,7 @@ components:
           example: 56
         eksternVarsling:
           type: array
-          description: TODO
+          description: Angir om varsel skal sendes til søker på f.eks. SMS eller epost.
           items:
             $ref: "#/components/schemas/Varsel"
 
@@ -303,15 +303,20 @@ components:
       properties:
         kanal:
           type: string
-          description: TODO
+          description: Angir på hvilken kanal varsel skal sendes til søker.
           example: epost
           enum:
             - sms
             - epost
         tekst:
           type: string
-          description: TODO
-          example: TODO
+          description: Spesifiserer en overordnet beskrivelse av et varsel til søker.
+          example: Ny soknad opprettet. Logg inn på NAV for å finne lenke for å åpne denne.
+        tittel:
+          type: string
+          nullable: true
+          description: Spesifiserer en tittel på epost dersom det sendes varsel via epost.
+          example: Notifikasjon fra NAV
 
   securitySchemes:
     basicAuth:

@@ -27,6 +27,7 @@ class NotificationService(
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
+	private val defaultVarselTittel = "Notifikasjon fra NAV"
 	val appNavn = "soknadsmottaker"
 	val allowedNamespace = listOf("team-soknad")
 	val notificationNamespace = "min-side."
@@ -111,7 +112,7 @@ class NotificationService(
 				builder.withSmsVarslingstekst(varsel.tekst)
 			if (varsel.kanal == epost) {
 				builder.withEpostVarslingstekst(varsel.tekst)
-				builder.withEpostVarslingstittel("") // TODO
+				builder.withEpostVarslingstittel(varsel.tittel ?: defaultVarselTittel)
 			}
 		}
 
@@ -138,7 +139,7 @@ class NotificationService(
 		for (varsel in eksternVarsling) {
 			if (varsel.kanal == epost) {
 				builder.withEpostVarslingstekst(varsel.tekst)
-				builder.withEpostVarslingstittel("") // TODO
+				builder.withEpostVarslingstittel(varsel.tittel ?: defaultVarselTittel)
 			}
 			if (varsel.kanal == sms)
 				builder.withSmsVarslingstekst(varsel.tekst)
