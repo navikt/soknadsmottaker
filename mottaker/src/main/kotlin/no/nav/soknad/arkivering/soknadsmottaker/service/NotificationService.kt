@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZoneOffset
 
 @Service
 class NotificationService(
@@ -45,7 +46,7 @@ class NotificationService(
 		val eventId = if (isIdFromHenvendelse(key)) createULIDEventId(key, soknad.erEttersendelse) else	key
 		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
 
-		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		if (!soknad.erEttersendelse) {
 			val beskjedNotifikasjon = nyBeskjedNotifikasjon(
@@ -81,7 +82,7 @@ class NotificationService(
 
 		val eventId = if (isIdFromHenvendelse(key)) createULIDEventId(key, soknad.erEttersendelse) else	key
 		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
-		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		val doneNotifikasjon = DoneInputBuilder()
 			.withTidspunkt(hendelsestidspunkt)

@@ -259,7 +259,7 @@ components:
         tidpunktEndret:
           type: string
           format: date-time
-          description: Tidpunkt når forsendelsen sist endrets.
+          description: Tidpunkt når forsendelsen sist endrets, i UTC.
           example: 2022-04-06T14:10:00Z
 
     NotificationInfo:
