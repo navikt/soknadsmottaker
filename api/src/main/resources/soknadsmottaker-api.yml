@@ -59,7 +59,7 @@ paths:
   /notify/done:
     post:
       summary: Message in order to publish message in order to cancel an user notification
-      description: After an application is sent in or deleted previous added user notification shall be canceld
+      description: After an application is sent in or deleted previous added user notification shall be canceled
       operationId: cancelNotification
 
       requestBody:
@@ -268,6 +268,7 @@ components:
         - notifikasjonsTittel
         - lenke
         - antallAktiveDager
+        - eksternVarsling
       properties:
         notifikasjonsTittel:
           type: string
@@ -288,6 +289,29 @@ components:
           description:
             Antall dager Brukernotifikasjonen skal vises.
           example: 56
+        eksternVarsling:
+          type: array
+          description: TODO
+          items:
+            $ref: "#/components/schemas/Varsel"
+
+    Varsel:
+      type: object
+      required:
+        - kanal
+        - tekst
+      properties:
+        kanal:
+          type: string
+          description: TODO
+          example: epost
+          enum:
+            - sms
+            - epost
+        tekst:
+          type: string
+          description: TODO
+          example: TODO
 
   securitySchemes:
     basicAuth:
