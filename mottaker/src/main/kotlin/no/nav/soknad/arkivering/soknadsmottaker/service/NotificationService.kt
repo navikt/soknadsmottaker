@@ -10,6 +10,9 @@ import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import no.nav.soknad.arkivering.soknadsmottaker.model.NotificationInfo
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
+import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel
+import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel.Kanal.epost
+import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel.Kanal.sms
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.net.URL
@@ -48,7 +51,8 @@ class NotificationService(
 				brukerNotifikasjonInfo.notifikasjonsTittel,
 				brukerNotifikasjonInfo.lenke,
 				hendelsestidspunkt,
-				brukerNotifikasjonInfo.antallAktiveDager
+				brukerNotifikasjonInfo.antallAktiveDager,
+				brukerNotifikasjonInfo.eksternVarsling
 			)
 
 			logger.info("$eventId: Varsel om Beskjed for $key med lenke ${brukerNotifikasjonInfo.lenke} skal publiseres")
@@ -59,7 +63,8 @@ class NotificationService(
 				brukerNotifikasjonInfo.notifikasjonsTittel,
 				brukerNotifikasjonInfo.lenke,
 				hendelsestidspunkt,
-				brukerNotifikasjonInfo.antallAktiveDager
+				brukerNotifikasjonInfo.antallAktiveDager,
+				brukerNotifikasjonInfo.eksternVarsling
 			)
 			logger.info("$eventId: Varsel om Oppgave for $key med lenke ${brukerNotifikasjonInfo.lenke} skal publiseres")
 			kafkaSender.publishOppgaveNotification(notifikasjonsNokkel, oppgaveNotifikasjon)
@@ -88,36 +93,58 @@ class NotificationService(
 		title: String,
 		lenke: String,
 		hendelsestidspunkt: LocalDateTime,
-		antallAktiveDager: Int
+		antallAktiveDager: Int,
+		eksternVarsling: List<Varsel>
 	): BeskjedInput {
 
 		val synligFremTil = LocalDateTime.now().plusDays(antallAktiveDager.toLong())
-		return BeskjedInputBuilder()
+		val builder = BeskjedInputBuilder()
 			.withTekst(title)
 			.withLink(URL(lenke))
 			.withSikkerhetsnivaa(securityLevel)
 			.withTidspunkt(hendelsestidspunkt)
 			.withSynligFremTil(synligFremTil)
-			.withEksternVarsling(false)
-			.build()
+			.withEksternVarsling(eksternVarsling.isNotEmpty())
+
+		for (varsel in eksternVarsling) {
+			if (varsel.kanal == sms)
+				builder.withSmsVarslingstekst(varsel.tekst)
+			if (varsel.kanal == epost) {
+				builder.withEpostVarslingstekst(varsel.tekst)
+				builder.withEpostVarslingstittel("") // TODO
+			}
+		}
+
+		return builder.build()
 	}
 
 	private fun nyOppgaveNotifikasjon(
 		title: String,
 		lenke: String,
 		hendelsestidspunkt: LocalDateTime,
-		antallAktiveDager: Int
+		antallAktiveDager: Int,
+		eksternVarsling: List<Varsel>
 	): OppgaveInput {
 
 		val synligFremTil = LocalDateTime.now().plusDays(antallAktiveDager.toLong())
-		return OppgaveInputBuilder()
+		val builder = OppgaveInputBuilder()
 			.withTekst(title)
 			.withLink(URL(lenke))
 			.withSikkerhetsnivaa(securityLevel)
 			.withTidspunkt(hendelsestidspunkt)
 			.withSynligFremTil(synligFremTil)
-			.withEksternVarsling(false)
-			.build()
+			.withEksternVarsling(eksternVarsling.isNotEmpty())
+
+		for (varsel in eksternVarsling) {
+			if (varsel.kanal == epost) {
+				builder.withEpostVarslingstekst(varsel.tekst)
+				builder.withEpostVarslingstittel("") // TODO
+			}
+			if (varsel.kanal == sms)
+				builder.withSmsVarslingstekst(varsel.tekst)
+		}
+
+		return builder.build()
 	}
 
 	private fun createNotificationKey(enventId: String, fnr: String, groupId: String): NokkelInput {
