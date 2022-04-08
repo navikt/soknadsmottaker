@@ -68,7 +68,7 @@ class NotificationService(
 				brukerNotifikasjonInfo.antallAktiveDager,
 				brukerNotifikasjonInfo.eksternVarsling
 			)
-			logger.info("$eventId: Varsel om Oppgave med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke} " +
+			logger.info("$key: Varsel om Oppgave med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke} " +
 				"skal publiseres")
 			kafkaSender.publishOppgaveNotification(notifikasjonsNokkel, oppgaveNotifikasjon)
 		}
