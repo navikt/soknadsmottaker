@@ -1,8 +1,8 @@
 {
 	"namespace": "team-soknad",
 	"ingress": [
-		"https://soknadsmottaker-newapi.intern.nav.no",
-		"https://soknadsmottaker-newapi.prod-fss.nais.io"
+		"https://soknadsmottaker.intern.nav.no",
+		"https://soknadsmottaker.prod-fss.nais.io"
 	],
 	"service-user-path": "/serviceuser/data/prod/srvsoknadsmottaker",
 	"kafka-bootstrap-servers": "SASL_SSL://a01apvl00145.adeo.no:8443,SASL_SSL://a01apvl00146.adeo.no:8443,SASL_SSL://a01apvl00147.adeo.no:8443,SASL_SSL://a01apvl00149.adeo.no:8443",
