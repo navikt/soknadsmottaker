@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.net.URL
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 
 @Service
@@ -57,7 +56,8 @@ class NotificationService(
 				brukerNotifikasjonInfo.eksternVarsling
 			)
 
-			logger.info("$eventId: Varsel om Beskjed for $key med lenke ${brukerNotifikasjonInfo.lenke} skal publiseres")
+			logger.info("$key: Varsel om Beskjed med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke} " +
+				"skal publiseres")
 			kafkaSender.publishBeskjedNotification(notifikasjonsNokkel, beskjedNotifikasjon)
 
 		} else {
@@ -68,7 +68,8 @@ class NotificationService(
 				brukerNotifikasjonInfo.antallAktiveDager,
 				brukerNotifikasjonInfo.eksternVarsling
 			)
-			logger.info("$eventId: Varsel om Oppgave for $key med lenke ${brukerNotifikasjonInfo.lenke} skal publiseres")
+			logger.info("$eventId: Varsel om Oppgave med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke} " +
+				"skal publiseres")
 			kafkaSender.publishOppgaveNotification(notifikasjonsNokkel, oppgaveNotifikasjon)
 		}
 	}
