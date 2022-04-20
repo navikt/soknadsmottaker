@@ -15,14 +15,14 @@
 	<properties>
 		<brukernotifikasjon-schemas.version>v2.5.1</brukernotifikasjon-schemas.version>
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
-		<confluent.version>7.0.1</confluent.version>
-		<springdoc.version>1.6.5</springdoc.version>
+		<confluent.version>7.1.0</confluent.version>
+		<springdoc.version>1.6.7</springdoc.version>
 		<konfig.version>1.6.10.0</konfig.version>
-		<prometheus-simpleclient.version>0.14.1</prometheus-simpleclient.version>
-		<logstash.version>7.0.1</logstash.version>
-		<mockk.version>1.12.2</mockk.version>
+		<prometheus-simpleclient.version>0.15.0</prometheus-simpleclient.version>
+		<logstash.version>7.1.1</logstash.version>
+		<mockk.version>1.12.3</mockk.version>
 
-		<kotlin.version>1.6.10</kotlin.version>
+		<kotlin.version>1.6.20</kotlin.version>
 		<java.version>17</java.version>
 	</properties>
 
