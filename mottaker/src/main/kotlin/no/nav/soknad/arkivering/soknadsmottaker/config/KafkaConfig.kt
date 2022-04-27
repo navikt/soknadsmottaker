@@ -39,7 +39,7 @@ class KafkaConfig(private val appConfiguration: AppConfiguration) {
 			else -> "*Secret from Vault*"
 		}
 		logger.info("Will use the following KafkaConfig: Bootstrap servers='${configProps[BOOTSTRAP_SERVERS_CONFIG]}', " +
-			"User='${config.username}', password='$password', topic='${config.topic}'")
+			"User='${config.username}', password='$password'")
 
 		return configProps
 	}

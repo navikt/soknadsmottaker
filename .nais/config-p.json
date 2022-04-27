@@ -10,5 +10,8 @@
 	"profile": "prod",
 	"kafka-main-topic": "privat-soknadInnsendt-v1",
 	"kafka-metrics-topic": "privat-soknadInnsendt-metrics-v1",
+	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1",
+	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1",
+	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1",
 	"kafka-pool": "nav-prod"
 }

@@ -6,6 +6,7 @@ import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
+import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeaders
 import org.slf4j.LoggerFactory
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class KafkaSender(
+	private val appConfiguration: AppConfiguration,
 	private val kafkaTemplate: KafkaTemplate<String, Soknadarkivschema>,
 	private val metricKafkaTemplate: KafkaTemplate<String, InnsendingMetrics>,
 	private val kafkaBeskjedTemplate: KafkaTemplate<NokkelInput, BeskjedInput>,
@@ -24,26 +26,31 @@ class KafkaSender(
 ) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	fun publish(topic: String, key: String, value: Soknadarkivschema) {
+	fun publishSoknadarkivschema(key: String, value: Soknadarkivschema) {
+		val topic = appConfiguration.kafkaConfig.mainTopic
 		publish(topic, key, value, kafkaTemplate)
 		logger.info("$key: Published to $topic")
 	}
 
-	fun publishMetric(topic: String, key: String, value: InnsendingMetrics) {
+	fun publishMetric(key: String, value: InnsendingMetrics) {
+		val topic = appConfiguration.kafkaConfig.metricsTopic
 		publish(topic, key, value, metricKafkaTemplate)
 		logger.info("$key: Published to $topic")
 	}
 
 	fun publishDoneNotification(key: NokkelInput, value: DoneInput) {
-		publishBrukernotifikasjon("min-side.aapen-brukernotifikasjon-done-v1", key, value, kafkaDoneTemplate)
+		val topic = appConfiguration.kafkaConfig.brukernotifikasjonDoneTopic
+		publishBrukernotifikasjon(topic, key, value, kafkaDoneTemplate)
 	}
 
 	fun publishBeskjedNotification(key: NokkelInput, value: BeskjedInput) {
-		publishBrukernotifikasjon("min-side.aapen-brukernotifikasjon-beskjed-v1", key, value, kafkaBeskjedTemplate)
+		val topic = appConfiguration.kafkaConfig.brukernotifikasjonBeskjedTopic
+		publishBrukernotifikasjon(topic, key, value, kafkaBeskjedTemplate)
 	}
 
 	fun publishOppgaveNotification(key: NokkelInput, value: OppgaveInput) {
-		publishBrukernotifikasjon("min-side.aapen-brukernotifikasjon-oppgave-v1", key, value, kafkaOppgaveTemplate)
+		val topic = appConfiguration.kafkaConfig.brukernotifikasjonOppgaveTopic
+		publishBrukernotifikasjon(topic, key, value, kafkaOppgaveTemplate)
 	}
 
 	private fun <T> publishBrukernotifikasjon(topic: String, key: NokkelInput, value: T, kafkaTemplate: KafkaTemplate<NokkelInput, T>) {

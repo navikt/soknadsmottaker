@@ -7,8 +7,11 @@ import java.io.File
 
 private val defaultProperties = ConfigurationMap(
 	mapOf(
-		"KAFKA_TOPIC" to "privat-soknadInnsendt-v1-teamsoknad",
+		"KAFKA_MAIN_TOPIC" to "privat-soknadInnsendt-v1-teamsoknad",
 		"KAFKA_METRICS_TOPIC" to "privat-soknadInnsendt-metrics-v1-teamsoknad",
+		"KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC" to "min-side.aapen-brukernotifikasjon-done-v1",
+		"KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC" to "min-side.aapen-brukernotifikasjon-beskjed-v1",
+		"KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC" to "min-side.aapen-brukernotifikasjon-oppgave-v1",
 		"SCHEMA_REGISTRY_URL" to "http://localhost:8081",
 		"KAFKA_BOOTSTRAP_SERVERS" to "localhost:29092",
 		"KAFKA_USERNAME" to "kafkaproducer",
@@ -52,8 +55,6 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val secure: String = "KAFKA_SECURITY".configProperty(),
 		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
 		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
-		val topic: String = "KAFKA_TOPIC".configProperty(),
-		val metricsTopic: String = "KAFKA_METRICS_TOPIC".configProperty(),
 		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";",
 
 		// Kafka på Aiven config
@@ -64,9 +65,14 @@ data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val re
 		val aivenServers: String= "KAFKA_BROKERS".configProperty(),
 		val trustStorePath: String = "KAFKA_TRUSTSTORE_PATH".configProperty(),
 		val privateKeyPath: String = "KAFKA_KEYSTORE_PATH".configProperty(),
-		val credstorePassword: String = "KAFKA_CREDSTORE_PASSWORD".configProperty()
+		val credstorePassword: String = "KAFKA_CREDSTORE_PASSWORD".configProperty(),
 
-		)
+		val mainTopic: String = "KAFKA_MAIN_TOPIC".configProperty(),
+		val metricsTopic: String = "KAFKA_METRICS_TOPIC".configProperty(),
+		val brukernotifikasjonDoneTopic: String = "KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC".configProperty(),
+		val brukernotifikasjonBeskjedTopic: String = "KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC".configProperty(),
+		val brukernotifikasjonOppgaveTopic: String = "KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC".configProperty()
+	)
 
 	data class RestConfig(
 		val username: String = readFileAsText("/secrets/innsending-data/username", "BASICAUTH_USERNAME".configProperty()),

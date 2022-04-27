@@ -18,9 +18,8 @@ class SoknadsmottakerApplicationTests {
 
 	@Test
 	fun `Reads environment variables correctly`() {
-		assertEquals("privat-soknadInnsendt-v1-teamsoknad", config.kafkaConfig.topic)
+		assertEquals("privat-soknadInnsendt-v1-teamsoknad", config.kafkaConfig.mainTopic)
 		assertEquals("privat-soknadInnsendt-metrics-v1-teamsoknad", config.kafkaConfig.metricsTopic)
-		assertEquals("kafkaproducer", config.kafkaConfig.username)
 		assertEquals("innsending", config.restConfig.username)
 		assertEquals("password", config.restConfig.password)
 	}

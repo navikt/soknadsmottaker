@@ -108,8 +108,9 @@ class ReceiverTests {
 		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
 
 	private fun mockReceiver(metrics: InnsendtMetrics): RestApi {
-		val kafkaSender = KafkaSender(kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock)
-		val archiverService = ArchiverService(kafkaSender, AppConfiguration(), metrics)
+		val conf = AppConfiguration()
+		val kafkaSender = KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock)
+		val archiverService = ArchiverService(kafkaSender, metrics)
 		return RestApi(archiverService)
 	}
 }

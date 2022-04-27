@@ -58,7 +58,13 @@ spec:
       value: PLAIN
     - name: SPRING_PROFILES_ACTIVE
       value: {{profile}}
-    - name: KAFKA_TOPIC
+    - name: KAFKA_MAIN_TOPIC
       value: {{kafka-main-topic}}
     - name: KAFKA_METRICS_TOPIC
       value: {{kafka-metrics-topic}}
+    - name: KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC
+      value: {{kafka-brukernotifikasjon-done-topic}}
+    - name: KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC
+      value: {{kafka-brukernotifikasjon-beskjed-topic}}
+    - name: KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC
+      value: {{kafka-brukernotifikasjon-oppgave-topic}}
