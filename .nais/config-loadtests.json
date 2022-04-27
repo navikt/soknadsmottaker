@@ -1,0 +1,13 @@
+{
+	"namespace": "team-soknad",
+	"ingress": [
+		"https://soknadsmottaker-gcp.dev.intern.nav.no"
+	],
+	"service-user-path": "/serviceuser/data/dev/srvsoknadsmottaker",
+	"profile": "dev",
+	"kafka-main-topic": "privat-soknadInnsendt-v1-loadtests",
+	"kafka-metrics-topic": "privat-soknadInnsendt-metrics-v1-loadtests",
+	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1-loadtests",
+	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1-loadtests",
+	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1-loadtests"
+}

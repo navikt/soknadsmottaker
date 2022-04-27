@@ -12,18 +12,12 @@ private val defaultProperties = ConfigurationMap(
 		"KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC" to "min-side.aapen-brukernotifikasjon-done-v1",
 		"KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC" to "min-side.aapen-brukernotifikasjon-beskjed-v1",
 		"KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC" to "min-side.aapen-brukernotifikasjon-oppgave-v1",
-		"SCHEMA_REGISTRY_URL" to "http://localhost:8081",
-		"KAFKA_BOOTSTRAP_SERVERS" to "localhost:29092",
-		"KAFKA_USERNAME" to "kafkaproducer",
-		"KAFKA_PASSWORD" to "",
-		"KAFKA_SECURITY" to "",
-		"KAFKA_SECPROT" to "",
-		"KAFKA_SASLMEC" to "",
 
+		"KAFKA_SECURITY" to "",
 		"KAFKA_SCHEMA_REGISTRY_USER" to "",
 		"KAFKA_SCHEMA_REGISTRY_PASSWORD" to "",
-		"KAFKA_SCHEMA_REGISTRY" to "",
-		"KAFKA_BROKERS" to "",
+		"KAFKA_SCHEMA_REGISTRY" to "http://localhost:8081",
+		"KAFKA_BROKERS" to "localhost:29092",
 		"KAFKA_CREDSTORE_PASSWORD" to "",
 		"KAFKA_TRUSTSTORE_PATH" to "",
 		"KAFKA_KEYSTORE_PATH" to "",
@@ -48,23 +42,14 @@ fun readFileAsText(fileName: String, default: String = "") = try { File(fileName
 
 data class AppConfiguration(val kafkaConfig: KafkaConfig = KafkaConfig(), val restConfig: RestConfig = RestConfig()) {
 	data class KafkaConfig(
-		val username: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/username", "KAFKA_USERNAME".configProperty()),
-		val password: String = readFileAsText("/var/run/secrets/nais.io/serviceuser/password", "KAFKA_PASSWORD".configProperty()),
-		val servers: String = "KAFKA_BOOTSTRAP_SERVERS".configProperty(),
-		val schemaRegistryUrl: String = "SCHEMA_REGISTRY_URL".configProperty(),
 		val secure: String = "KAFKA_SECURITY".configProperty(),
-		val protocol: String = "KAFKA_SECPROT".configProperty(), // SASL_PLAINTEXT | SASL_SSL
-		val salsmec: String = "KAFKA_SASLMEC".configProperty(), // PLAIN
-		val saslJaasConfig: String = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";",
-
-		// Kafka på Aiven config
 		val namespace: String = "NAIS_NAMESPACE".configProperty(),
-		val aivenRegisteryUsername: String = "KAFKA_SCHEMA_REGISTRY_USER".configProperty(),
-		val aivenRegisteryPassword: String = "KAFKA_SCHEMA_REGISTRY_PASSWORD".configProperty(),
-		val aivenRegisteryUrl: String = "KAFKA_SCHEMA_REGISTRY".configProperty(),
-		val aivenServers: String= "KAFKA_BROKERS".configProperty(),
-		val trustStorePath: String = "KAFKA_TRUSTSTORE_PATH".configProperty(),
-		val privateKeyPath: String = "KAFKA_KEYSTORE_PATH".configProperty(),
+		val schemaRegistryUsername: String = "KAFKA_SCHEMA_REGISTRY_USER".configProperty(),
+		val schemaRegistryPassword: String = "KAFKA_SCHEMA_REGISTRY_PASSWORD".configProperty(),
+		val schemaRegistryUrl: String = "KAFKA_SCHEMA_REGISTRY".configProperty(),
+		val kafkaBrokers: String= "KAFKA_BROKERS".configProperty(),
+		val truststorePath: String = "KAFKA_TRUSTSTORE_PATH".configProperty(),
+		val keystorePath: String = "KAFKA_KEYSTORE_PATH".configProperty(),
 		val credstorePassword: String = "KAFKA_CREDSTORE_PASSWORD".configProperty(),
 
 		val mainTopic: String = "KAFKA_MAIN_TOPIC".configProperty(),

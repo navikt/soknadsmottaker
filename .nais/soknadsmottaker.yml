@@ -46,18 +46,10 @@ spec:
   kafka:
     pool: {{ kafka-pool }}
   env:
-    - name: KAFKA_BOOTSTRAP_SERVERS
-      value: {{kafka-bootstrap-servers}}
-    - name: SCHEMA_REGISTRY_URL
-      value: {{schema-registry-url}}
-    - name: KAFKA_SECURITY
-      value: 'TRUE'
-    - name: KAFKA_SECPROT
-      value: SASL_SSL
-    - name: KAFKA_SASLMEC
-      value: PLAIN
     - name: SPRING_PROFILES_ACTIVE
       value: {{profile}}
+    - name: KAFKA_SECURITY
+      value: 'TRUE'
     - name: KAFKA_MAIN_TOPIC
       value: {{kafka-main-topic}}
     - name: KAFKA_METRICS_TOPIC
