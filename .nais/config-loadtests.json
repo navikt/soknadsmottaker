@@ -9,5 +9,6 @@
 	"kafka-metrics-topic": "privat-soknadInnsendt-metrics-v1-loadtests",
 	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1-loadtests",
 	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1-loadtests",
-	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1-loadtests"
+	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1-loadtests",
+	"kafka-pool": "nav-dev"
 }
