@@ -36,13 +36,16 @@ spec:
   {{/each}}
   secureLogs:
     enabled: true
-  vault:
-    enabled: true
-    paths:
-      - mountPath: /var/run/secrets/nais.io/serviceuser
-        kvPath: {{service-user-path}}
-      - mountPath: /secrets/innsending-data
-        kvPath: secret/team-soknad/innsending/basicauth
+  accessPolicy:
+    inbound:
+      rules:
+        - application: sendsoknad
+        - application: innsending-api
+  envFrom:
+    - secret: basicauth
+      metadata:
+        annotations:
+          reloader.stakater.com/match: "true"
   kafka:
     pool: {{ kafka-pool }}
   env:
