@@ -10,7 +10,7 @@ import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
-import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
+import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
@@ -108,7 +108,23 @@ class ReceiverTests {
 		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
 
 	private fun mockReceiver(metrics: InnsendtMetrics): RestApi {
-		val conf = AppConfiguration()
+		val conf = KafkaConfig().also {
+			it.namespace = "default"
+			it.secure = "FALSE"
+			it.schemaRegistryUsername = "user"
+			it.schemaRegistryPassword = "pass"
+			it.schemaRegistryUrl = "http://localhost:8081"
+			it.kafkaBrokers = "localhost:29092"
+			it.truststorePath = "path"
+			it.keystorePath = "path"
+			it.credstorePassword = "pass"
+
+			it.mainTopic = topic
+			it.metricsTopic = "privat-soknadInnsendt-metrics-v1-teamsoknad"
+			it.brukernotifikasjonDoneTopic = "min-side.aapen-brukernotifikasjon-done-v1"
+			it.brukernotifikasjonBeskjedTopic = "min-side.aapen-brukernotifikasjon-beskjed-v1"
+			it.brukernotifikasjonOppgaveTopic = "min-side.aapen-brukernotifikasjon-oppgave-v1"
+		}
 		val kafkaSender = KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock)
 		val archiverService = ArchiverService(kafkaSender, metrics)
 		return RestApi(archiverService)

@@ -14,56 +14,56 @@ import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.config.SaslConfigs.SASL_MECHANISM
 import org.apache.kafka.common.config.SslConfigs.*
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 
 @Configuration
-class KafkaConfig(private val appConfiguration: AppConfiguration) {
+class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 
-	fun getKafkaConfig(): HashMap<String, Any> {
-		val appConfig = appConfiguration.kafkaConfig
+	fun createKafkaConfig(): HashMap<String, Any> {
 
 		return HashMap<String, Any>().also {
-			it[BOOTSTRAP_SERVERS_CONFIG] = appConfig.kafkaBrokers
-			it[SCHEMA_REGISTRY_URL_CONFIG] = appConfig.schemaRegistryUrl
+			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.kafkaBrokers
+			it[SCHEMA_REGISTRY_URL_CONFIG] = kafkaConfig.schemaRegistryUrl
 			it[KEY_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
 			it[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
 			it[MAX_BLOCK_MS_CONFIG] = 30000
 			it[ACKS_CONFIG] = "all"
 			it[ENABLE_IDEMPOTENCE_CONFIG] = "false"
-			if (appConfig.secure == "TRUE") {
-				it[USER_INFO_CONFIG] = "${appConfig.schemaRegistryUsername}:${appConfig.schemaRegistryPassword}"
+			if (kafkaConfig.secure == "TRUE") {
+				it[USER_INFO_CONFIG] = "${kafkaConfig.schemaRegistryUsername}:${kafkaConfig.schemaRegistryPassword}"
 				it[BASIC_AUTH_CREDENTIALS_SOURCE] = "USER_INFO"
 				it[SASL_MECHANISM] = "PLAIN"
 				it[SECURITY_PROTOCOL_CONFIG] = "SSL"
 				it[SSL_TRUSTSTORE_TYPE_CONFIG] = "jks"
 				it[SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
-				it[SSL_TRUSTSTORE_PASSWORD_CONFIG] = appConfig.credstorePassword
-				it[SSL_KEYSTORE_PASSWORD_CONFIG] = appConfig.credstorePassword
-				it[SSL_KEY_PASSWORD_CONFIG] = appConfig.credstorePassword
-				it[SSL_TRUSTSTORE_LOCATION_CONFIG] = appConfig.truststorePath
-				it[SSL_KEYSTORE_LOCATION_CONFIG] = appConfig.keystorePath
+				it[SSL_TRUSTSTORE_PASSWORD_CONFIG] = kafkaConfig.credstorePassword
+				it[SSL_KEYSTORE_PASSWORD_CONFIG] = kafkaConfig.credstorePassword
+				it[SSL_KEY_PASSWORD_CONFIG] = kafkaConfig.credstorePassword
+				it[SSL_TRUSTSTORE_LOCATION_CONFIG] = kafkaConfig.truststorePath
+				it[SSL_KEYSTORE_LOCATION_CONFIG] = kafkaConfig.keystorePath
 				it[SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG] =  ""
 			}
 		}
 	}
 
 	@Bean
-	fun producerFactory() = DefaultKafkaProducerFactory<String, Soknadarkivschema>(getKafkaConfig())
+	fun producerFactory() = DefaultKafkaProducerFactory<String, Soknadarkivschema>(createKafkaConfig())
 
 	@Bean
-	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(getKafkaConfig())
+	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(createKafkaConfig())
 
 	@Bean
-	fun defaultBeskjedNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, BeskjedInput>(getKafkaConfig())
+	fun defaultBeskjedNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, BeskjedInput>(createKafkaConfig())
 
 	@Bean
-	fun defaultOppgaveNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, OppgaveInput>(getKafkaConfig())
+	fun defaultOppgaveNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, OppgaveInput>(createKafkaConfig())
 
 	@Bean
-	fun defaultDoneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(getKafkaConfig())
+	fun defaultDoneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(createKafkaConfig())
 
 	@Bean
 	fun kafkaBeskjedTemplate() = KafkaTemplate(defaultBeskjedNotificationFactory())
@@ -79,4 +79,23 @@ class KafkaConfig(private val appConfiguration: AppConfiguration) {
 
 	@Bean
 	fun metricKafkaTemplate() = KafkaTemplate(metricProducerFactory())
+}
+
+@ConfigurationProperties("kafkaconfig")
+class KafkaConfig {
+	lateinit var namespace: String
+	lateinit var secure: String
+	lateinit var schemaRegistryUsername: String
+	lateinit var schemaRegistryPassword: String
+	lateinit var schemaRegistryUrl: String
+	lateinit var kafkaBrokers: String
+	lateinit var truststorePath: String
+	lateinit var keystorePath: String
+	lateinit var credstorePassword: String
+
+	lateinit var mainTopic: String
+	lateinit var metricsTopic: String
+	lateinit var brukernotifikasjonDoneTopic: String
+	lateinit var brukernotifikasjonBeskjedTopic: String
+	lateinit var brukernotifikasjonOppgaveTopic: String
 }

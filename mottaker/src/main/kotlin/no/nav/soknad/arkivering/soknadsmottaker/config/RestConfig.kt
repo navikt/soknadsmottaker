@@ -2,6 +2,7 @@ package no.nav.soknad.arkivering.soknadsmottaker.config
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -12,7 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfigurerAdapter() {
+class WebSecurityConfig(private val restConfig: RestConfig) : WebSecurityConfigurerAdapter() {
 
 	override fun configure(http: HttpSecurity) {
 		http
@@ -31,8 +32,14 @@ class WebSecurityConfig(private val config: AppConfiguration) : WebSecurityConfi
 	@Autowired
 	fun configureGlobal(auth: AuthenticationManagerBuilder) {
 		auth.inMemoryAuthentication()
-			.withUser(config.restConfig.username)
-			.password("{noop}${config.restConfig.password}")
+			.withUser(restConfig.username)
+			.password("{noop}${restConfig.password}")
 			.roles("ADMIN")
 	}
+}
+
+@ConfigurationProperties("restconfig")
+class RestConfig {
+	lateinit var username: String
+	lateinit var password: String
 }

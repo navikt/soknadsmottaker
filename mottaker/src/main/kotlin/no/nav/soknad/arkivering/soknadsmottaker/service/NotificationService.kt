@@ -7,7 +7,7 @@ import no.nav.brukernotifikasjon.schemas.builders.OppgaveInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
-import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
+import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
 import no.nav.soknad.arkivering.soknadsmottaker.model.NotificationInfo
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class NotificationService(
 	private val kafkaSender: KafkaSender,
-	private val appConfiguration: AppConfiguration
+	private val kafkaConfig: KafkaConfig
 ) {
 
 	private val logger = LoggerFactory.getLogger(javaClass)
@@ -38,9 +38,8 @@ class NotificationService(
 
 
 	fun newNotification(key: String, soknad: SoknadRef, brukerNotifikasjonInfo: NotificationInfo) {
-		if (!correctNamespace(appConfiguration.kafkaConfig.namespace)) {
-			logger.info("$key: Will not publish Beskjed/Oppgave, the namespace '${appConfiguration.kafkaConfig.namespace}' " +
-				"is not correct.")
+		if (!correctNamespace(kafkaConfig.namespace)) {
+			logger.info("$key: Will not publish Beskjed/Oppgave, the namespace '${kafkaConfig.namespace}' is not correct.")
 			return
 		}
 
@@ -56,9 +55,8 @@ class NotificationService(
 	}
 
 	fun cancelNotification(key: String, soknad: SoknadRef) {
-		if (!correctNamespace(appConfiguration.kafkaConfig.namespace)) {
-			logger.info("$key: Will not publish Done Event, the namespace '${appConfiguration.kafkaConfig.namespace}' " +
-				"is not correct.")
+		if (!correctNamespace(kafkaConfig.namespace)) {
+			logger.info("$key: Will not publish Done Event, the namespace '${kafkaConfig.namespace}' is not correct.")
 			return
 		}
 

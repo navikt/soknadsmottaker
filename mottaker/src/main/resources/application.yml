@@ -18,3 +18,58 @@ management:
         request:
           autotime:
             enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod | dev
+
+restconfig:
+  username: ${BASICAUTH_USERNAME}
+  password: ${BASICAUTH_PASSWORD}
+
+kafkaconfig:
+  namespace: ${NAIS_NAMESPACE}
+  secure: ${KAFKA_SECURITY}
+  schemaRegistryUsername: ${KAFKA_SCHEMA_REGISTRY_USER}
+  schemaRegistryPassword: ${KAFKA_SCHEMA_REGISTRY_PASSWORD}
+  schemaRegistryUrl: ${KAFKA_SCHEMA_REGISTRY}
+  kafkaBrokers: ${KAFKA_BROKERS}
+  truststorePath: ${KAFKA_TRUSTSTORE_PATH}
+  keystorePath: ${KAFKA_KEYSTORE_PATH}
+  credstorePassword: ${KAFKA_CREDSTORE_PASSWORD}
+
+  mainTopic: ${KAFKA_MAIN_TOPIC}
+  metricsTopic: ${KAFKA_METRICS_TOPIC}
+  brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC}
+  brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC}
+  brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC}
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: default | test
+
+restconfig:
+  username: innsending
+  password: password
+
+kafkaconfig:
+  namespace: default
+  secure: FALSE
+  schemaRegistryUsername: user
+  schemaRegistryPassword: pass
+  schemaRegistryUrl: http://localhost:8081
+  kafkaBrokers: localhost:29092
+  truststorePath: path
+  keystorePath: path
+  credstorePassword: pass
+
+  mainTopic: privat-soknadInnsendt-v1-teamsoknad
+  metricsTopic: privat-soknadInnsendt-metrics-v1-teamsoknad
+  brukernotifikasjonDoneTopic: min-side.aapen-brukernotifikasjon-done-v1
+  brukernotifikasjonBeskjedTopic: min-side.aapen-brukernotifikasjon-beskjed-v1
+  brukernotifikasjonOppgaveTopic: min-side.aapen-brukernotifikasjon-oppgave-v1
