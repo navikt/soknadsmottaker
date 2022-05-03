@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.concurrent.TimeUnit
 
 @Service
 class NotificationService(
@@ -33,6 +34,7 @@ class NotificationService(
 	val notificationNamespace = "min-side."
 
 	private val securityLevel = 4 // Forutsetter at brukere har logget seg på f.eks. bankId slik at nivå 4 er oppnådd
+	private val sleepTimes = listOf(5, 15, 30)
 
 
 	fun newNotification(key: String, soknad: SoknadRef, brukerNotifikasjonInfo: NotificationInfo) {
@@ -44,33 +46,12 @@ class NotificationService(
 
 		val eventId = if (isIdFromHenvendelse(key)) createULIDEventId(key, soknad.erEttersendelse) else	key
 		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
-
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		if (!soknad.erEttersendelse) {
-			val beskjedNotifikasjon = nyBeskjedNotifikasjon(
-				brukerNotifikasjonInfo.notifikasjonsTittel,
-				brukerNotifikasjonInfo.lenke,
-				hendelsestidspunkt,
-				brukerNotifikasjonInfo.antallAktiveDager,
-				brukerNotifikasjonInfo.eksternVarsling
-			)
-
-			logger.info("$key: Varsel om Beskjed med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke} " +
-				"skal publiseres")
-			kafkaSender.publishBeskjedNotification(notifikasjonsNokkel, beskjedNotifikasjon)
-
+			publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
 		} else {
-			val oppgaveNotifikasjon = nyOppgaveNotifikasjon(
-				brukerNotifikasjonInfo.notifikasjonsTittel,
-				brukerNotifikasjonInfo.lenke,
-				hendelsestidspunkt,
-				brukerNotifikasjonInfo.antallAktiveDager,
-				brukerNotifikasjonInfo.eksternVarsling
-			)
-			logger.info("$key: Varsel om Oppgave med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke} " +
-				"skal publiseres")
-			kafkaSender.publishOppgaveNotification(notifikasjonsNokkel, oppgaveNotifikasjon)
+			publishOppgaveNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
 		}
 	}
 
@@ -85,11 +66,90 @@ class NotificationService(
 		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
+		publishDoneNotification(key, hendelsestidspunkt, notifikasjonsNokkel)
+	}
+
+	private fun publishOppgaveNotification(
+		brukerNotifikasjonInfo: NotificationInfo,
+		hendelsestidspunkt: LocalDateTime,
+		key: String,
+		eventId: String,
+		notifikasjonsNokkel: NokkelInput
+	) {
+		val oppgaveNotifikasjon = nyOppgaveNotifikasjon(
+			brukerNotifikasjonInfo.notifikasjonsTittel,
+			brukerNotifikasjonInfo.lenke,
+			hendelsestidspunkt,
+			brukerNotifikasjonInfo.antallAktiveDager,
+			brukerNotifikasjonInfo.eksternVarsling
+		)
+
+		val notificationType = "Oppgave"
+		loopAndPublishToKafka(key, notificationType) {
+			logger.info(
+				"$key: Varsel om $notificationType skal publiseres med eventId=$eventId og med lenke " +
+					brukerNotifikasjonInfo.lenke
+			)
+			kafkaSender.publishOppgaveNotification(notifikasjonsNokkel, oppgaveNotifikasjon)
+		}
+	}
+
+	private fun publishBeskjedNotification(
+		brukerNotifikasjonInfo: NotificationInfo,
+		hendelsestidspunkt: LocalDateTime,
+		key: String,
+		eventId: String,
+		notifikasjonsNokkel: NokkelInput
+	) {
+		val beskjedNotifikasjon = nyBeskjedNotifikasjon(
+			brukerNotifikasjonInfo.notifikasjonsTittel,
+			brukerNotifikasjonInfo.lenke,
+			hendelsestidspunkt,
+			brukerNotifikasjonInfo.antallAktiveDager,
+			brukerNotifikasjonInfo.eksternVarsling
+		)
+
+		val notificationType = "Beskjed"
+		loopAndPublishToKafka(key, notificationType) {
+			logger.info(
+				"$key: Varsel om $notificationType skal publiseres med eventId=$eventId og med lenke " +
+					brukerNotifikasjonInfo.lenke
+			)
+			kafkaSender.publishBeskjedNotification(notifikasjonsNokkel, beskjedNotifikasjon)
+		}
+	}
+
+	private fun publishDoneNotification(
+		key: String,
+		hendelsestidspunkt: LocalDateTime?,
+		notifikasjonsNokkel: NokkelInput
+	) {
 		val doneNotifikasjon = DoneInputBuilder()
 			.withTidspunkt(hendelsestidspunkt)
 			.build()
 
-		kafkaSender.publishDoneNotification(notifikasjonsNokkel, doneNotifikasjon)
+		loopAndPublishToKafka(key, "Done") {
+			kafkaSender.publishDoneNotification(notifikasjonsNokkel, doneNotifikasjon)
+		}
+	}
+
+	private fun loopAndPublishToKafka(
+		key: String,
+		notificationType: String,
+		publishingLambda: () -> Unit
+	) {
+		sleepTimes.forEachIndexed { index, sleepTime ->
+			try {
+				publishingLambda.invoke()
+
+			} catch (e: Exception) {
+				if (index != sleepTimes.size - 1)
+					logger.warn("$key: Failed to publish $notificationType notification - will try again in $sleepTime s", e)
+				else
+					logger.error("$key: Failed to publish $notificationType notification - Giving up", e)
+				TimeUnit.SECONDS.sleep(sleepTime.toLong())
+			}
+		}
 	}
 
 	private fun nyBeskjedNotifikasjon(
@@ -150,11 +210,11 @@ class NotificationService(
 		return builder.build()
 	}
 
-	private fun createNotificationKey(enventId: String, fnr: String, groupId: String): NokkelInput {
+	private fun createNotificationKey(eventId: String, fnr: String, groupId: String): NokkelInput {
 		return NokkelInputBuilder()
 			.withNamespace(notificationNamespace)
 			.withAppnavn(appNavn)
-			.withEventId(enventId)
+			.withEventId(eventId)
 			.withFodselsnummer(fnr)
 			.withGrupperingsId(groupId)
 			.build()

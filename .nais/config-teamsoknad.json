@@ -12,5 +12,5 @@
 	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1-teamsoknad",
 	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1-teamsoknad",
 	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1-teamsoknad",
-	"kafka-pool": ""
+	"kafka-pool": "nav-dev"
 }
