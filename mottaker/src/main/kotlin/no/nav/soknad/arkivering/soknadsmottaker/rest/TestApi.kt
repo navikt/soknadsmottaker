@@ -34,6 +34,7 @@ class TestApi : SoknadTestApi {
 	override fun receiveTest(soknad: Soknad): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
 		receivedRequests[key] = soknad
+		logger.info("$key: TEST ENDPOINT - receivedRequests size: ${receivedRequests.size}")
 		log(key, soknad)
 
 		return ResponseEntity(HttpStatus.OK)
