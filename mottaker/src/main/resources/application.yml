@@ -26,8 +26,8 @@ spring:
       on-profile: prod | dev
 
 restconfig:
-  username: ${BASICAUTH_USERNAME}
-  password: ${BASICAUTH_PASSWORD}
+  username: ${INNSENDING_USERNAME}
+  password: ${INNSENDING_PASSWORD}
 
 kafkaconfig:
   namespace: ${NAIS_NAMESPACE}
