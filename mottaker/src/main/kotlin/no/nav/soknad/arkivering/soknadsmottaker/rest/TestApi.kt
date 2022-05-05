@@ -32,11 +32,15 @@ class TestApi : SoknadTestApi {
 		consumes = ["application/json"]
 	)
 	override fun receiveTest(soknad: Soknad): ResponseEntity<Unit> {
-		val key = soknad.innsendingId
-		logger.info("$key: TEST ENDPOINT - received request")
-		receivedRequests[key] = soknad
-		logger.info("$key: TEST ENDPOINT - receivedRequests size: ${receivedRequests.size}")
-		log(key, soknad)
+		try {
+			val key = soknad.innsendingId
+			logger.info("$key: TEST ENDPOINT - request received")
+			receivedRequests[key] = soknad
+			logger.info("$key: TEST ENDPOINT - receivedRequests size: ${receivedRequests.size}")
+			log(key, soknad)
+		} catch (t: Throwable) {
+			logger.error("SOMETHING WENT WRONG", t)
+		}
 
 		return ResponseEntity(HttpStatus.OK)
 	}
