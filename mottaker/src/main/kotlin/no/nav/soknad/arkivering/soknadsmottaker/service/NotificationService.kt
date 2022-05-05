@@ -138,9 +138,10 @@ class NotificationService(
 		notificationType: String,
 		publishingLambda: () -> Unit
 	) {
-		sleepTimes.forEachIndexed { index, sleepTime ->
+		for ((index, sleepTime) in sleepTimes.withIndex()) {
 			try {
 				publishingLambda.invoke()
+				break
 
 			} catch (e: Exception) {
 				if (index != sleepTimes.size - 1)
