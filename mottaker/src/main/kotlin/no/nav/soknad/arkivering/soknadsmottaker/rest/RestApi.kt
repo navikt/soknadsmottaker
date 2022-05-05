@@ -62,6 +62,7 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 			soknad.dokumenter
 		)
 
+		logger.info("$key: receivedRequests size: ${receivedRequests.size}")
 		val testSoknad = receivedRequests[key]
 		if (testSoknad == null) {
 			logger.warn("$key: Didn't find any received test requests")
