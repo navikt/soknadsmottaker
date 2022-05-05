@@ -17,8 +17,6 @@ class TestApi : SoknadTestApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
-	val receivedRequests: HashMap<String, Soknad> = hashMapOf()
-
 	/**
 	 * The following annotations are copied from [SoknadTestApi.receiveTest].
 	 */
@@ -54,3 +52,5 @@ class TestApi : SoknadTestApi {
 		secureLogger.info("$key: TEST ENDPOINT - Received request '$soknad'")
 	}
 }
+
+val receivedRequests: HashMap<String, Soknad> = hashMapOf()

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class RestApi(private val archiverService: ArchiverService, private val testApi: TestApi) : SoknadApi {
+class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
@@ -54,13 +54,22 @@ class RestApi(private val archiverService: ArchiverService, private val testApi:
 
 	// Method to verify that the test endpoint and the real endpoint receive identical requests
 	private fun compareRequests(key: String, soknad: Soknad) {
-		val testSoknad = testApi.receivedRequests[key]
+		fun mask(soknad: Soknad) = Soknad(
+			soknad.innsendingId,
+			soknad.erEttersendelse,
+			personId = "**fnr can be found in secure logs**",
+			soknad.tema,
+			soknad.dokumenter
+		)
+
+		val testSoknad = receivedRequests[key]
 		if (testSoknad == null) {
-			logger.warn("$key: Didn't find any received test requests for key $key")
+			logger.warn("$key: Didn't find any received test requests")
 		} else if (testSoknad != soknad) {
-			logger.warn("$key: Received test request didn't match!\n$testSoknad\n$soknad")
+			logger.warn("$key: Received test request didn't match!\n${mask(testSoknad)}\n${mask(soknad)}")
 		} else {
-			testApi.receivedRequests.remove(key)
+			logger.info("$key: Received test request matches!")
+			receivedRequests.remove(key)
 		}
 	}
 }

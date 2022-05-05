@@ -111,6 +111,6 @@ class ReceiverTests {
 		val conf = AppConfiguration()
 		val kafkaSender = KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock)
 		val archiverService = ArchiverService(kafkaSender, metrics)
-		return RestApi(archiverService, TestApi())
+		return RestApi(archiverService)
 	}
 }
