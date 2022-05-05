@@ -32,24 +32,10 @@ class TestApi : SoknadTestApi {
 		consumes = ["application/json"]
 	)
 	override fun receiveTest(soknad: Soknad): ResponseEntity<Unit> {
-		try {
-			println("TEST ENDPOINT")
-			logger.info("TEST ENDPOINT")
-			val key = soknad.innsendingId
-			updateMap(key, soknad)
-			log(key, soknad)
-		} catch (t: Throwable) {
-			println("Error!")
-			logger.error("SOMETHING WENT WRONG", t)
-		}
+		val key = soknad.innsendingId
+		log(key, soknad)
 
 		return ResponseEntity(HttpStatus.OK)
-	}
-
-	private fun updateMap(key: String, soknad: Soknad) {
-		logger.info("$key: TEST ENDPOINT - request received")
-		receivedRequests[key] = soknad
-		logger.info("$key: TEST ENDPOINT - receivedRequests size: ${receivedRequests.size}")
 	}
 
 	private fun log(key: String, soknad: Soknad) {
@@ -64,5 +50,3 @@ class TestApi : SoknadTestApi {
 		secureLogger.info("$key: TEST ENDPOINT - Received request '$soknad'")
 	}
 }
-
-val receivedRequests = mutableMapOf<String, Soknad>()

@@ -35,7 +35,7 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	override fun receive(soknad: Soknad): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
 		log(key, soknad)
-		compareRequests(key, soknad)
+
 		archiverService.archive(key, soknad)
 		return ResponseEntity(HttpStatus.OK)
 	}
@@ -50,27 +50,5 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		)
 		logger.info("$key: Received request '$fnrMasked'")
 		secureLogger.info("$key: Received request '$soknad'")
-	}
-
-	// Method to verify that the test endpoint and the real endpoint receive identical requests
-	private fun compareRequests(key: String, soknad: Soknad) {
-		fun mask(soknad: Soknad) = Soknad(
-			soknad.innsendingId,
-			soknad.erEttersendelse,
-			personId = "**fnr can be found in secure logs**",
-			soknad.tema,
-			soknad.dokumenter
-		)
-
-		logger.info("$key: receivedRequests size: ${receivedRequests.size}")
-		val testSoknad = receivedRequests[key]
-		if (testSoknad == null) {
-			logger.warn("$key: Didn't find any received test requests")
-		} else if (testSoknad != soknad) {
-			logger.warn("$key: Received test request didn't match!\n${mask(testSoknad)}\n${mask(soknad)}")
-		} else {
-			logger.info("$key: Received test request matches!")
-			receivedRequests.remove(key)
-		}
 	}
 }
