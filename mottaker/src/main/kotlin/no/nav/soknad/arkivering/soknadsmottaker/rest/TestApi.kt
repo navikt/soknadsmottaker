@@ -33,16 +33,23 @@ class TestApi : SoknadTestApi {
 	)
 	override fun receiveTest(soknad: Soknad): ResponseEntity<Unit> {
 		try {
+			println("TEST ENDPOINT")
+			logger.info("TEST ENDPOINT")
 			val key = soknad.innsendingId
-			logger.info("$key: TEST ENDPOINT - request received")
-			receivedRequests[key] = soknad
-			logger.info("$key: TEST ENDPOINT - receivedRequests size: ${receivedRequests.size}")
+			updateMap(key, soknad)
 			log(key, soknad)
 		} catch (t: Throwable) {
+			println("Error!")
 			logger.error("SOMETHING WENT WRONG", t)
 		}
 
 		return ResponseEntity(HttpStatus.OK)
+	}
+
+	private fun updateMap(key: String, soknad: Soknad) {
+		logger.info("$key: TEST ENDPOINT - request received")
+		receivedRequests[key] = soknad
+		logger.info("$key: TEST ENDPOINT - receivedRequests size: ${receivedRequests.size}")
 	}
 
 	private fun log(key: String, soknad: Soknad) {
