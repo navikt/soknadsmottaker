@@ -53,4 +53,4 @@ class TestApi : SoknadTestApi {
 	}
 }
 
-val receivedRequests: HashMap<String, Soknad> = hashMapOf()
+val receivedRequests = mutableMapOf<String, Soknad>()
