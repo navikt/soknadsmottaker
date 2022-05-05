@@ -33,9 +33,8 @@ class TestApi : SoknadTestApi {
 	)
 	override fun receiveTest(soknad: Soknad): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
-		log(key, soknad)
-
 		receivedRequests[key] = soknad
+		log(key, soknad)
 
 		return ResponseEntity(HttpStatus.OK)
 	}
