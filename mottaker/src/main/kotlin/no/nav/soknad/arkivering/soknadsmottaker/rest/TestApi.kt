@@ -17,6 +17,8 @@ class TestApi : SoknadTestApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
+	val receivedRequests: HashMap<String, Soknad> = hashMapOf()
+
 	/**
 	 * The following annotations are copied from [SoknadTestApi.receiveTest].
 	 */
@@ -34,6 +36,8 @@ class TestApi : SoknadTestApi {
 	override fun receiveTest(soknad: Soknad): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
 		log(key, soknad)
+
+		receivedRequests[key] = soknad
 
 		return ResponseEntity(HttpStatus.OK)
 	}
