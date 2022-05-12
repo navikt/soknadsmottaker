@@ -14,6 +14,8 @@ import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.config.SaslConfigs.SASL_MECHANISM
 import org.apache.kafka.common.config.SslConfigs.*
+import org.apache.kafka.common.serialization.Serializer
+import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,12 +25,15 @@ import org.springframework.kafka.core.KafkaTemplate
 @Configuration
 class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 
-	fun createKafkaConfig(): HashMap<String, Any> {
+	private val stringKeySerializerClass = StringSerializer::class.java
+	private val avroKeySerializerClass = KafkaAvroSerializer::class.java
+
+	fun <T : Serializer<*>> createKafkaConfig( serializer: Class< T > ): HashMap<String, Any> {
 
 		return HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.kafkaBrokers
 			it[SCHEMA_REGISTRY_URL_CONFIG] = kafkaConfig.schemaRegistryUrl
-			it[KEY_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
+			it[KEY_SERIALIZER_CLASS_CONFIG] = serializer
 			it[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
 			it[MAX_BLOCK_MS_CONFIG] = 30000
 			it[ACKS_CONFIG] = "all"
@@ -51,19 +56,19 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	}
 
 	@Bean
-	fun producerFactory() = DefaultKafkaProducerFactory<String, Soknadarkivschema>(createKafkaConfig())
+	fun producerFactory() = DefaultKafkaProducerFactory<String, Soknadarkivschema>(createKafkaConfig(stringKeySerializerClass))
 
 	@Bean
-	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(createKafkaConfig())
+	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(createKafkaConfig(stringKeySerializerClass))
 
 	@Bean
-	fun defaultBeskjedNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, BeskjedInput>(createKafkaConfig())
+	fun defaultBeskjedNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, BeskjedInput>(createKafkaConfig(avroKeySerializerClass))
 
 	@Bean
-	fun defaultOppgaveNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, OppgaveInput>(createKafkaConfig())
+	fun defaultOppgaveNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, OppgaveInput>(createKafkaConfig(avroKeySerializerClass))
 
 	@Bean
-	fun defaultDoneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(createKafkaConfig())
+	fun defaultDoneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(createKafkaConfig(avroKeySerializerClass))
 
 	@Bean
 	fun kafkaBeskjedTemplate() = KafkaTemplate(defaultBeskjedNotificationFactory())
