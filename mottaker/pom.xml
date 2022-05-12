@@ -17,7 +17,6 @@
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
 		<confluent.version>7.1.0</confluent.version>
 		<springdoc.version>1.6.8</springdoc.version>
-		<konfig.version>1.6.10.0</konfig.version>
 		<prometheus-simpleclient.version>0.15.0</prometheus-simpleclient.version>
 		<logstash.version>7.1.1</logstash.version>
 		<mockk.version>1.12.3</mockk.version>
@@ -120,12 +119,6 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-kotlin</artifactId>
 			<version>${springdoc.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.natpryce</groupId>
-			<artifactId>konfig</artifactId>
-			<version>${konfig.version}</version>
 		</dependency>
 
 		<dependency>
