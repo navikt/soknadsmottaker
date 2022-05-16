@@ -38,7 +38,7 @@ jobs:
           push: true
           tags: ${{ env.docker_image }}
  
- deploy-loadtests:
+  deploy-loadtests:
     name: Deploy to loadtests
     needs: build
     runs-on: ubuntu-latest
