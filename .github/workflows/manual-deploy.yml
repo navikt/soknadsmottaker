@@ -1,6 +1,18 @@
-name: Build, push, and deploy
+name: Manually triggered deployment
 
-on: [push]
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'preprod'
+        type: choice
+        options:
+          - none
+          - preprod
+          - loadtests
+          - prod
 
 env:
   docker_image: ghcr.io/${{ github.repository }}:${{ github.sha }}
@@ -37,10 +49,26 @@ jobs:
           context: .
           push: true
           tags: ${{ env.docker_image }}
- 
- deploy-loadtests:
-    name: Deploy to loadtests
+
+  deploy-preprod:
+    name: Deploy to preprod
     needs: build
+    if: github.event.inputs.environment == 'preprod'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais.yml
+          VARS: .nais/config-preprod.json
+          VAR: image=${{ env.docker_image }}
+
+  deploy-loadtests:
+    name: Deploy to preprod loadtests
+    needs: build
+    if: github.event.inputs.environment == 'loadtests'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -55,6 +83,7 @@ jobs:
   deploy:
     name: Deploy to prod
     needs: build
+    if: github.event.inputs.environment == 'prod'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
