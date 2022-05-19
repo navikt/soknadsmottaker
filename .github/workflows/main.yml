@@ -41,6 +41,7 @@ jobs:
   deploy-loadtests:
     name: Deploy to loadtests
     needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -55,6 +56,7 @@ jobs:
   deploy:
     name: Deploy to prod
     needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
