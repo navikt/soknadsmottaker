@@ -31,8 +31,8 @@ import org.springframework.util.concurrent.SettableListenableFuture
 
 class ReceiverTests {
 
-	private val topic = "privat-soknadInnsendt-v1-teamsoknad"
-	private val metricsTopic = "privat-soknadInnsendt-metrics-v1-teamsoknad"
+	private val topic = "privat-soknadinnsending-v1-dev"
+	private val metricsTopic = "privat-soknadinnsending-metrics-v1-dev"
 
 	private val kafkaMock = mockk<KafkaTemplate<String, Soknadarkivschema>>()
 	private val metricsKafkaMock = mockk<KafkaTemplate<String, InnsendingMetrics>>()
@@ -120,7 +120,7 @@ class ReceiverTests {
 			it.credstorePassword = "pass"
 
 			it.mainTopic = topic
-			it.metricsTopic = "privat-soknadInnsendt-metrics-v1-teamsoknad"
+			it.metricsTopic = metricsTopic
 			it.brukernotifikasjonDoneTopic = "min-side.aapen-brukernotifikasjon-done-v1"
 			it.brukernotifikasjonBeskjedTopic = "min-side.aapen-brukernotifikasjon-beskjed-v1"
 			it.brukernotifikasjonOppgaveTopic = "min-side.aapen-brukernotifikasjon-oppgave-v1"

@@ -67,8 +67,8 @@ kafkaconfig:
   keystorePath: ${KAFKA_KEYSTORE_PATH}
   credstorePassword: ${KAFKA_CREDSTORE_PASSWORD}
 
-  mainTopic: privat-soknadInnsendt-v1-teamsoknad
-  metricsTopic: privat-soknadInnsendt-metrics-v1-teamsoknad
+  mainTopic: privat-soknadinnsending-v1-dev
+  metricsTopic: privat-soknadinnsending-metrics-v1-dev
   brukernotifikasjonDoneTopic: min-side.aapen-brukernotifikasjon-done-v1
   brukernotifikasjonBeskjedTopic: min-side.aapen-brukernotifikasjon-beskjed-v1
   brukernotifikasjonOppgaveTopic: min-side.aapen-brukernotifikasjon-oppgave-v1
@@ -93,8 +93,8 @@ kafkaconfig:
   keystorePath: path
   credstorePassword: pass
 
-  mainTopic: privat-soknadInnsendt-v1-teamsoknad
-  metricsTopic: privat-soknadInnsendt-metrics-v1-teamsoknad
+  mainTopic: privat-soknadinnsending-v1-dev
+  metricsTopic: privat-soknadinnsending-metrics-v1-dev
   brukernotifikasjonDoneTopic: min-side.aapen-brukernotifikasjon-done-v1
   brukernotifikasjonBeskjedTopic: min-side.aapen-brukernotifikasjon-beskjed-v1
   brukernotifikasjonOppgaveTopic: min-side.aapen-brukernotifikasjon-oppgave-v1
