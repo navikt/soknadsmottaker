@@ -67,11 +67,12 @@ kafkaconfig:
   keystorePath: ${KAFKA_KEYSTORE_PATH}
   credstorePassword: ${KAFKA_CREDSTORE_PASSWORD}
 
-  mainTopic: privat-soknadinnsending-v1-dev
-  metricsTopic: privat-soknadinnsending-metrics-v1-dev
-  brukernotifikasjonDoneTopic: min-side.aapen-brukernotifikasjon-done-v1
-  brukernotifikasjonBeskjedTopic: min-side.aapen-brukernotifikasjon-beskjed-v1
-  brukernotifikasjonOppgaveTopic: min-side.aapen-brukernotifikasjon-oppgave-v1
+  mainTopic: ${KAFKA_MAIN_TOPIC:privat-soknadinnsending-v1-dev}
+  metricsTopic: ${KAFKA_METRICS_TOPIC:privat-soknadinnsending-metrics-v1-dev}
+  brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC:min-side.aapen-brukernotifikasjon-done-v1}
+  brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC:min-side.aapen-brukernotifikasjon-beskjed-v1}
+  brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC:min-side.aapen-brukernotifikasjon-oppgave-v1}
+
 ---
 spring:
   config:
@@ -93,8 +94,8 @@ kafkaconfig:
   keystorePath: path
   credstorePassword: pass
 
-  mainTopic: privat-soknadinnsending-v1-dev
-  metricsTopic: privat-soknadinnsending-metrics-v1-dev
-  brukernotifikasjonDoneTopic: min-side.aapen-brukernotifikasjon-done-v1
-  brukernotifikasjonBeskjedTopic: min-side.aapen-brukernotifikasjon-beskjed-v1
-  brukernotifikasjonOppgaveTopic: min-side.aapen-brukernotifikasjon-oppgave-v1
+  mainTopic: ${KAFKA_MAIN_TOPIC:privat-soknadinnsending-v1-dev}
+  metricsTopic: ${KAFKA_METRICS_TOPIC:privat-soknadinnsending-metrics-v1-dev}
+  brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC:min-side.aapen-brukernotifikasjon-done-v1}
+  brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC:min-side.aapen-brukernotifikasjon-beskjed-v1}
+  brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC:min-side.aapen-brukernotifikasjon-oppgave-v1}
