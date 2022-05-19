@@ -6,8 +6,8 @@
 	],
 	"kafka-main-topic": "privat-soknadinnsending-v1-dev",
 	"kafka-metrics-topic": "privat-soknadinnsending-metrics-v1-dev",
-	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1-dev",
-	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1-dev",
-	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1-dev",
+	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1",
+	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1",
+	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1",
 	"kafka-pool": "nav-dev"
 }
