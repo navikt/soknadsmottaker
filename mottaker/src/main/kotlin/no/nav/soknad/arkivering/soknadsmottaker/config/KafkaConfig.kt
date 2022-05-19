@@ -24,11 +24,10 @@ import org.springframework.kafka.core.KafkaTemplate
 
 @Configuration
 class KafkaSetup(private val kafkaConfig: KafkaConfig) {
-
 	private val stringKeySerializerClass = StringSerializer::class.java
 	private val avroKeySerializerClass = KafkaAvroSerializer::class.java
 
-	fun <T : Serializer<*>> createKafkaConfig( serializer: Class< T > ): HashMap<String, Any> {
+	fun <T : Serializer<*>> createKafkaConfig(serializer: Class<T>): HashMap<String, Any> {
 
 		return HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.kafkaBrokers
@@ -62,22 +61,22 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(createKafkaConfig(stringKeySerializerClass))
 
 	@Bean
-	fun defaultBeskjedNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, BeskjedInput>(createKafkaConfig(avroKeySerializerClass))
+	fun beskjedNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, BeskjedInput>(createKafkaConfig(avroKeySerializerClass))
 
 	@Bean
-	fun defaultOppgaveNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, OppgaveInput>(createKafkaConfig(avroKeySerializerClass))
+	fun oppgaveNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, OppgaveInput>(createKafkaConfig(avroKeySerializerClass))
 
 	@Bean
-	fun defaultDoneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(createKafkaConfig(avroKeySerializerClass))
+	fun doneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(createKafkaConfig(avroKeySerializerClass))
 
 	@Bean
-	fun kafkaBeskjedTemplate() = KafkaTemplate(defaultBeskjedNotificationFactory())
+	fun kafkaBeskjedTemplate() = KafkaTemplate(beskjedNotificationFactory())
 
 	@Bean
-	fun kafkaOppgaveTemplate() = KafkaTemplate(defaultOppgaveNotificationFactory())
+	fun kafkaOppgaveTemplate() = KafkaTemplate(oppgaveNotificationFactory())
 
 	@Bean
-	fun kafkaDoneTemplate() = KafkaTemplate(defaultDoneNotificationFactory())
+	fun kafkaDoneTemplate() = KafkaTemplate(doneNotificationFactory())
 
 	@Bean
 	fun kafkaTemplate() = KafkaTemplate(producerFactory())
