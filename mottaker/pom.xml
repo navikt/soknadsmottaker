@@ -16,7 +16,7 @@
 		<brukernotifikasjon-schemas.version>v2.5.1</brukernotifikasjon-schemas.version>
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
 		<confluent.version>7.1.0</confluent.version>
-		<springdoc.version>1.6.8</springdoc.version>
+		<springdoc.version>1.6.9</springdoc.version>
 		<konfig.version>1.6.10.0</konfig.version>
 		<prometheus-simpleclient.version>0.15.0</prometheus-simpleclient.version>
 		<logstash.version>7.1.1</logstash.version>
