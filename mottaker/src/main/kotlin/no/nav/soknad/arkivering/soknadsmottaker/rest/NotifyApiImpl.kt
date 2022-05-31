@@ -7,9 +7,9 @@ import no.nav.soknad.arkivering.soknadsmottaker.service.NotificationService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.stereotype.Controller
 
-@RestController
+@Controller
 class NotifyApiImpl(private val notificationService: NotificationService) : NotifyApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
