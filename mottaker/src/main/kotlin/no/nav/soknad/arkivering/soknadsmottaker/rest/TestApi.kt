@@ -49,13 +49,13 @@ class TestApi : SoknadTestApi {
 			if (id in seenValues) {
 				val oldSoknad = seenValues[id]
 				if (soknad == oldSoknad) {
-					logger.info("$key: Soknader are equal")
+					logger.info("$id: Soknader are equal")
 					seenValues.remove(id)
 				} else {
-					logger.warn("$key: Soknader differs!\nSS: $oldSoknad\nHV: $soknad")
+					logger.warn("$id: Soknader differs!\nSS: $oldSoknad\nHV: $soknad")
 				}
 			} else {
-				logger.warn("$xInnsendingId: Never seen Soknad before\n$soknad")
+				logger.warn("$id: Never seen Soknad before\n$soknad")
 			}
 		} else {
 			seenValues[key] = soknad
