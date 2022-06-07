@@ -34,7 +34,7 @@ class TestApi : SoknadTestApi {
 		consumes = ["application/json"]
 	)
 	override fun receiveTest(soknad: Soknad, xInnsendingId: String?): ResponseEntity<Unit> {
-		val key = soknad.innsendingId
+		val key = xInnsendingId ?: soknad.innsendingId
 		log(key, soknad)
 
 		updateOrCompareValues(xInnsendingId, key, soknad)
@@ -52,7 +52,7 @@ class TestApi : SoknadTestApi {
 					logger.info("$key: Soknader are equal")
 					seenValues.remove(id)
 				} else {
-					logger.warn("$key: Soknader differs!\nOld: $oldSoknad\nNew: $soknad")
+					logger.warn("$key: Soknader differs!\nSS: $oldSoknad\nHV: $soknad")
 				}
 			} else {
 				logger.warn("$xInnsendingId: Never seen Soknad before\n$soknad")
