@@ -47,15 +47,15 @@ class TestApi : SoknadTestApi {
 		if (xInnsendingId != null && xInnsendingId.startsWith("henvendelse_")) {
 			val id = xInnsendingId.replace("henvendelse_", "")
 			if (id in seenValues) {
-				val oldSoknad = seenValues[id]
-				if (soknad == oldSoknad) {
+				val soknadFromSendsoknad = seenValues[id]!!
+				if (soknad == soknadFromSendsoknad) {
 					logger.info("$id: Soknader are equal")
 					seenValues.remove(id)
 				} else {
-					logger.warn("$id: Soknader differs!\nSS: $oldSoknad\nHV: $soknad")
+					logger.warn("$id: Soknader differs!\nSS: ${maskFnr(soknadFromSendsoknad)}\nHV: ${maskFnr(soknad)}")
 				}
 			} else {
-				logger.warn("$id: Never seen Soknad before\n$soknad")
+				logger.warn("$id: Never seen Soknad before\n${maskFnr(soknad)}")
 			}
 		} else {
 			seenValues[key] = soknad
@@ -63,14 +63,15 @@ class TestApi : SoknadTestApi {
 	}
 
 	private fun log(key: String, soknad: Soknad) {
-		val fnrMasked = Soknad(
-			soknad.innsendingId,
-			soknad.erEttersendelse,
-			personId = "**fnr can be found in secure logs**",
-			soknad.tema,
-			soknad.dokumenter
-		)
-		logger.info("$key: TEST ENDPOINT - Received request '$fnrMasked'")
+		logger.info("$key: TEST ENDPOINT - Received request '${maskFnr(soknad)}'")
 		secureLogger.info("$key: TEST ENDPOINT - Received request '$soknad'")
 	}
+
+	private fun maskFnr(soknad: Soknad) = Soknad(
+		soknad.innsendingId,
+		soknad.erEttersendelse,
+		personId = "**fnr can be found in secure logs**",
+		soknad.tema,
+		soknad.dokumenter
+	)
 }
