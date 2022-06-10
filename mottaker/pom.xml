@@ -19,7 +19,7 @@
 		<springdoc.version>1.6.9</springdoc.version>
 		<prometheus-simpleclient.version>0.15.0</prometheus-simpleclient.version>
 		<logstash.version>7.2</logstash.version>
-		<mockk.version>1.12.5</mockk.version>
+		<mockk.version>1.12.4</mockk.version>
 
 		<kotlin.version>1.7.0</kotlin.version>
 		<java.version>17</java.version>
