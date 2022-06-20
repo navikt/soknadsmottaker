@@ -9,10 +9,9 @@ For a description of the whole archiving system, see [the documentation](https:/
 The Rest-API can be accessed here:
 
 * [localhost](http://localhost:8090/swagger-ui/index.html)
-* [q0](https://soknadsmottaker-q0.dev.intern.nav.no/swagger-ui/index.html)
-* [q1](https://soknadsmottaker-q1.dev.intern.nav.no/swagger-ui/index.html)
-* [teamsoknad (dev-fss)](https://soknadsmottaker.dev.intern.nav.no/swagger-ui/index.html)
-* [prod](https://soknadsmottaker.intern.nav.no/swagger-ui/index.html)
+* [preprod](https://soknadsmottaker-gcp.dev.intern.nav.no/swagger-ui/index.html)
+* [loadtests (preprod)](https://soknadsmottaker-gcp-loadtests.dev.intern.nav.no/swagger-ui/index.html)
+* [prod](https://soknadsmottaker-gcp.intern.nav.no/swagger-ui/index.html)
 
 # Dependencies
 This component requires the following to work:
@@ -55,11 +54,11 @@ apprunner@soknadsmottaker-86745fb779-lndkn:/app$ cat /secure-logs/secure.log
 ## Resending requests
 If a Soknad for some reason fails to be sent through the whole archiving chain, a last resort is to manually resend it, as explained below. Save your data into a json-file called "soknader.json" (an example can be seen [here](mottaker/src/main/resources/soknader.json)), and run the script below (requires curl and [jq](https://github.com/stedolan/jq)).
 
-Run the script first against localhost:8090 (i.e. start soknadsmottaker on your own machine) to see that it works as expected. Then do a test run against one of the dev-environments (i.e. replace `soknadsmottakerurl` with https://soknadsmottaker-q0.dev.intern.nav.no for instance). When you have verified that the behaviour and data is as expected, you can run against production with care.
+Run the script first against localhost:8090 (i.e. start Soknadsmottaker on your own machine) to see that it works as expected. Then do a test run against preprod (i.e. replace `soknadsmottakerurl` with https://soknadsmottaker-gcp.dev.intern.nav.no). When you have verified that the behaviour and data is as expected, you can run against production with care.
 
 One must never send in a Soknad with the same innsendingId as a previous one. The script will replace whatever innsendingId is set to, with a newly generated UUID.
 
-Update `credentials` with the username and password, which you can find [in Vault](https://vault.adeo.no/ui/vault/secrets/secret/show/team-soknad/innsending/basicauth). Note that the script will save the password to your shell history (e.g. in ~/.bash_history), which is a bad side effect. Two options are available:
+Update `credentials` with the username and password, which you can find in [GCP Secret Manager](https://console.cloud.google.com/security/secret-manager/secret/shared-innsending-secret/versions?project=team-soknad-dev-ee5e) (remember to select the correct project - dev or prod). Note that the script will save the password to your shell history (e.g. in ~/.bash_history), which is a bad side effect. Two options are available:
 * After running the script, you can manually remove the password from your shell history file.
 * You can set `credentials=innsending` rather than `credentials=innsending:password`. This will make curl prompt you for the password for each Soknad in soknader.json. If you have only a few Soknader to send in it should be no problem, but if you have many it might be cumbersome, and you should in that case opt for manually cleaning your shell history file instead.
 ```
