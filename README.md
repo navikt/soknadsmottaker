@@ -52,7 +52,7 @@ apprunner@soknadsmottaker-86745fb779-lndkn:/app$ cat /secure-logs/secure.log
 ```
 
 ## Resending requests
-If a Soknad for some reason fails to be sent through the whole archiving chain, a last resort is to manually resend it, as explained below. Save your data into a json-file called "soknader.json" (an example can be seen [here](mottaker/src/main/resources/soknader.json)), and run the script below (requires curl and [jq](https://github.com/stedolan/jq)).
+If a Soknad for some reason fails to be sent through the whole archiving chain, a last resort is to manually resend it, as explained below. Save your data into a json-file called "soknader.json" (an example can be seen [here](mottaker/src/main/resources/soknader.json)), and run the script below (requires curl and [jq](https://github.com/stedolan/jq)). To send failed files to Soknadsfillager, see [its documentation](https://github.com/navikt/soknadsfillager#manually-sending-files-to-soknadsfillager).
 
 Run the script first against localhost:8090 (i.e. start Soknadsmottaker on your own machine) to see that it works as expected. Then do a test run against preprod (i.e. replace `soknadsmottakerurl` with https://soknadsmottaker-gcp.dev.intern.nav.no). When you have verified that the behaviour and data is as expected, you can run against production with care.
 
