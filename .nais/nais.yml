@@ -41,6 +41,9 @@ spec:
       rules:
         - application: sendsoknad
         - application: innsending-api
+    outbound:
+      rules:
+        - application: soknadsfillager # TODO: This is a temporary consistency check
   envFrom:
     - secret: shared-innsending-secret
       metadata:
