@@ -62,7 +62,7 @@ class TestApi(fileStorageProperties: FileStorageProperties) : SoknadTestApi {
 			val id = xInnsendingId.replace("henvendelse_", "")
 			if (id in seenValues) {
 				val soknadFromSendsoknad = seenValues[id]!!
-				if (soknad == soknadFromSendsoknad) {
+				if (maskFnr(soknad).toString() == maskFnr(soknadFromSendsoknad).toString()) {
 					logger.info("$id: Soknader are equal")
 					seenValues.remove(id)
 				} else {
