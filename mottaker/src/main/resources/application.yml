@@ -51,6 +51,13 @@ kafkaconfig:
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC}
   brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC}
 
+no.nav.security.jwt:
+  issuer:
+    azure:
+      discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
+      #https://soknad-oauth2-mock.dev.nav.no/default/.well-known/openid-configuration
+      accepted_audience: ${AZURE_APP_CLIENT_ID}
+
 ---
 spring:
   config:

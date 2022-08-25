@@ -36,11 +36,15 @@ spec:
   {{/each}}
   secureLogs:
     enabled: true
+  azure:
+    application:
+      enabled: true
   accessPolicy:
     inbound:
       rules:
-        - application: sendsoknad
-        - application: innsending-api
+        {{#each inbound}}
+        - application: "{{this}}"
+        {{/each}}
     outbound:
       rules:
         - application: soknadsfillager # TODO: This is a temporary consistency check
