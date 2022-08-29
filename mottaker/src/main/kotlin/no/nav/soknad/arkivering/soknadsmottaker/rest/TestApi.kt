@@ -1,6 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsfillager.api.FilesApi
 import no.nav.soknad.arkivering.soknadsfillager.infrastructure.ApiClient
 import no.nav.soknad.arkivering.soknadsfillager.infrastructure.ClientException
@@ -29,7 +30,7 @@ class TestApi(fileStorageProperties: FileStorageProperties) : SoknadTestApi {
 		filesApi = FilesApi(fileStorageProperties.host)
 	}
 
-
+	@Protected
 	override fun receiveTest(soknad: Soknad, xInnsendingId: String?, xOriginSystem: String?): ResponseEntity<Unit> {
 		val key = xInnsendingId ?: soknad.innsendingId
 		log(key, soknad)
