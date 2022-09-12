@@ -12,11 +12,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 
 @Controller
-class RestApi(private val archiverService: ArchiverService) : SoknadApi {
+class RestApi(private val archiverService: ArchiverService, @Value("\${service.dryRun:false}") private val dryRunEnabled : String) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
-	@Value("\${service.dryRun}")
-	private lateinit var  dryRunEnabled : String
+
 	@Protected
 	override fun receive(soknad: Soknad): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
