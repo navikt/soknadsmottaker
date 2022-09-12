@@ -72,3 +72,5 @@ spec:
       value: {{kafka-brukernotifikasjon-oppgave-topic}}
     - name: FILESTORAGE_HOST
       value: {{filestorage-host}}
+    - name: ENABLE_SERVICE_DRYRUN
+      value: {{dryRun}}
