@@ -68,5 +68,3 @@ spec:
       value: {{kafka-brukernotifikasjon-beskjed-topic}}
     - name: KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC
       value: {{kafka-brukernotifikasjon-oppgave-topic}}
-    - name: FILESTORAGE_HOST
-      value: {{filestorage-host}}

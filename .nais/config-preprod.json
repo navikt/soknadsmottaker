@@ -9,7 +9,6 @@
 	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1",
 	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1",
 	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1",
-	"filestorage-host": "https://soknadsfillager-gcp.dev.intern.nav.no",
 	"kafka-pool": "nav-dev",
 	"inbound": [ "sendsoknad-q1","innsending-api"]
 }

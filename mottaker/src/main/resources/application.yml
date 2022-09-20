@@ -61,11 +61,6 @@ spring:
     activate:
       on-profile: docker
 
-filestoragetesting:
-  host: http://localhost:9042
-  username: ${INNSENDING_USERNAME}
-  password: ${INNSENDING_PASSWORD}
-
 restconfig:
   username: ${INNSENDING_USERNAME}
   password: ${INNSENDING_PASSWORD}
@@ -92,11 +87,6 @@ spring:
   config:
     activate:
       on-profile: default | test
-
-filestoragetesting:
-  host: http://localhost:9042
-  username: innsending
-  password: password
 
 restconfig:
   username: innsending
