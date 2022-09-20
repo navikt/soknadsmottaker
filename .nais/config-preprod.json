@@ -11,6 +11,5 @@
 	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1",
 	"filestorage-host": "https://soknadsfillager-gcp.dev.intern.nav.no",
 	"kafka-pool": "nav-dev",
-	"inbound": [ "sendsoknad-q1","innsending-api"],
-	"dryRun": "disabled"
+	"inbound": [ "sendsoknad-q1","innsending-api"]
 }

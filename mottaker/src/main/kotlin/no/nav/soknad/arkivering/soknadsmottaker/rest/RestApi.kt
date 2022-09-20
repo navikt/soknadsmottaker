@@ -1,18 +1,16 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import no.nav.security.token.support.core.api.Protected
-import no.nav.security.token.support.core.api.Unprotected
 import no.nav.soknad.arkivering.soknadsmottaker.api.SoknadApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 
 @Controller
-class RestApi(private val archiverService: ArchiverService, @Value("\${service.dryRun:false}") private val dryRunEnabled : String) : SoknadApi {
+class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
@@ -20,13 +18,8 @@ class RestApi(private val archiverService: ArchiverService, @Value("\${service.d
 	override fun receive(soknad: Soknad): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
 		log(key, soknad)
-		if ( "enabled" != dryRunEnabled ) {
-			archiverService.archive(key, soknad)
-		}
-		else {
-			logger.info("Dryrun enabled for innsenidngId" + soknad.innsendingId)
-			log(soknad.innsendingId,soknad)
-		}
+
+		archiverService.archive(key, soknad)
 
 		return ResponseEntity(HttpStatus.OK)
 	}

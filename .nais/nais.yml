@@ -45,9 +45,7 @@ spec:
         {{#each inbound}}
         - application: "{{this}}"
         {{/each}}
-    outbound:
-      rules:
-        - application: soknadsfillager # TODO: This is a temporary consistency check
+
   envFrom:
     - secret: shared-innsending-secret
       metadata:
@@ -72,5 +70,3 @@ spec:
       value: {{kafka-brukernotifikasjon-oppgave-topic}}
     - name: FILESTORAGE_HOST
       value: {{filestorage-host}}
-    - name: ENABLE_SERVICE_DRYRUN
-      value: {{dryRun}}
