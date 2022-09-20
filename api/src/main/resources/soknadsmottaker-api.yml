@@ -28,6 +28,17 @@ paths:
       description: Receives a benefit application, which will lead to it being put on a Kafka topic and archived.
       operationId: receive
 
+      parameters:
+        - in: header
+          name: X-dryRun
+          description: >
+            If set to "enabled" or if omitted, the service will only log the requests sent,
+            nothing will be sent to Kafka topics. Set to "disabled" to enable proper archiving.
+          example: enabled
+          required: false
+          schema:
+            type: string
+
       requestBody:
         description: Metadata about the benefit application being sent in.
         content:

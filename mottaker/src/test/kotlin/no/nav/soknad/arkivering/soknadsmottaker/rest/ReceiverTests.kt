@@ -55,7 +55,7 @@ class ReceiverTests {
 		every { kafkaMock.send(capture(record)) } returns setFuture(makeSendResult(topic, convert(soknad)))
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, InnsendingMetrics()))
 
-		receiver.receive(soknad)
+		receiver.receive(soknad, "disabled")
 
 		assertTrue(record.isCaptured)
 		assertEquals(topic, record.captured.topic(), "Should send to the right topic")
@@ -90,7 +90,7 @@ class ReceiverTests {
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, metricMessage))
 
 		assertThrows<KafkaException> {
-			receiver.receive(soknad)
+			receiver.receive(soknad, "disabled")
 		}
 
 		assertTrue(record.isCaptured)

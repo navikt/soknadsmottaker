@@ -15,11 +15,15 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
 	@Protected
-	override fun receive(soknad: Soknad): ResponseEntity<Unit> {
+	override fun receive(soknad: Soknad, xDryRun: String?): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
 		log(key, soknad)
 
-		archiverService.archive(key, soknad)
+		if (xDryRun == "disabled") {
+			archiverService.archive(key, soknad)
+		} else {
+			logger.info("{}: DryRun enabled - will not archive", soknad.innsendingId)
+		}
 
 		return ResponseEntity(HttpStatus.OK)
 	}
