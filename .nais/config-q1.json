@@ -1,7 +1,8 @@
 {
+	"appname": "soknadsmottaker",
 	"namespace": "team-soknad",
 	"ingress": [
-		"https://soknadsmottaker-team.dev.intern.nav.no"
+		"https://soknadsmottaker-q1.dev.intern.nav.no"
 	],
 	"service-user-path": "/serviceuser/data/dev/srvsoknadsmottaker",
 	"kafka-bootstrap-servers": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
