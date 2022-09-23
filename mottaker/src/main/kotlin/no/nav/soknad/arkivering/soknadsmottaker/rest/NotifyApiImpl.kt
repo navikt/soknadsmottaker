@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.security.token.support.core.api.Unprotected
+import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.NotifyApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.AddNotification
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
@@ -15,7 +15,7 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
-	@Unprotected
+	@Protected
 	override fun newNotification(addNotification: AddNotification): ResponseEntity<Unit> {
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
@@ -25,7 +25,7 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		return ResponseEntity(HttpStatus.OK)
 	}
 
-	@Unprotected
+	@Protected
 	override fun cancelNotification(soknadRef: SoknadRef): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
 		log(key, "Request to publish done notification for", soknadRef)
