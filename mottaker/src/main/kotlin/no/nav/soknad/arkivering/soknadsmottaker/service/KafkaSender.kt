@@ -54,9 +54,9 @@ class KafkaSender(
 	}
 
 	private fun <T> publishBrukernotifikasjon(topic: String, key: NokkelInput, value: T, kafkaTemplate: KafkaTemplate<NokkelInput, T>) {
-		logger.info("${key.getGrupperingsId()}: Skal publisere notifikasjon med eventId=${key.getEventId()} på topic $topic")
+		logger.info("${key.grupperingsId}: Skal publisere notifikasjon med eventId=${key.eventId} på topic $topic")
 		publish(topic, key, value, kafkaTemplate)
-		logger.info("${key.getGrupperingsId()}: Published to $topic")
+		logger.info("${key.grupperingsId}: Published to $topic")
 	}
 
 	private fun <K, V> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
