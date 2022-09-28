@@ -17,16 +17,15 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 
 	@Protected
 	override fun newNotification(addNotification: AddNotification, xDryRun: String?): ResponseEntity<Unit> {
+		if (xDryRun == null ) {
+			logger.info("{}: DryRun enabled - will not create new Notification", addNotification.soknadRef)
+		}
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
 		log(key, "Request to publish message or task notification for", soknadRef)
 		val brukerNotifikasjonInfo = addNotification.brukernotifikasjonInfo
+		notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
 
-		if (xDryRun == null) {
-			notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
-		} else {
-			logger.info("{}: DryRun enabled - will not create new Notification", key)
-		}
 
 		return ResponseEntity(HttpStatus.OK)
 	}
