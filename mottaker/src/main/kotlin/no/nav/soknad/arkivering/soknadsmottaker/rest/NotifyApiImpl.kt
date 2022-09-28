@@ -15,10 +15,13 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
+	private fun String?.isDryRunEnabled() = this != null
+
 	@Protected
 	override fun newNotification(addNotification: AddNotification, xDryRun: String?): ResponseEntity<Unit> {
-		if (xDryRun == null ) {
+		if (xDryRun.isDryRunEnabled()) {
 			logger.info("{}: DryRun enabled - will not create new Notification", addNotification.soknadRef)
+			return ResponseEntity(HttpStatus.OK)
 		}
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
@@ -33,14 +36,14 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	@Protected
 	override fun cancelNotification(soknadRef: SoknadRef, xDryRun: String?): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
+		if (xDryRun.isDryRunEnabled()) {
+			logger.info("{}: DryRun enabled - will not create cancel Notification", key)
+			return ResponseEntity(HttpStatus.OK)
+		}
 		log(key, "Request to publish done notification for", soknadRef)
 
+		notificationService.cancelNotification(key, soknadRef)
 
-		if (xDryRun == null) {
-			notificationService.cancelNotification(key, soknadRef)
-		} else {
-			logger.info("{}: DryRun enabled - will not create cancel Notification", key)
-		}
 
 		return ResponseEntity(HttpStatus.OK)
 	}
