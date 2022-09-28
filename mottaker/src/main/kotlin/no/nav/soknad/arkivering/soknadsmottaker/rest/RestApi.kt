@@ -19,7 +19,7 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		val key = soknad.innsendingId
 		log(key, soknad)
 
-		if (xDryRun == "disabled") {
+		if (xDryRun == null) {
 			archiverService.archive(key, soknad)
 		} else {
 			logger.info("{}: DryRun enabled - will not archive", soknad.innsendingId)

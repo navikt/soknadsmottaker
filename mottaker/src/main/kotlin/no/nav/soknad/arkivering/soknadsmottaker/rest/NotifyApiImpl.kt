@@ -22,7 +22,7 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		log(key, "Request to publish message or task notification for", soknadRef)
 		val brukerNotifikasjonInfo = addNotification.brukernotifikasjonInfo
 
-		if (xDryRun == "disabled") {
+		if (xDryRun == null) {
 			notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
 		} else {
 			logger.info("{}: DryRun enabled - will not create new Notification", key)
@@ -37,7 +37,7 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		log(key, "Request to publish done notification for", soknadRef)
 
 
-		if (xDryRun == "disabled") {
+		if (xDryRun == null) {
 			notificationService.cancelNotification(key, soknadRef)
 		} else {
 			logger.info("{}: DryRun enabled - will not create cancel Notification", key)
