@@ -19,12 +19,12 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		val key = soknad.innsendingId
 		log(key, soknad)
 
-		if (xDryRun == null) {
-			archiverService.archive(key, soknad)
-		} else {
-			logger.info("{}: DryRun enabled - will not archive", soknad.innsendingId)
+		if (xDryRun.isDryRunEnabled()) {
+			logger.info("{}: DryRun enabled - will not archive", key)
+			return ResponseEntity(HttpStatus.OK)
 		}
 
+		archiverService.archive(key, soknad)
 		return ResponseEntity(HttpStatus.OK)
 	}
 
@@ -39,4 +39,6 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		logger.info("$key: Received request '$fnrMasked'")
 		secureLogger.info("$key: Received request '$soknad'")
 	}
+
+	private fun String?.isDryRunEnabled() = this != null
 }

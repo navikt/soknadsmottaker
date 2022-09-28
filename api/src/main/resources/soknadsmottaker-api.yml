@@ -33,7 +33,7 @@ paths:
           name: X-dryRun
           description: >
             If this value is passed in, the service will only log the requests sent, nothing will be sent to
-            Kafka topics. Omit setting this header to send proper notifications.
+            Kafka topics. Omit setting this header to properly archive.
           example: enabled
           required: false
           schema:
