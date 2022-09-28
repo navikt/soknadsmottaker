@@ -16,20 +16,33 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
 	@Protected
-	override fun newNotification(addNotification: AddNotification): ResponseEntity<Unit> {
+	override fun newNotification(addNotification: AddNotification, xDryRun: String?): ResponseEntity<Unit> {
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
 		log(key, "Request to publish message or task notification for", soknadRef)
 		val brukerNotifikasjonInfo = addNotification.brukernotifikasjonInfo
-		notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
+
+		if (xDryRun == "disabled") {
+			notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
+		} else {
+			logger.info("{}: DryRun enabled - will not create new Notification", key)
+		}
+
 		return ResponseEntity(HttpStatus.OK)
 	}
 
 	@Protected
-	override fun cancelNotification(soknadRef: SoknadRef): ResponseEntity<Unit> {
+	override fun cancelNotification(soknadRef: SoknadRef, xDryRun: String?): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
 		log(key, "Request to publish done notification for", soknadRef)
-		notificationService.cancelNotification(key, soknadRef)
+
+
+		if (xDryRun == "disabled") {
+			notificationService.cancelNotification(key, soknadRef)
+		} else {
+			logger.info("{}: DryRun enabled - will not create cancel Notification", key)
+		}
+
 		return ResponseEntity(HttpStatus.OK)
 	}
 
