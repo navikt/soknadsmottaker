@@ -7,8 +7,13 @@ import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
+import org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.header.internals.RecordHeaders
+import org.apache.kafka.common.serialization.StringSerializer
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
@@ -47,7 +52,25 @@ class KafkaSender(
 	fun publishUtkastNotification(key: String, value: String) {
 		val topic = kafkaConfig.utkastTopic
 		try {
-			publish(topic, key, value, kafkaUtkastTemplate)
+			//publish(topic, key, value, kafkaUtkastTemplate)
+			logger.debug("$key. Skal publisere Utkast $value")
+			val props = Properties()
+			props[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.qualifiedName
+			props[VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.qualifiedName
+
+			KafkaProducer<String, String>(props).use { producer ->
+				producer.send(ProducerRecord(topic, key, value)) {
+					m: RecordMetadata, e: Exception? ->
+					when (e) {
+						// no exception, good to go!
+						null -> println("Produced record to topic ${m.topic()} partition [${m.partition()}] @ offset ${m.offset()}")
+						// print stacktrace in case of exception
+						else -> logger.error("$key: Feil ved publisering til $topic, ${e.message}")
+					}
+				}
+				producer.flush()
+			}
+
 		} catch (ex: Exception) {
 			logger.warn("$key: Feil ved publisering av utkast, ${ex.message}")
 		}
