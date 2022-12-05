@@ -47,6 +47,7 @@ kafkaconfig:
   brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC}
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC}
   brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC}
+  utkastTopic: ${KAFKA_UTKAST_TOPIC}
 
 no.nav.security.jwt:
   issuer:

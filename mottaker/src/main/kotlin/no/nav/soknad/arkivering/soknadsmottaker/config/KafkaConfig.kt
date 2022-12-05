@@ -70,6 +70,9 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	fun doneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(createKafkaConfig(avroKeySerializerClass))
 
 	@Bean
+	fun utkastFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass))
+
+	@Bean
 	fun kafkaBeskjedTemplate() = KafkaTemplate(beskjedNotificationFactory())
 
 	@Bean
@@ -77,6 +80,9 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 
 	@Bean
 	fun kafkaDoneTemplate() = KafkaTemplate(doneNotificationFactory())
+
+	@Bean
+	fun kafkaUtkastTemplate() = KafkaTemplate(utkastFactory())
 
 	@Bean
 	fun kafkaTemplate() = KafkaTemplate(producerFactory())

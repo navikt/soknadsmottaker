@@ -9,6 +9,7 @@
 	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1",
 	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1",
 	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1",
+	"kafka-utkast-topic": "min-side.aapen-utkast-v1",
 	"kafka-pool": "nav-dev",
 	"inbound": [ "sendsoknad-q1","innsending-api"]
 }
