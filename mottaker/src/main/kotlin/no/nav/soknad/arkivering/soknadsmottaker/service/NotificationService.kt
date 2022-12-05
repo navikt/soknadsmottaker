@@ -13,6 +13,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel.Kanal.epost
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel.Kanal.sms
+import no.nav.tms.utkast.builder.UtkastJsonBuilder
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.net.URL
@@ -48,7 +49,8 @@ class NotificationService(
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		if (!soknad.erEttersendelse) {
-			publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
+			publishNewUtkastNotification(brukerNotifikasjonInfo, key, eventId)
+			publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel) // TODO, beholder midlertidig også beskjednotifikasjon for å sammenligne.
 		} else {
 			publishOppgaveNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
 		}
@@ -65,6 +67,8 @@ class NotificationService(
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		publishDoneNotification(key, hendelsestidspunkt, notifikasjonsNokkel)
+		publishDoneUtkastNotification(eventId, soknad.personId)
+
 	}
 
 	private fun publishOppgaveNotification(
@@ -90,6 +94,35 @@ class NotificationService(
 			)
 			kafkaSender.publishOppgaveNotification(notifikasjonsNokkel, oppgaveNotifikasjon)
 		}
+	}
+
+	private fun publishNewUtkastNotification(
+		brukerNotifikasjonInfo: NotificationInfo,
+		eventId: String,
+		ident: String
+	) {
+		val utkast = UtkastJsonBuilder()
+			.withUtkastId(eventId)
+			.withLink(brukerNotifikasjonInfo.lenke)
+			.withIdent(ident)
+			.withTittel(brukerNotifikasjonInfo.notifikasjonsTittel)
+			.create()
+
+		kafkaSender.publishUtkastNotification(eventId, utkast)
+
+	}
+
+	private fun publishDoneUtkastNotification(
+		eventId: String,
+		ident: String
+	) {
+		val utkast = UtkastJsonBuilder()
+			.withUtkastId(eventId)
+			.withIdent(ident)
+			.delete()
+
+		kafkaSender.publishUtkastNotification(eventId, utkast)
+
 	}
 
 	private fun publishBeskjedNotification(

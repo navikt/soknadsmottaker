@@ -110,6 +110,11 @@
 			<version>${brukernotifikasjon-schemas.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.github.navikt</groupId>
+			<artifactId>tms-utkast</artifactId>
+			<version>2022-11-28-1215-spraak</version>
+		</dependency>
+		<dependency>
 			<groupId>no.nav.security</groupId>
 			<artifactId>token-validation-spring</artifactId>
 			<version>${token-support.version}</version>

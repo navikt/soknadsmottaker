@@ -23,6 +23,7 @@ class KafkaSender(
 	private val kafkaBeskjedTemplate: KafkaTemplate<NokkelInput, BeskjedInput>,
 	private val kafkaOppgaveTemplate: KafkaTemplate<NokkelInput, OppgaveInput>,
 	private val kafkaDoneTemplate: KafkaTemplate<NokkelInput, DoneInput>,
+	private val kafkaUtkastTemplate: KafkaTemplate<String, String>
 ) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -41,6 +42,11 @@ class KafkaSender(
 	fun publishDoneNotification(key: NokkelInput, value: DoneInput) {
 		val topic = kafkaConfig.brukernotifikasjonDoneTopic
 		publishBrukernotifikasjon(topic, key, value, kafkaDoneTemplate)
+	}
+
+	fun publishUtkastNotification(key: String, value: String) {
+		val topic = kafkaConfig.utkastTopic
+		publish(topic, key, value, kafkaUtkastTemplate)
 	}
 
 	fun publishBeskjedNotification(key: NokkelInput, value: BeskjedInput) {

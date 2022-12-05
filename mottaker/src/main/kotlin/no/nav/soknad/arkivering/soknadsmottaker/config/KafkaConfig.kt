@@ -102,4 +102,5 @@ class KafkaConfig {
 	lateinit var brukernotifikasjonDoneTopic: String
 	lateinit var brukernotifikasjonBeskjedTopic: String
 	lateinit var brukernotifikasjonOppgaveTopic: String
+	lateinit var utkastTopic: String
 }
