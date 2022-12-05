@@ -46,7 +46,11 @@ class KafkaSender(
 
 	fun publishUtkastNotification(key: String, value: String) {
 		val topic = kafkaConfig.utkastTopic
-		publish(topic, key, value, kafkaUtkastTemplate)
+		try {
+			publish(topic, key, value, kafkaUtkastTemplate)
+		} catch (ex: Exception) {
+			logger.warn("$key: Feil ved publisering av utkast, ${ex.message}")
+		}
 	}
 
 	fun publishBeskjedNotification(key: NokkelInput, value: BeskjedInput) {

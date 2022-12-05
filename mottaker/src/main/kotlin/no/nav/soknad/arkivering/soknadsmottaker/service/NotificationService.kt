@@ -101,6 +101,7 @@ class NotificationService(
 		eventId: String,
 		ident: String
 	) {
+		logger.info("$eventId: Lager utkast med lenke ${brukerNotifikasjonInfo.lenke}")
 		val utkast = UtkastJsonBuilder()
 			.withUtkastId(eventId)
 			.withLink(brukerNotifikasjonInfo.lenke)
@@ -109,6 +110,7 @@ class NotificationService(
 			.create()
 
 		kafkaSender.publishUtkastNotification(eventId, utkast)
+		logger.info("$eventId: Publisert utkast med lenke ${brukerNotifikasjonInfo.lenke}")
 
 	}
 
