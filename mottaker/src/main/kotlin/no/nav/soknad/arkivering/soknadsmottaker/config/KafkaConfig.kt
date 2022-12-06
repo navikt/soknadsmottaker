@@ -26,14 +26,15 @@ import org.springframework.kafka.core.KafkaTemplate
 class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	private val stringKeySerializerClass = StringSerializer::class.java
 	private val avroKeySerializerClass = KafkaAvroSerializer::class.java
+	private val stringValueSerializerClass = StringSerializer::class.java
 
-	fun <T : Serializer<*>> createKafkaConfig(serializer: Class<T>): HashMap<String, Any> {
+	fun <T : Serializer<*>> createKafkaConfig(keySerializer: Class<T>, valueSerializer: Class<T>? = null): HashMap<String, Any> {
 
 		return HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.kafkaBrokers
 			it[SCHEMA_REGISTRY_URL_CONFIG] = kafkaConfig.schemaRegistryUrl
-			it[KEY_SERIALIZER_CLASS_CONFIG] = serializer
-			it[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
+			it[KEY_SERIALIZER_CLASS_CONFIG] = keySerializer
+			it[VALUE_SERIALIZER_CLASS_CONFIG] = valueSerializer ?: KafkaAvroSerializer::class.java
 			it[MAX_BLOCK_MS_CONFIG] = 30000
 			it[ACKS_CONFIG] = "all"
 			it[ENABLE_IDEMPOTENCE_CONFIG] = "false"
@@ -70,7 +71,7 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	fun doneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(createKafkaConfig(avroKeySerializerClass))
 
 	@Bean
-	fun utkastFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass))
+	fun utkastFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass, stringValueSerializerClass))
 
 	@Bean
 	fun kafkaBeskjedTemplate() = KafkaTemplate(beskjedNotificationFactory())

@@ -109,8 +109,12 @@ class NotificationService(
 			.withTittel(brukerNotifikasjonInfo.notifikasjonsTittel)
 			.create()
 
-		kafkaSender.publishUtkastNotification(eventId, utkast)
-		logger.info("$eventId: Publisert utkast med lenke ${brukerNotifikasjonInfo.lenke}")
+		try {
+			kafkaSender.publishUtkastNotification(eventId, utkast)
+			logger.info("$eventId: Publisert utkast med lenke ${brukerNotifikasjonInfo.lenke}")
+		} catch ( ex: Exception) {
+			logger.error("$eventId: feil ved publisering av utkast med lenke ${brukerNotifikasjonInfo.lenke}, \n${ex.message}")
+		}
 
 	}
 
