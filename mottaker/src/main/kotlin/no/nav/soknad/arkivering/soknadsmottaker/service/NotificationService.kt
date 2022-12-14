@@ -49,7 +49,7 @@ class NotificationService(
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		if (!soknad.erEttersendelse) {
-			publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel) // TODO, beholder midlertidig også beskjednotifikasjon for å sammenligne.
+			// publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
 			publishNewUtkastNotification(brukerNotifikasjonInfo, notifikasjonsNokkel.eventId, notifikasjonsNokkel.fodselsnummer)
 		} else {
 			publishOppgaveNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
