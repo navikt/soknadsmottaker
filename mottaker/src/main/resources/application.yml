@@ -1,6 +1,9 @@
 server:
   port: 8090
 
+cron:
+  startSendBrukerBeskjed: 0 15 14 * * *
+
 management:
   endpoint:
     health:

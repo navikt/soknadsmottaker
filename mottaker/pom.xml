@@ -21,6 +21,8 @@
 		<prometheus-simpleclient.version>0.15.0</prometheus-simpleclient.version>
 		<logstash.version>7.2</logstash.version>
 		<mockk.version>1.12.4</mockk.version>
+		<coroutines.version>1.6.4</coroutines.version>
+		<kotlin-serialization.version>1.4.1</kotlin-serialization.version>
 
 		<kotlin.version>1.6.21</kotlin.version>
 		<java.version>17</java.version>
@@ -103,6 +105,21 @@
 			<groupId>com.github.navikt</groupId>
 			<artifactId>brukernotifikasjon-schemas</artifactId>
 			<version>${brukernotifikasjon-schemas.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlinx</groupId>
+			<artifactId>kotlinx-coroutines-slf4j</artifactId>
+			<version>${coroutines.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlinx</groupId>
+			<artifactId>kotlinx-serialization-json</artifactId>
+			<version>${kotlin-serialization.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10</version>
 		</dependency>
 
 		<dependency>

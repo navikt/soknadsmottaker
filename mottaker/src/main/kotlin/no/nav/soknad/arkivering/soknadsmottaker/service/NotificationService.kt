@@ -37,6 +37,11 @@ class NotificationService(
 	private val sleepTimes = listOf(5, 15, 30)
 
 
+	fun userMessageNotification(key:String, brukerNotifikasjonInfo: NotificationInfo, userId: String, groupId: String) {
+		val notifikasjonsNokkel = createNotificationKey(key, userId, groupId)
+		publishBeskjedNotification(brukerNotifikasjonInfo, LocalDateTime.now(), key, key, notifikasjonsNokkel)
+	}
+
 	fun newNotification(key: String, soknad: SoknadRef, brukerNotifikasjonInfo: NotificationInfo) {
 		if (!correctNamespace(appConfiguration.kafkaConfig.namespace)) {
 			logger.info("$key: Will not publish Beskjed/Oppgave, the namespace '${appConfiguration.kafkaConfig.namespace}' " +
