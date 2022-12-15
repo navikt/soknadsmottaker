@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
+import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.SoknadApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
@@ -13,9 +14,15 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
-	override fun receive(soknad: Soknad): ResponseEntity<Unit> {
+	@Protected
+	override fun receive(soknad: Soknad, xDryRun: String?): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
 		log(key, soknad)
+
+		if (xDryRun.isDryRunEnabled()) {
+			logger.info("{}: DryRun enabled - will not archive", key)
+			return ResponseEntity(HttpStatus.OK)
+		}
 
 		archiverService.archive(key, soknad)
 		return ResponseEntity(HttpStatus.OK)
@@ -32,4 +39,6 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		logger.info("$key: Received request '$fnrMasked'")
 		secureLogger.info("$key: Received request '$soknad'")
 	}
+
+	private fun String?.isDryRunEnabled() = this != null
 }

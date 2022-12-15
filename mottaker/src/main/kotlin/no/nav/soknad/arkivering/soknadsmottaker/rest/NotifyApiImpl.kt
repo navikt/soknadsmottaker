@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
+import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.NotifyApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.AddNotification
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
@@ -14,18 +15,32 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
-	override fun newNotification(addNotification: AddNotification): ResponseEntity<Unit> {
+
+	@Protected
+	override fun newNotification(addNotification: AddNotification, xDryRun: String?): ResponseEntity<Unit> {
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
 		log(key, "Request to publish message or task notification for", soknadRef)
-		val brukerNotifikasjonInfo = addNotification.brukernotifikasjonInfo
-		notificationService.newNotification(key, soknadRef, brukerNotifikasjonInfo)
+
+		if (xDryRun.isDryRunEnabled()) {
+			logger.info("{}: DryRun enabled - will not create new Notification", key)
+			return ResponseEntity(HttpStatus.OK)
+		}
+
+		notificationService.newNotification(key, soknadRef, addNotification.brukernotifikasjonInfo)
 		return ResponseEntity(HttpStatus.OK)
 	}
 
-	override fun cancelNotification(soknadRef: SoknadRef): ResponseEntity<Unit> {
+	@Protected
+	override fun cancelNotification(soknadRef: SoknadRef, xDryRun: String?): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
 		log(key, "Request to publish done notification for", soknadRef)
+
+		if (xDryRun.isDryRunEnabled()) {
+			logger.info("{}: DryRun enabled - will not create cancel Notification", key)
+			return ResponseEntity(HttpStatus.OK)
+		}
+
 		notificationService.cancelNotification(key, soknadRef)
 		return ResponseEntity(HttpStatus.OK)
 	}
@@ -41,4 +56,6 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		logger.info("$key: $message '$fnrMasked'")
 		secureLogger.info("$key: $message '$soknad'")
 	}
+
+	private fun String?.isDryRunEnabled() = this != null
 }

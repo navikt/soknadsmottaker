@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: {{appname}}
-  namespace: {{namespace}}
+  namespace: team-soknad
   labels:
     team: team-soknad
 spec:
@@ -36,28 +36,28 @@ spec:
   {{/each}}
   secureLogs:
     enabled: true
-  vault:
-    enabled: true
-    paths:
-      - mountPath: /var/run/secrets/nais.io/serviceuser
-        kvPath: {{service-user-path}}
-      - mountPath: /secrets/innsending-data
-        kvPath: secret/team-soknad/innsending/basicauth
+  azure:
+    application:
+      enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        {{#each inbound}}
+        - application: "{{this}}"
+        {{/each}}
+
+  envFrom:
+    - secret: shared-innsending-secret
+      metadata:
+        annotations:
+          reloader.stakater.com/match: "true"
   kafka:
     pool: {{ kafka-pool }}
   env:
-    - name: KAFKA_BOOTSTRAP_SERVERS
-      value: {{kafka-bootstrap-servers}}
-    - name: SCHEMA_REGISTRY_URL
-      value: {{schema-registry-url}}
-    - name: KAFKA_SECURITY
-      value: 'TRUE'
-    - name: KAFKA_SECPROT
-      value: SASL_SSL
-    - name: KAFKA_SASLMEC
-      value: PLAIN
     - name: SPRING_PROFILES_ACTIVE
       value: {{profile}}
+    - name: KAFKA_SECURITY
+      value: 'TRUE'
     - name: KAFKA_MAIN_TOPIC
       value: {{kafka-main-topic}}
     - name: KAFKA_METRICS_TOPIC

@@ -4,24 +4,24 @@ import no.nav.soknad.arkivering.avroschemas.Soknadstyper
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createDocuments
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createVariant
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.OffsetDateTime
 
 class ConverterTests {
 	private val soknad = createSoknad()
 
 	@Test
 	fun `Can convert correctly`() {
-		val startTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+		val startTime = OffsetDateTime.now().toEpochSecond()
 
 		val result = convert(soknad)
 
 		assertEquals(soknad.innsendingId, result.behandlingsid)
 		assertEquals(soknad.personId, result.fodselsnummer)
 		assertEquals(soknad.tema, result.arkivtema)
-		val endTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+		val endTime = OffsetDateTime.now().toEpochSecond()
 		assertTrue(result.innsendtDato >= startTime)
 		assertTrue(result.innsendtDato <= endTime)
 		assertEquals(Soknadstyper.SOKNAD, result.soknadstype)

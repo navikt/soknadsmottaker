@@ -7,14 +7,13 @@ import no.nav.soknad.arkivering.avroschemas.Soknadstyper
 import no.nav.soknad.arkivering.soknadsmottaker.model.DocumentData
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varianter
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.OffsetDateTime
 
 fun convert(soknad: Soknad) = Soknadarkivschema(
 	soknad.innsendingId,
 	soknad.personId,
 	soknad.tema,
-	LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
+	OffsetDateTime.now().toEpochSecond(),
 	if (soknad.erEttersendelse) Soknadstyper.ETTERSENDING else Soknadstyper.SOKNAD,
 	convertDocuments(soknad.dokumenter)
 )

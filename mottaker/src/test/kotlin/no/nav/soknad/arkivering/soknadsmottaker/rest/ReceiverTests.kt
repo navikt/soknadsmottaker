@@ -10,7 +10,7 @@ import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
-import no.nav.soknad.arkivering.soknadsmottaker.config.AppConfiguration
+import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
@@ -31,8 +31,8 @@ import org.springframework.util.concurrent.SettableListenableFuture
 
 class ReceiverTests {
 
-	private val topic = "privat-soknadInnsendt-v1-teamsoknad"
-	private val metricsTopic = "privat-soknadInnsendt-metrics-v1-teamsoknad"
+	private val topic = "privat-soknadinnsending-v1-dev"
+	private val metricsTopic = "privat-soknadinnsending-metrics-v1-dev"
 
 	private val kafkaMock = mockk<KafkaTemplate<String, Soknadarkivschema>>()
 	private val metricsKafkaMock = mockk<KafkaTemplate<String, InnsendingMetrics>>()
@@ -55,7 +55,7 @@ class ReceiverTests {
 		every { kafkaMock.send(capture(record)) } returns setFuture(makeSendResult(topic, convert(soknad)))
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, InnsendingMetrics()))
 
-		receiver.receive(soknad)
+		receiver.receive(soknad, null)
 
 		assertTrue(record.isCaptured)
 		assertEquals(topic, record.captured.topic(), "Should send to the right topic")
@@ -90,7 +90,7 @@ class ReceiverTests {
 		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, metricMessage))
 
 		assertThrows<KafkaException> {
-			receiver.receive(soknad)
+			receiver.receive(soknad, null)
 		}
 
 		assertTrue(record.isCaptured)
@@ -108,7 +108,23 @@ class ReceiverTests {
 		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
 
 	private fun mockReceiver(metrics: InnsendtMetrics): RestApi {
-		val conf = AppConfiguration()
+		val conf = KafkaConfig().also {
+			it.namespace = "default"
+			it.secure = "FALSE"
+			it.schemaRegistryUsername = "user"
+			it.schemaRegistryPassword = "pass"
+			it.schemaRegistryUrl = "http://localhost:8081"
+			it.kafkaBrokers = "localhost:29092"
+			it.truststorePath = "path"
+			it.keystorePath = "path"
+			it.credstorePassword = "pass"
+
+			it.mainTopic = topic
+			it.metricsTopic = metricsTopic
+			it.brukernotifikasjonDoneTopic = "min-side.aapen-brukernotifikasjon-done-v1"
+			it.brukernotifikasjonBeskjedTopic = "min-side.aapen-brukernotifikasjon-beskjed-v1"
+			it.brukernotifikasjonOppgaveTopic = "min-side.aapen-brukernotifikasjon-oppgave-v1"
+		}
 		val kafkaSender = KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock)
 		val archiverService = ArchiverService(kafkaSender, metrics)
 		return RestApi(archiverService)

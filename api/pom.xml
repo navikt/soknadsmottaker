@@ -14,16 +14,19 @@
 
 
 	<properties>
-		<springdoc-openapi.version>1.6.9</springdoc-openapi.version>
-		<swagger-annotations.version>2.2.0</swagger-annotations.version>
-		<spring-web.version>5.3.20</spring-web.version>
+		<jackson.version>2.13.4</jackson.version>
+		<okhttp3.version>4.10.0</okhttp3.version>
+
+		<springdoc-openapi.version>1.6.12</springdoc-openapi.version>
+		<swagger-annotations.version>2.2.4</swagger-annotations.version>
+		<spring-web.version>5.3.23</spring-web.version>
 		<javax-servlet-api.version>4.0.1</javax-servlet-api.version>
 		<javax-validation-api.version>2.0.1.Final</javax-validation-api.version>
-		<jakarta-annotation.version>2.1.0</jakarta-annotation.version>
-		<jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
-		<openapi-generator-maven-plugin.version>6.0.0</openapi-generator-maven-plugin.version>
+		<jakarta-annotation.version>2.1.1</jakarta-annotation.version>
+		<jackson-databind-nullable.version>0.2.4</jackson-databind-nullable.version>
+		<openapi-generator-maven-plugin.version>6.2.0</openapi-generator-maven-plugin.version>
 
-		<kotlin.version>1.6.21</kotlin.version>
+		<kotlin.version>1.7.20</kotlin.version>
 		<java.version>17</java.version>
 	</properties>
 
@@ -67,6 +70,16 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${okhttp3.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-kotlin</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
 			<version>${jackson-databind-nullable.version}</version>
@@ -89,6 +102,7 @@
 				<version>${openapi-generator-maven-plugin.version}</version>
 				<executions>
 					<execution>
+						<id>Generate Soknadsmottaker API</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>

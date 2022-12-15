@@ -13,18 +13,17 @@
 	<description>Receives benefit applications</description>
 
 	<properties>
-		<brukernotifikasjon-schemas.version>v2.5.1</brukernotifikasjon-schemas.version>
+		<brukernotifikasjon-schemas.version>v2.5.2</brukernotifikasjon-schemas.version>
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
-		<confluent.version>7.1.1</confluent.version>
-		<springdoc.version>1.6.9</springdoc.version>
-		<konfig.version>1.6.10.0</konfig.version>
-		<prometheus-simpleclient.version>0.15.0</prometheus-simpleclient.version>
-		<logstash.version>7.2</logstash.version>
-		<mockk.version>1.12.4</mockk.version>
-		<coroutines.version>1.6.4</coroutines.version>
-		<kotlin-serialization.version>1.4.1</kotlin-serialization.version>
+		<token-support.version>2.1.7</token-support.version>
 
-		<kotlin.version>1.6.21</kotlin.version>
+		<confluent.version>7.2.2</confluent.version>
+		<springdoc.version>1.6.12</springdoc.version>
+		<prometheus-simpleclient.version>0.16.0</prometheus-simpleclient.version>
+		<logstash.version>7.2</logstash.version>
+		<mockk.version>1.13.2</mockk.version>
+
+		<kotlin.version>1.7.20</kotlin.version>
 		<java.version>17</java.version>
 	</properties>
 
@@ -40,6 +39,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.micrometer</groupId>
@@ -107,19 +110,9 @@
 			<version>${brukernotifikasjon-schemas.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-slf4j</artifactId>
-			<version>${coroutines.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-serialization-json</artifactId>
-			<version>${kotlin-serialization.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.10</version>
+			<groupId>no.nav.security</groupId>
+			<artifactId>token-validation-spring</artifactId>
+			<version>${token-support.version}</version>
 		</dependency>
 
 		<dependency>
@@ -137,12 +130,6 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-kotlin</artifactId>
 			<version>${springdoc.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.natpryce</groupId>
-			<artifactId>konfig</artifactId>
-			<version>${konfig.version}</version>
 		</dependency>
 
 		<dependency>
@@ -170,7 +157,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.mockk</groupId>
-			<artifactId>mockk-dsl-jvm</artifactId>
+			<artifactId>mockk-jvm</artifactId>
 			<version>${mockk.version}</version>
 			<scope>test</scope>
 		</dependency>
