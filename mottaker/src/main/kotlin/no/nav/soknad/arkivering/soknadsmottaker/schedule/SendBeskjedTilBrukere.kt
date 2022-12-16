@@ -26,18 +26,15 @@ class SendBeskjedTilBrukere(
 
 	val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-	@Value("\${user-notification-file}")
-	private var sourceFile: String = "user-notification-message"
-
 	@Scheduled(cron = "\${cron.startSendBrukerBeskjed}")
 	fun start() {
+		val inputString: String? = System.getenv("user-notification-message") ?: System.getProperty("user-notification-message")
+		logger.info("**** Start sending av usernotification, ${if (inputString != null) inputString.length else null} ****")
 		try {
-			if (leaderSelectionUtility.isLeader()) {
+			if (leaderSelectionUtility.isLeader() && inputString != null) {
 
-				logger.info("**** Start sending av usernotification basert på $sourceFile ****")
-				val jsonByteArray = readeBytesFromFile(sourceFile)
 				val gson = Gson()
-				val input = gson.fromJson(jsonByteArray.decodeToString(), UserNotificationMessageDto::class.java)
+				val input = gson.fromJson(inputString, UserNotificationMessageDto::class.java)
 
 				input.userList.forEach {
 					publiser(
@@ -46,9 +43,11 @@ class SendBeskjedTilBrukere(
 						input.messageLinkBase
 					)
 				}
+			} else {
+				logger.info("**** Sending skipped ****")
 			}
 		} catch (ex: Exception) {
-			logger.warn("Sending av usernotification basert på $sourceFile feilet med ${ex.message}")
+			logger.warn("Sending av usernotification feilet med ${ex.message}")
 		}
 	}
 
@@ -75,6 +74,8 @@ class SendBeskjedTilBrukere(
 		}
 		return outputStream.toByteArray()
 	}
+
+	fun canReadFile(filePath: String): Boolean = File(filePath).canRead()
 
 	fun readeBytesFromFile(filePath: String): ByteArray {
 		return File(filePath).readBytes()

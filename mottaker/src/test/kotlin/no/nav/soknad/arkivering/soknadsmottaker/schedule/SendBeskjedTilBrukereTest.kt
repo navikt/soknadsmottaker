@@ -3,13 +3,12 @@ package no.nav.soknad.arkivering.soknadsmottaker.schedule
 import com.google.gson.Gson
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
 import no.nav.soknad.arkivering.soknadsmottaker.dto.UserDto
 import no.nav.soknad.arkivering.soknadsmottaker.dto.UserMessageDto
 import no.nav.soknad.arkivering.soknadsmottaker.dto.UserNotificationMessageDto
-import no.nav.soknad.arkivering.soknadsmottaker.model.AddNotification
 import no.nav.soknad.arkivering.soknadsmottaker.model.NotificationInfo
 import no.nav.soknad.arkivering.soknadsmottaker.service.NotificationService
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -18,6 +17,8 @@ class SendBeskjedTilBrukereTest {
 
 	private val notificationService = mockk<NotificationService>(relaxUnitFun = true)
 	private val leaderSelectionUtility = mockk<LeaderSelectionUtility>()
+	private val sourceFile = "user-notification-message"
+
 
 	fun lagInput(): UserNotificationMessageDto {
 		val userDto = UserDto("4aee359a-a6b7-472d-bc71-70df92a5642d", "14878099436", "NAV 08-35.01","no")
@@ -34,18 +35,24 @@ class SendBeskjedTilBrukereTest {
 
 	}
 
+	@AfterEach
+	fun cleanUp() {
+		File(sourceFile).delete()
+	}
+
 	@Test
 	fun testLesOgKonverterInput() {
 		val sendBeskjedTilBrukere = SendBeskjedTilBrukere(notificationService, leaderSelectionUtility)
 		val userNotificationMessageDto = lagInput()
 		val filePath = ""
-		val sourceFile = "user-notification-message"
 
 		val gson = Gson()
 
 		val jsonString = gson.toJson(userNotificationMessageDto)
 
 		writeBytesToFile(jsonString.toByteArray(Charsets.UTF_8), filePath+sourceFile)
+
+		System.setProperty("user-notification-message", jsonString)
 
 		every { leaderSelectionUtility.isLeader() } returns true
 		val brukernotifikasjonInfos = mutableListOf<NotificationInfo>()
