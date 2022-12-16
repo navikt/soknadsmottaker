@@ -1,8 +1,10 @@
 server:
   port: 8090
 
+userNotificationMessageJson: ""
+
 cron:
-  startSendBrukerBeskjed: 0 50 18 16 DEC ?
+  startSendBrukerBeskjed: 0 00 19 16 DEC ?
 
 management:
   endpoint:
