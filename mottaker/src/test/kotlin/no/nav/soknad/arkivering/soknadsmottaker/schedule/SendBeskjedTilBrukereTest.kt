@@ -23,8 +23,8 @@ class SendBeskjedTilBrukereTest {
 	fun lagInput(): UserNotificationMessageDto {
 		val userDto = UserDto("4aee359a-a6b7-472d-bc71-70df92a5642d", "14878099436", "NAV 08-35.01","no")
 		val userDto2 = UserDto("53a2b9d6-ae8b-4274-bfc2-d1d20e09278f", "23828896741", "NAV 04-02.01", "en")
-		val userMessageDto = UserMessageDto("Opprett ny søknad", "Det er en beskjed til deg på nav.no/minside", "Vennligst logg inn og sjekk meldingen",
-			"Det er en beskjed til deg på nav.no/minside", "Vennligst logg inn og sjekk meldingen")
+		val userMessageDto = UserMessageDto("Du må sende søknaden på nytt. Vi har hatt en teknisk feil som gjorde at det ikke var mulig å sende inn vedlegg til søknader fra 12. til 14. desember. Feilen gjelder dessverre en søknad du har sendt inn. For at NAV skal kunne behandle søknaden din må du sende søknad og vedlegg på nytt.", "Det er en beskjed til deg på nav.no", "Vennligst logg inn og sjekk beskjeden",
+			"Det er en beskjed til deg på nav.no", "Vennligst logg inn og sjekk beskjeden")
 		val userMessageDto_en = UserMessageDto("Create new Application", "There is is a message to you, see nav.no/minside", "Please log on to check the message",
 			"There is is a message to you, see nav.no/minside", "Please log on to check the message")
 		val userNotificationMessageDto = UserNotificationMessageDto(userMessageDto, userMessageDto_en,
