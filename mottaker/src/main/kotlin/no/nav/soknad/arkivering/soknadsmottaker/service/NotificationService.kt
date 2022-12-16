@@ -178,7 +178,7 @@ class NotificationService(
 				builder.withSmsVarslingstekst(varsel.tekst)
 			if (varsel.kanal == epost) {
 				builder.withEpostVarslingstekst(varsel.tekst)
-				builder.withEpostVarslingstittel(varsel.tittel ?: defaultVarselTittel)
+				builder.withEpostVarslingstittel(if (varsel.tittel == null || varsel.tittel?.length!! > 40)  defaultVarselTittel else varsel.tittel)
 			}
 		}
 
