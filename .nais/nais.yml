@@ -46,6 +46,7 @@ spec:
         - application: "{{this}}"
         {{/each}}
 
+  leaderElection: true
   filesFrom:
     - secret: user-notification-message
       mountPath: /var/run/secrets/user-notification-message
