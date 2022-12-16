@@ -38,8 +38,8 @@ class SendBeskjedTilBrukereTest {
 	fun testLesOgKonverterInput() {
 		val sendBeskjedTilBrukere = SendBeskjedTilBrukere(notificationService, leaderSelectionUtility)
 		val userNotificationMessageDto = lagInput()
-		val filePath = "./src/test/resources"
-		val sourceFile = "/userNotificationMessage.json"
+		val filePath = ""
+		val sourceFile = "user-notification-message"
 
 		val gson = Gson()
 

@@ -1,8 +1,10 @@
 server:
   port: 8090
 
+user-notification-file: "/src/main/test/resources/user-notification-message"
+
 cron:
-  startSendBrukerBeskjed: 0 15 14 * * *
+  startSendBrukerBeskjed: 0 35 13 16 DEC ? 2022
 
 management:
   endpoint:
@@ -27,6 +29,9 @@ spring:
   config:
     activate:
       on-profile: prod | dev
+
+user-notification-file: ${user-notification-message}
+
 service:
   dryRun: ${ENABLE_SERVICE_DRYRUN}
 

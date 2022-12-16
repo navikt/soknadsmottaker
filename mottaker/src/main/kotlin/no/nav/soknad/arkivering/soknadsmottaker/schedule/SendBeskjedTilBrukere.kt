@@ -9,26 +9,33 @@ import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel
 import no.nav.soknad.arkivering.soknadsmottaker.service.NotificationService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 
 @Service
 @EnableScheduling
-class SendBeskjedTilBrukere(private val notificationService: NotificationService, private val leaderSelectionUtility: LeaderSelectionUtility) {
+class SendBeskjedTilBrukere(
+	private val notificationService: NotificationService,
+	private val leaderSelectionUtility: LeaderSelectionUtility
+	) {
 
 	val logger: Logger = LoggerFactory.getLogger(javaClass)
 
+	@Value("\${user-notification-file}")
+	private var sourceFile: String = "user-notification-message"
+
 	@Scheduled(cron = "\${cron.startSendBrukerBeskjed}")
 	fun start() {
-		val sourceFile = "/userNotificationMessage.json"
 		try {
 			if (leaderSelectionUtility.isLeader()) {
 
 				logger.info("**** Start sending av usernotification basert på $sourceFile ****")
-				val jsonByteArray = getBytesFromFile(sourceFile)
+				val jsonByteArray = readeBytesFromFile(sourceFile)
 				val gson = Gson()
 				val input = gson.fromJson(jsonByteArray.decodeToString(), UserNotificationMessageDto::class.java)
 
@@ -68,6 +75,11 @@ class SendBeskjedTilBrukere(private val notificationService: NotificationService
 		}
 		return outputStream.toByteArray()
 	}
+
+	fun readeBytesFromFile(filePath: String): ByteArray {
+		return File(filePath).readBytes()
+	}
+
 
 }
 
