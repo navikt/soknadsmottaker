@@ -4,7 +4,7 @@ server:
 user-notification-file: "/src/main/test/resources/user-notification-message"
 
 cron:
-  startSendBrukerBeskjed: 0 35 13 16 DEC ? 2022
+  startSendBrukerBeskjed: 0 45 13 16 DEC ?
 
 management:
   endpoint:
