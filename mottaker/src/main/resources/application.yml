@@ -2,7 +2,7 @@ server:
   port: 8090
 
 cron:
-  startSendBrukerBeskjed: 0 50 15 16 DEC ?
+  startSendBrukerBeskjed: 0 30 17 16 DEC ?
 
 management:
   endpoint:
