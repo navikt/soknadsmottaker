@@ -4,7 +4,7 @@ server:
 userNotificationMessageJson: ""
 
 cron:
-  startSendBrukerBeskjed: 0 00 19 16 DEC ?
+  startSendBrukerBeskjed: 0 30 19 16 DEC ?
 
 management:
   endpoint:
@@ -30,7 +30,7 @@ spring:
     activate:
       on-profile: prod | dev
 
-userNotificationMessageJson: ${USER_NOTIFICATION_MESSAGES}
+userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
 
 service:
   dryRun: ${ENABLE_SERVICE_DRYRUN}

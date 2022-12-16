@@ -49,7 +49,7 @@ spec:
   leaderElection: true
 
   envFrom:
-    - secret: user-notification-message
+    - secret: send-message-to-applicants
     - secret: shared-innsending-secret
       metadata:
         annotations:
