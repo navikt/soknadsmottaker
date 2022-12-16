@@ -26,7 +26,7 @@ class SendBeskjedTilBrukere(
 
 	val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-	@Value("\${userNotificationMessage}")
+	@Value("\${userNotificationMessageJson}")
 	private var envInput: String? = null
 
 	@Scheduled(cron = "\${cron.startSendBrukerBeskjed}")

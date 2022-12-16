@@ -2,7 +2,7 @@ server:
   port: 8090
 
 cron:
-  startSendBrukerBeskjed: 0 15 18 16 DEC ?
+  startSendBrukerBeskjed: 0 25 18 16 DEC ?
 
 management:
   endpoint:
@@ -28,7 +28,7 @@ spring:
     activate:
       on-profile: prod | dev
 
-userNotificationMessage: ${userNotificationMessage}
+userNotificationMessageJson: ${userNotificationMessage}
 
 service:
   dryRun: ${ENABLE_SERVICE_DRYRUN}
