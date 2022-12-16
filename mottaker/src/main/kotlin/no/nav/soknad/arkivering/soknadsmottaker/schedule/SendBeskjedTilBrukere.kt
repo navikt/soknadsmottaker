@@ -26,9 +26,12 @@ class SendBeskjedTilBrukere(
 
 	val logger: Logger = LoggerFactory.getLogger(javaClass)
 
+	@Value("\${userNotificationMessage}")
+	private var envInput: String? = null
+
 	@Scheduled(cron = "\${cron.startSendBrukerBeskjed}")
 	fun start() {
-		val inputString: String? = System.getenv("user-notification-message") ?: System.getProperty("user-notification-message")
+		val inputString: String? = envInput ?: System.getenv("userNotificationMessage") ?: System.getProperty("userNotificationMessage")
 		logger.info("**** Start sending av usernotification, ${if (inputString != null) inputString.length else null} ****")
 		try {
 			if (leaderSelectionUtility.isLeader() && inputString != null) {

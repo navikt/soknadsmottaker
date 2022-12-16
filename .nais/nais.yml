@@ -47,9 +47,6 @@ spec:
         {{/each}}
 
   leaderElection: true
-  filesFrom:
-    - secret: user-notification-message
-      mountPath: /var/run/secrets/user-notification-message
 
   envFrom:
     - secret: user-notification-message

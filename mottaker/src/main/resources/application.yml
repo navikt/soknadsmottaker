@@ -28,7 +28,7 @@ spring:
     activate:
       on-profile: prod | dev
 
-user-notification-message: ${user-notification-message}
+userNotificationMessage: ${userNotificationMessage}
 
 service:
   dryRun: ${ENABLE_SERVICE_DRYRUN}

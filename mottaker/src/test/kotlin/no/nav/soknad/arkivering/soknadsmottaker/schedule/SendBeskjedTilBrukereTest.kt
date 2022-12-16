@@ -52,7 +52,7 @@ class SendBeskjedTilBrukereTest {
 
 		writeBytesToFile(jsonString.toByteArray(Charsets.UTF_8), filePath+sourceFile)
 
-		System.setProperty("user-notification-message", jsonString)
+		System.setProperty("userNotificationMessage", jsonString)
 
 		every { leaderSelectionUtility.isLeader() } returns true
 		val brukernotifikasjonInfos = mutableListOf<NotificationInfo>()
