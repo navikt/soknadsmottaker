@@ -50,13 +50,11 @@ class SendBeskjedTilBrukereTest {
 		val gson = Gson()
 
 		val jsonString = gson.toJson(userNotificationMessageDto)
-
-		val jsonByteArray = jsonString.toByteArray(Charsets.UTF_8)
-		val jsonBase64Encoded = Base64.getEncoder().encodeToString(jsonByteArray)
+		val encodedJsonString: String = Base64.getEncoder().encodeToString(jsonString.toByteArray())
 
 		writeBytesToFile(jsonString.toByteArray(Charsets.UTF_8), filePath+sourceFile)
 
-		System.setProperty("userNotificationMessage", jsonBase64Encoded)
+		System.setProperty("userNotificationMessage", encodedJsonString)
 
 		every { leaderSelectionUtility.isLeader() } returns true
 		val brukernotifikasjonInfos = mutableListOf<NotificationInfo>()
@@ -67,6 +65,21 @@ class SendBeskjedTilBrukereTest {
 		assertTrue(brukernotifikasjonInfos.isNotEmpty())
 
 	}
+
+	@Test
+	fun lagBase64Encoded() {
+		/*
+				val userNotificationMessage = readeBytesFromFile("userNotificationMessage-1-kopi.json")
+
+				val encodedString: String = Base64.getEncoder().encodeToString(userNotificationMessage)
+
+				val gson = Gson()
+				val input = gson.fromJson(Base64.getDecoder().decode(encodedString).decodeToString(), UserNotificationMessageDto::class.java)
+
+				val test = Base64.getDecoder().decode(encodedString).decodeToString()
+		*/
+	}
+
 
 	fun writeBytesToFile(data: ByteArray, filePath: String) {
 		File(filePath).writeBytes(data)
