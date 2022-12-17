@@ -61,6 +61,7 @@ class SendBeskjedTilBrukere(
 		val emailVarsel = Varsel(Varsel.Kanal.epost, message.emailText!! , message.emailTitle)
 		val notificationInfo = NotificationInfo(notifikasjonsTittel = message.message, link,14, listOf(smsVarsel, emailVarsel) )
 		notificationService.userMessageNotification(key, notificationInfo, user.userId, user.innsendingRef)
+		logger.info("Har publisert beskjed:\t$key relatert til innsendingsid:\t${user.innsendingRef} ")
 	}
 
 	private fun convertSchemaString(schema: String): String {
