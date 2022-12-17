@@ -1,6 +1,11 @@
 server:
   port: 8090
 
+userNotificationMessageJson: ""
+
+cron:
+  startSendBrukerBeskjed: 0 45 12 17 DEC ?
+
 management:
   endpoint:
     health:
@@ -24,6 +29,9 @@ spring:
   config:
     activate:
       on-profile: prod | dev
+
+userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
+
 service:
   dryRun: ${ENABLE_SERVICE_DRYRUN}
 

@@ -46,7 +46,10 @@ spec:
         - application: "{{this}}"
         {{/each}}
 
+  leaderElection: true
+
   envFrom:
+    - secret: send-message-to-applicants
     - secret: shared-innsending-secret
       metadata:
         annotations:
