@@ -12,6 +12,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.util.*
 
 class SendBeskjedTilBrukereTest {
 
@@ -50,9 +51,12 @@ class SendBeskjedTilBrukereTest {
 
 		val jsonString = gson.toJson(userNotificationMessageDto)
 
+		val jsonByteArray = jsonString.toByteArray(Charsets.UTF_8)
+		val jsonBase64Encoded = Base64.getEncoder().encodeToString(jsonByteArray)
+
 		writeBytesToFile(jsonString.toByteArray(Charsets.UTF_8), filePath+sourceFile)
 
-		System.setProperty("userNotificationMessage", jsonString)
+		System.setProperty("userNotificationMessage", jsonBase64Encoded)
 
 		every { leaderSelectionUtility.isLeader() } returns true
 		val brukernotifikasjonInfos = mutableListOf<NotificationInfo>()
@@ -66,6 +70,10 @@ class SendBeskjedTilBrukereTest {
 
 	fun writeBytesToFile(data: ByteArray, filePath: String) {
 		File(filePath).writeBytes(data)
+	}
+
+	fun readeBytesFromFile(filePath: String): ByteArray {
+		return File(filePath).readBytes()
 	}
 
 }

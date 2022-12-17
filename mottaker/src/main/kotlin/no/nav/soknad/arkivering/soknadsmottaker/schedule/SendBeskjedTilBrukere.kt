@@ -36,8 +36,9 @@ class SendBeskjedTilBrukere(
 		try {
 			if (leaderSelectionUtility.isLeader() && inputString != null) {
 
+
 				val gson = Gson()
-				val input = gson.fromJson(inputString, UserNotificationMessageDto::class.java)
+				val input = gson.fromJson(Base64.getDecoder().decode(inputString).decodeToString(), UserNotificationMessageDto::class.java)
 
 				input.userList.forEach {
 					publiser(
