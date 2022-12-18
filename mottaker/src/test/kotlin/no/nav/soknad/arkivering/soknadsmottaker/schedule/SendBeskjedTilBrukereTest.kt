@@ -9,9 +9,11 @@ import no.nav.soknad.arkivering.soknadsmottaker.dto.UserNotificationMessageDto
 import no.nav.soknad.arkivering.soknadsmottaker.model.NotificationInfo
 import no.nav.soknad.arkivering.soknadsmottaker.service.NotificationService
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.util.*
 
 class SendBeskjedTilBrukereTest {
 
@@ -49,10 +51,11 @@ class SendBeskjedTilBrukereTest {
 		val gson = Gson()
 
 		val jsonString = gson.toJson(userNotificationMessageDto)
+		val encodedJsonString: String = Base64.getEncoder().encodeToString(jsonString.toByteArray())
 
 		writeBytesToFile(jsonString.toByteArray(Charsets.UTF_8), filePath+sourceFile)
 
-		System.setProperty("userNotificationMessage", jsonString)
+		System.setProperty("userNotificationMessage", encodedJsonString)
 
 		every { leaderSelectionUtility.isLeader() } returns true
 		val brukernotifikasjonInfos = mutableListOf<NotificationInfo>()
@@ -64,8 +67,14 @@ class SendBeskjedTilBrukereTest {
 
 	}
 
+
+
 	fun writeBytesToFile(data: ByteArray, filePath: String) {
 		File(filePath).writeBytes(data)
+	}
+
+	fun readeBytesFromFile(filePath: String): ByteArray {
+		return File(filePath).readBytes()
 	}
 
 }
