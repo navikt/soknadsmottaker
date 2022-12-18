@@ -24,12 +24,6 @@ spring:
   config:
     activate:
       on-profile: prod | dev
-service:
-  dryRun: ${ENABLE_SERVICE_DRYRUN}
-
-restconfig:
-  username: ${INNSENDING_USERNAME}
-  password: ${INNSENDING_PASSWORD}
 
 kafkaconfig:
   namespace: ${NAIS_NAMESPACE}
@@ -61,10 +55,6 @@ spring:
     activate:
       on-profile: docker
 
-restconfig:
-  username: ${INNSENDING_USERNAME}
-  password: ${INNSENDING_PASSWORD}
-
 kafkaconfig:
   namespace: ${NAIS_NAMESPACE}
   secure: ${KAFKA_SECURITY}
@@ -87,10 +77,6 @@ spring:
   config:
     activate:
       on-profile: default | test
-
-restconfig:
-  username: innsending
-  password: password
 
 kafkaconfig:
   namespace: default

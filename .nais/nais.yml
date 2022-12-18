@@ -31,9 +31,9 @@ spec:
       cpu: 200m
       memory: 256Mi
   ingresses:
-  {{#each ingress}}
-    - "{{this}}"
-  {{/each}}
+    {{#each ingress}}
+      - "{{this}}"
+    {{/each}}
   secureLogs:
     enabled: true
   azure:
