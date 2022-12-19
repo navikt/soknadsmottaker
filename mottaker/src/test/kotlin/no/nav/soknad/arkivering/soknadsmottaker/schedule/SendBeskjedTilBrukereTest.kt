@@ -77,4 +77,61 @@ class SendBeskjedTilBrukereTest {
 		return File(filePath).readBytes()
 	}
 
+/*
+
+	@Test
+	fun lagBase64Encoded() {
+		val jsonByteArray = readeBytesFromFile("userNotificationMessage-fixed.json")
+
+		val encodedString: String = Base64.getEncoder().encodeToString(jsonByteArray)
+		val gson = Gson()
+
+		val input = gson.fromJson(String(Base64.getDecoder().decode(encodedString)), UserNotificationMessageDto::class.java)
+
+		assertEquals("https://www.nav.no/fyllut/", input.messageLinkBase)
+
+		*/
+/*
+				val gson = Gson()
+				val input = gson.fromJson(Base64.getDecoder().decode(encodedString).decodeToString(), UserNotificationMessageDto::class.java)
+
+				val userNotificationMessageDto = lagInput()
+				val jsonByteArray = gson.toJson(userNotificationMessageDto).encodeToByteArray()
+				val encodedString = Base64.getEncoder().encodeToString(jsonByteArray)
+				val importedEncodedString = "eyJ1c2VyTWVzc2FnZSI6eyJtZXNzYWdlIjoiRHUgbcOlIHNlbmRlIHPDuGtuYWRlbiBww6Ugbnl0dC4gVmkgaGFyIGhhdHQgZW4gdGVrbmlzayBmZWlsIHNvbSBnam9yZGUgYXQgZGV0IGlra2UgdmFyIG11bGlnIMOlIHNlbmRlIGlubiB2ZWRsZWdnIHRpbCBzw7hrbmFkZXIgZnJhIDEyLiB0aWwgMTQuIGRlc2VtYmVyLiBGZWlsZW4gZ2plbGRlciBkZXNzdmVycmUgZW4gc8O4a25hZCBkdSBoYXIgc2VuZHQgaW5uLiBGb3IgYXQgTkFWIHNrYWwga3VubmUgYmVoYW5kbGUgc8O4a25hZGVuIGRpbiBtw6UgZHUgc2VuZGUgc8O4a25hZCBvZyB2ZWRsZWdnIHDDpSBueXR0LiIsInNtc1RpdGxlIjoiRGV0IGVyIGVuIGJlc2tqZWQgdGlsIGRlZyBww6UgbmF2Lm5vIiwic21zVGV4dCI6IlZlbm5saWdzdCBsb2dnIGlubiBvZyBzamVrayBiZXNramVkZW4iLCJlbWFpbFRpdGxlIjoiRGV0IGVyIGVuIGJlc2tqZWQgdGlsIGRlZyBww6UgbmF2Lm5vIiwiZW1haWxUZXh0IjoiVmVubmxpZ3N0IGxvZ2cgaW5uIG9nIHNqZWtrIGJlc2tqZWRlbiJ9LCJ1c2VyTWVzc2FnZV9lbiI6eyJtZXNzYWdlIjoiQ3JlYXRlIG5ldyBBcHBsaWNhdGlvbiIsInNtc1RpdGxlIjoiVGhlcmUgaXMgaXMgYSBtZXNzYWdlIHRvIHlvdSwgc2VlIG5hdi5uby9taW5zaWRlIiwic21zVGV4dCI6IlBsZWFzZSBsb2cgb24gdG8gY2hlY2sgdGhlIG1lc3NhZ2UiLCJlbWFpbFRpdGxlIjoiVGhlcmUgaXMgaXMgYSBtZXNzYWdlIHRvIHlvdSwgc2VlIG5hdi5uby9taW5zaWRlIiwiZW1haWxUZXh0IjoiUGxlYXNlIGxvZyBvbiB0byBjaGVjayB0aGUgbWVzc2FnZSJ9LCJtZXNzYWdlTGlua0Jhc2UiOiJodHRwczovL3NramVtYWRlbGluZ3NsZW5rZS5la3N0ZXJuLmRldi5uYXYubm8vZnlsbHV0LyIsInVzZXJMaXN0IjpbeyJpbm5zZW5kaW5nUmVmIjoiNGFlZTM1OWEtYTZiNy00NzJkLWJjNzEtNzBkZjkyYTU2NDJkIiwidXNlcklkIjoiMTQ4NzgwOTk0MzYiLCJzY2hlbWEiOiJOQVYgMDgtMzUuMDEiLCJsYW5ndWFnZSI6Im5vIn0seyJpbm5zZW5kaW5nUmVmIjoiNTNhMmI5ZDYtYWU4Yi00Mjc0LWJmYzItZDFkMjBlMDkyNzhmIiwidXNlcklkIjoiMjM4Mjg4OTY3NDEiLCJzY2hlbWEiOiJOQVYgMDQtMDIuMDEiLCJsYW5ndWFnZSI6ImVuIn1dfQ=="
+				val importedDecodedString = String(Base64.getDecoder().decode(importedEncodedString.replace("SEND_MESSAGE_TO_USERS=","")))
+				val input = gson.fromJson(String(Base64.getDecoder().decode(encodedString)), UserNotificationMessageDto::class.java)
+				val importedInput = gson.fromJson(importedDecodedString, UserNotificationMessageDto::class.java)
+				val substring1 = encodedString.substring(0,encodedString.length)
+				val substring2 = importedEncodedString.substring(0,encodedString.length)
+				assertEquals(input, userNotificationMessageDto)
+				assertEquals(importedInput, userNotificationMessageDto)
+				assertEquals(substring1, substring2)
+		*//*
+
+	}
+*/
+
+/*
+	@Test
+	fun findUsersWithMissingZero() {
+		val jsonByteArray = readeBytesFromFile("userNotificationMessage.json")
+		val jsonString = jsonByteArray.decodeToString()
+
+		val gson = Gson()
+
+		val userNotificationMessageDto = gson.fromJson(jsonString, UserNotificationMessageDto::class.java)
+
+		val userList: List<UserDto> = userNotificationMessageDto.userList.filter{it.userId.length==10}.map { UserDto(it.innsendingRef,"0"+it.userId, it.schema, it.language) }
+
+		val fixedNotificationMessages = UserNotificationMessageDto(userNotificationMessageDto.userMessage, userNotificationMessageDto.userMessage_en, userNotificationMessageDto.messageLinkBase, userList)
+
+		val fixedJsonString = gson.toJson(fixedNotificationMessages)
+
+		writeBytesToFile(fixedJsonString.toByteArray(Charsets.UTF_8), "userNotificationMessage-fixed.json")
+
+	}
+*/
+
+
 }

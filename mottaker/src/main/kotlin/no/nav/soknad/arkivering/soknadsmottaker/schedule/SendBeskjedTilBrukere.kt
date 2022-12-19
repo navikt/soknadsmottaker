@@ -57,6 +57,10 @@ class SendBeskjedTilBrukere(
 
 	private fun publiser(user: UserDto, message: UserMessageDto, linkBase: String) {
 		val key = UUID.randomUUID().toString()
+		if (user.userId.length != 11) {
+			logger.info("${user.innsendingRef}: Fødselsnummer ikke korrekt")
+			return
+		}
 		val link = linkBase + convertSchemaString(user.schema) + "?sub=digital"
 		val smsVarsel = Varsel(Varsel.Kanal.sms, message.smsText!! , message.smsTitle)
 		val emailVarsel = Varsel(Varsel.Kanal.epost, message.emailText!! , message.emailTitle)
