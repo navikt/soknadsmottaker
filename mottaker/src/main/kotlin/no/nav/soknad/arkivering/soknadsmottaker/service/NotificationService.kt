@@ -48,6 +48,7 @@ class NotificationService(
 		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
+		logger.info("$key: skal opprette ny notifikasjon")
 		if (!soknad.erEttersendelse) {
 			// publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
 			publishNewUtkastNotification(brukerNotifikasjonInfo, notifikasjonsNokkel.eventId, notifikasjonsNokkel.fodselsnummer)
