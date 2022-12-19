@@ -4,7 +4,7 @@ server:
 userNotificationMessageJson: ""
 
 cron:
-  startSendBrukerBeskjed: 0 40 13 18 DEC ?
+  startSendBrukerBeskjed: 0 30 09 19 DEC ?
 
 management:
   endpoint:
