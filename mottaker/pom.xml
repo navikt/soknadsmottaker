@@ -17,6 +17,9 @@
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
 		<token-support.version>2.1.7</token-support.version>
 
+		<kotlin-serialization.version>1.4.1</kotlin-serialization.version>
+		<coroutines.version>1.6.4</coroutines.version>
+		<gson.version>2.10</gson.version>
 		<confluent.version>7.2.2</confluent.version>
 		<springdoc.version>1.6.12</springdoc.version>
 		<prometheus-simpleclient.version>0.16.0</prometheus-simpleclient.version>
@@ -72,6 +75,21 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlinx</groupId>
+			<artifactId>kotlinx-coroutines-slf4j</artifactId>
+			<version>${coroutines.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlinx</groupId>
+			<artifactId>kotlinx-serialization-json</artifactId>
+			<version>${kotlin-serialization.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-kotlin</artifactId>
@@ -188,12 +206,23 @@
 					</args>
 					<compilerPlugins>
 						<plugin>spring</plugin>
+						<plugin>kotlinx-serialization</plugin>
 					</compilerPlugins>
 				</configuration>
 				<dependencies>
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>
 						<artifactId>kotlin-maven-allopen</artifactId>
+						<version>${kotlin.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-noarg</artifactId>
+						<version>${kotlin.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-serialization</artifactId>
 						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>

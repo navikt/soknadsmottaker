@@ -38,6 +38,11 @@ class NotificationService(
 	private val sleepTimes = listOf(5, 15, 30)
 
 
+	fun userMessageNotification(key:String, brukerNotifikasjonInfo: NotificationInfo, userId: String, groupId: String) {
+		val notifikasjonsNokkel = createNotificationKey(key, userId, groupId)
+		publishBeskjedNotification(brukerNotifikasjonInfo, LocalDateTime.now(), key, key, notifikasjonsNokkel)
+	}
+
 	fun newNotification(key: String, soknad: SoknadRef, brukerNotifikasjonInfo: NotificationInfo) {
 		if (!correctNamespace(kafkaConfig.namespace)) {
 			logger.info("$key: Will not publish Beskjed/Oppgave, the namespace '${kafkaConfig.namespace}' is not correct.")
@@ -213,7 +218,7 @@ class NotificationService(
 				builder.withSmsVarslingstekst(varsel.tekst)
 			if (varsel.kanal == epost) {
 				builder.withEpostVarslingstekst(varsel.tekst)
-				builder.withEpostVarslingstittel(varsel.tittel ?: defaultVarselTittel)
+				builder.withEpostVarslingstittel(if (varsel.tittel == null || varsel.tittel?.length!! > 40)  defaultVarselTittel else varsel.tittel)
 			}
 		}
 
