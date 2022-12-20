@@ -130,7 +130,7 @@
 		<dependency>
 			<groupId>com.github.navikt</groupId>
 			<artifactId>tms-utkast</artifactId>
-			<version>2022-11-28-1215-spraak</version>
+			<version>20221208152503-d9cba4c</version>
 		</dependency>
 		<dependency>
 			<groupId>no.nav.security</groupId>
