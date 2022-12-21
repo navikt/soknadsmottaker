@@ -13,6 +13,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel.Kanal.epost
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel.Kanal.sms
+import no.nav.tms.utkast.builder.UtkastJsonBuilder
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.net.URL
@@ -52,8 +53,10 @@ class NotificationService(
 		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
+		logger.info("$key: skal opprette ny notifikasjon")
 		if (!soknad.erEttersendelse) {
-			publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
+			// publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
+			publishNewUtkastNotification(brukerNotifikasjonInfo, notifikasjonsNokkel.eventId, notifikasjonsNokkel.fodselsnummer)
 		} else {
 			publishOppgaveNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
 		}
@@ -70,6 +73,8 @@ class NotificationService(
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		publishDoneNotification(key, hendelsestidspunkt, notifikasjonsNokkel)
+		publishDoneUtkastNotification(eventId, soknad.personId)
+
 	}
 
 	private fun publishOppgaveNotification(
@@ -95,6 +100,41 @@ class NotificationService(
 			)
 			kafkaSender.publishOppgaveNotification(notifikasjonsNokkel, oppgaveNotifikasjon)
 		}
+	}
+
+	private fun publishNewUtkastNotification(
+		brukerNotifikasjonInfo: NotificationInfo,
+		eventId: String,
+		ident: String
+	) {
+		logger.info("$eventId: Lager utkast med lenke ${brukerNotifikasjonInfo.lenke}")
+		val utkast = UtkastJsonBuilder()
+			.withUtkastId(eventId)
+			.withLink(brukerNotifikasjonInfo.lenke)
+			.withIdent(ident)
+			.withTittel(brukerNotifikasjonInfo.notifikasjonsTittel)
+			.create()
+
+		try {
+			kafkaSender.publishUtkastNotification(eventId, utkast)
+			logger.info("$eventId: Publisert utkast med lenke ${brukerNotifikasjonInfo.lenke}")
+		} catch ( ex: Exception) {
+			logger.error("$eventId: feil ved publisering av utkast med lenke ${brukerNotifikasjonInfo.lenke}, \n${ex.message}")
+		}
+
+	}
+
+	private fun publishDoneUtkastNotification(
+		eventId: String,
+		ident: String
+	) {
+		val utkast = UtkastJsonBuilder()
+			.withUtkastId(eventId)
+			.withIdent(ident)
+			.delete()
+
+		kafkaSender.publishUtkastNotification(eventId, utkast)
+
 	}
 
 	private fun publishBeskjedNotification(

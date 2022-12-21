@@ -39,6 +39,7 @@ class ReceiverTests {
 	private val beskjedKafkaMock = mockk<KafkaTemplate<NokkelInput, BeskjedInput>>()
 	private val oppgaveKafkaMock = mockk<KafkaTemplate<NokkelInput, OppgaveInput>>()
 	private val doneKafkaMock = mockk<KafkaTemplate<NokkelInput, DoneInput>>()
+	private val utkastKafkaMock = mockk<KafkaTemplate<String, String>>()
 
 	private val metrics = InnsendtMetrics(CollectorRegistry(true))
 	private val receiver = mockReceiver(metrics)
@@ -125,7 +126,7 @@ class ReceiverTests {
 			it.brukernotifikasjonBeskjedTopic = "min-side.aapen-brukernotifikasjon-beskjed-v1"
 			it.brukernotifikasjonOppgaveTopic = "min-side.aapen-brukernotifikasjon-oppgave-v1"
 		}
-		val kafkaSender = KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock)
+		val kafkaSender = KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock, utkastKafkaMock)
 		val archiverService = ArchiverService(kafkaSender, metrics)
 		return RestApi(archiverService)
 	}

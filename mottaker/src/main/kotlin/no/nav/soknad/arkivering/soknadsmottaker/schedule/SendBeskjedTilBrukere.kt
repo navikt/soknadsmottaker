@@ -17,6 +17,13 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
 
+/*
+Denne klassen er brukt for å kunne trigge utsending av varsler til en gruppe av NAV brukere.
+Det baserer seg på å benytte Beskjed notifikasjons tjenesten på minside. For hver bruker publiseres det en notifikasjon
+med epost og sms varsel med tekster angitt i json, og det legges en beskjed notifikasjon på brukers minside. Denne beksjeden
+har en lenke som leder bruker til f.eks. søknad som vedkommende er bedt om å sende inn.
+Json filen leses inn fra miljøparameteren SEND_MESSAGE_TO_USERS. Dette er en Base64encoded streng.
+ */
 @Service
 @EnableScheduling
 class SendBeskjedTilBrukere(
