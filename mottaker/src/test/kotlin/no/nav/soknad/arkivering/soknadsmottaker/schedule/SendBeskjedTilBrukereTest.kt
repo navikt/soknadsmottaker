@@ -77,4 +77,47 @@ class SendBeskjedTilBrukereTest {
 		return File(filePath).readBytes()
 	}
 
+
+	@Test
+	fun lagBase64Encoded() {
+		/*
+		Denne testen benyttes for å generere en Base64encoded string som kan legges inn som value i google secret.
+		 */
+		val jsonByteArray = readeBytesFromFile("userNotificationMessage-noUsers.json")
+
+		val encodedString: String = Base64.getEncoder().encodeToString(jsonByteArray)
+		val gson = Gson()
+
+		val input = gson.fromJson(String(Base64.getDecoder().decode(encodedString)), UserNotificationMessageDto::class.java)
+
+		assertEquals("https://www.nav.no/fyllut/", input.messageLinkBase)
+
+	}
+
+/*
+	@Test
+	fun findUsersWithMissingZero() {
+		/*
+			Denne testen skal normalt utkommentert. Brukt for å fikse på fødselsnummeret som var blitt feil.
+			Kan kanskje brukes som et utgangspunkt for annen type oppbygging av brukerliste når det er behov for sending av varsel.
+		 */
+		val jsonByteArray = readeBytesFromFile("userNotificationMessage.json")
+		val jsonString = jsonByteArray.decodeToString()
+
+		val gson = Gson()
+
+		val userNotificationMessageDto = gson.fromJson(jsonString, UserNotificationMessageDto::class.java)
+
+		val userList: List<UserDto> = userNotificationMessageDto.userList.filter{it.userId.length==10}.map { UserDto(it.innsendingRef,"0"+it.userId, it.schema, it.language) }
+
+		val fixedNotificationMessages = UserNotificationMessageDto(userNotificationMessageDto.userMessage, userNotificationMessageDto.userMessage_en, userNotificationMessageDto.messageLinkBase, userList)
+
+		val fixedJsonString = gson.toJson(fixedNotificationMessages)
+
+		writeBytesToFile(fixedJsonString.toByteArray(Charsets.UTF_8), "userNotificationMessage-fixed.json")
+
+	}
+*/
+
+
 }
