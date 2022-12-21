@@ -1,0 +1,18 @@
+{
+	"userMessage": {
+		"message": "Du må sende søknaden på nytt. Vi har hatt en teknisk feil som gjorde at det ikke var mulig å sende inn vedlegg til søknader fra 12. til 14. desember. Feilen gjelder dessverre en søknad du har sendt inn. For at NAV skal kunne behandle søknaden din må du sende søknad og vedlegg på nytt.",
+		"smsTitle": "Det er en beskjed til deg på NAV",
+		"smsText": "Vennligst logg inn og sjekk beskjeden",
+		"emailTitle": "Det er en beskjed til deg på NAV",
+		"emailText": "Vennligst logg inn og sjekk beskjeden"
+	},
+	"userMessage_en": {
+		"message": "You must resend the application. A technical error meant it was not possible to submit attachments to applications from 12 to 14 December. The error concerns an application you have submitted. For NAV to be able to process your application, you must send the application and attachments again.",
+		"smsTitle": "There is is a message to you at NAV",
+		"smsText": "Please log on to check the message",
+		"emailTitle": "There is is a message to you at NAV",
+		"emailText": "Please log on to check the message"
+	},
+	"messageLinkBase": "https://www.nav.no/fyllut/",
+"userList":[]
+}
