@@ -14,6 +14,7 @@
 
 	<properties>
 		<brukernotifikasjon-schemas.version>v2.5.2</brukernotifikasjon-schemas.version>
+		<utkast-schema.version>20221220105847-f39908a</utkast-schema.version>
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
 		<token-support.version>2.1.7</token-support.version>
 
@@ -130,7 +131,7 @@
 		<dependency>
 			<groupId>com.github.navikt</groupId>
 			<artifactId>tms-utkast</artifactId>
-			<version>20221208152503-d9cba4c</version>
+			<version>${utkast-schema.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>no.nav.security</groupId>
