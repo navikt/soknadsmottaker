@@ -3,6 +3,8 @@ When a user applies for a benefit (_sender inn en søknad_), one or more documen
 
 When Soknadsmottaker receives data, it will be converted, serialized as an Avro message and put on a Kafka topic.
 
+Soknadsmottaker also has REST-interfaces for publishing _brukernotifikasjoner_ to Kafka topics.
+
 For a description of the whole archiving system, see [the documentation](https://github.com/navikt/archiving-infrastructure/wiki).
 
 ## Rest-API
@@ -17,11 +19,10 @@ The Rest-API can be accessed here:
 This component requires the following to work:
 * [soknadarkiv-schema](https://github.com/navikt/soknadarkiv-schema) (Avro schema definitions)
 * Kafka broker (for providing Kafka topics to send to)
-* Shared secrets on Vault.
 
 
 ## Secure logs
-The application will log the requests it receives, but mask the personId / fødselsnummer / fnr. For debugging and resending purposes, the fnr is needed. It can be found in the secure logs of the application.
+The application will log the requests it receives, but mask the personId / fødselsnummer / fnr. For debugging and resending purposes, the fnr is needed. It can be found in the secure logs of the application, accessible via Kibana or Kubectl.
 
 ### Kibana
 The secure logs can be accessed from [Kibana](https://logs.adeo.no/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(message,envclass,level,application,host),filters:!(),index:'tjenestekall-*',interval:auto,query:(language:lucene,query:'envclass:q%20AND%20application:soknadsmottaker'),sort:!())). Change index in Kibana from `logstash-*` to `tjenestekall-*` in the left menu, as in the screenshot below. If you lack access, it is most likely because you are not in the AD-group. See [the nais documentation](https://doc.nais.io/observability/logs/#3-put-people-into-the-ad-group) for details.
