@@ -214,13 +214,14 @@ class NotificationService(
 			.withEksternVarsling(eksternVarsling.isNotEmpty())
 
 		for (varsel in eksternVarsling) {
-			if (varsel.kanal == sms)
+			if (varsel.kanal == sms && varsel.tekst != null)
 				builder.withSmsVarslingstekst(varsel.tekst)
 			if (varsel.kanal == epost) {
 				builder.withEpostVarslingstekst(varsel.tekst)
 				builder.withEpostVarslingstittel(if (varsel.tittel == null || varsel.tittel?.length!! > 40)  defaultVarselTittel else varsel.tittel)
 			}
 		}
+
 
 		return builder.build()
 	}
