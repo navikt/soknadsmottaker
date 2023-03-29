@@ -2,7 +2,7 @@
 	"appname": "soknadsmottaker-loadtests",
 	"profile": "dev",
 	"ingress": [
-		"https://soknadsmottaker-gcp-loadtests.dev.intern.nav.no"
+		"https://soknadsmottaker-gcp-loadtests.intern.dev.nav.no"
 	],
 	"kafka-main-topic": "team-soknad.privat-soknadinnsending-v1-loadtests",
 	"kafka-metrics-topic": "team-soknad.privat-soknadinnsending-metrics-v1-loadtests",

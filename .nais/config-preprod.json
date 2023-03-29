@@ -2,7 +2,7 @@
 	"appname": "soknadsmottaker",
 	"profile": "dev",
 	"ingress": [
-		"https://soknadsmottaker-gcp.dev.intern.nav.no"
+		"https://soknadsmottaker-gcp.intern.dev.nav.no"
 	],
 	"kafka-main-topic": "team-soknad.privat-soknadinnsending-v2-dev",
 	"kafka-metrics-topic": "team-soknad.privat-soknadinnsending-metrics-v2-dev",
