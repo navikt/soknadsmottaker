@@ -54,12 +54,15 @@ class NotificationService(
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		logger.info("$key: skal opprette ny notifikasjon")
-		if (!soknad.erEttersendelse) {
-			// publishBeskjedNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
-			publishNewUtkastNotification(brukerNotifikasjonInfo, notifikasjonsNokkel.eventId, notifikasjonsNokkel.fodselsnummer)
-		} else {
+
+		//  Når en bruker tar initiativ til å opprette en søknad/ettersending lages det et utkast.
+		//  Når systemet ser at det mangler påkrevde vedlegg som skal ettersendes, lages det en oppgave i stedet.
+		if (soknad.erSystemGenerert == true) {
 			publishOppgaveNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
+		} else {
+			publishNewUtkastNotification(brukerNotifikasjonInfo, notifikasjonsNokkel.eventId, notifikasjonsNokkel.fodselsnummer)
 		}
+
 	}
 
 	fun cancelNotification(key: String, soknad: SoknadRef) {
