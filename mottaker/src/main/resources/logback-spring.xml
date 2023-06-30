@@ -40,7 +40,11 @@
 
 	<springProfile name="default,docker">
 		<appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
-			<encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>
+					%green(%d{HH:mm:ss}) %cyan([%-5.5t]) %boldCyan(%0.-5p) %yellow(%logger{36}) %cyan(:) %m%n
+				</pattern>
+			</layout>
 		</appender>
 
 		<logger name="org.apache" level="${log.level.org.apache:-INFO}"/>
