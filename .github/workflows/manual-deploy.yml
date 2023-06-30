@@ -17,6 +17,9 @@ on:
 
 jobs:
   build-and-push:
+    permissions:
+      contents: "read"
+      id-token: "write"
     name: Build and push Docker container
     runs-on: ubuntu-latest
     steps:
