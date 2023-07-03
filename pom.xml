@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.5</version>
+		<version>3.1.1</version>
 		<relativePath/>
 	</parent>
 
@@ -16,6 +16,80 @@
 	<name>soknadsmottaker</name>
 	<description>Receives benefit applications</description>
 
+	<properties>
+		<spring-boot.version>3.1.1</spring-boot.version>
+		<java.version>17</java.version>
+		<kotlin.version>1.8.22</kotlin.version>
+		<maven.version>3.2.5</maven.version>
+
+		<!--Kotlin-->
+		<kotlin-serialization.version>1.5.1</kotlin-serialization.version>
+		<coroutines.version>1.7.2</coroutines.version>
+
+		<!--Spring-->
+		<springdoc-openapi.version>1.7.0</springdoc-openapi.version>
+		<spring-web.version>6.0.10</spring-web.version>
+
+		<!--Serialization-->
+		<jackson.version>2.15.2</jackson.version>
+		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+		<gson.version>2.10.1</gson.version>
+
+		<!--NAV-->
+		<token-support.version>3.1.0</token-support.version>
+
+		<!--Kafka-->
+		<confluent.version>7.4.0</confluent.version>
+		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
+		<utkast-schema.version>20230427133709-1262b97</utkast-schema.version>
+		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
+
+		<!--Logging-->
+		<prometheus-simpleclient.version>0.16.0</prometheus-simpleclient.version>
+		<logstash.version>7.4</logstash.version>
+
+		<!--Jakarta-->
+		<jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
+		<jakarta-validation-api.version>3.0.2</jakarta-validation-api.version>
+		<jakarta-annotation.version>2.1.1</jakarta-annotation.version>
+
+		<!--Other -->
+		<okhttp3.version>4.11.0</okhttp3.version>
+		<swagger-annotations.version>2.2.14</swagger-annotations.version>
+		<snappy-java.version>1.1.10.1</snappy-java.version>
+		<snakeyaml.version>2.0</snakeyaml.version>
+		<guava.version>32.0.1-jre</guava.version>
+
+		<!--Test-->
+		<mockk.version>1.13.5</mockk.version>
+
+		<!--Plugins-->
+		<versions-maven-plugin.version>2.16.0</versions-maven-plugin.version>
+		<cyclonedx-maven-plugin.version>2.7.9</cyclonedx-maven-plugin.version>
+		<maven-enforcer.version>3.3.0</maven-enforcer.version>
+		<openapi-generator-maven-plugin.version>6.6.0</openapi-generator-maven-plugin.version>
+	</properties>
+
+	<!-- Dependencies that might be used as transitive dependencies and have security issues-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>${snakeyaml.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.xerial.snappy</groupId>
+				<artifactId>snappy-java</artifactId>
+				<version>${snappy-java.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<modules>
 		<module>api</module>
@@ -28,4 +102,55 @@
 			<url>https://repo1.maven.org/maven2</url>
 		</repository>
 	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>${versions-maven-plugin.version}</version>
+				<configuration>
+					<rulesUri>file://${user.dir}/maven-version-rules.xml</rulesUri>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>${maven-enforcer.version}</version>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<banDuplicatePomDependencyVersions/>
+								<requireMavenVersion>
+									<version>${maven.version}</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- https://docs.nais.io/security/salsa/salsa/#known-limitations-->
+			<plugin>
+				<groupId>org.cyclonedx</groupId>
+				<artifactId>cyclonedx-maven-plugin</artifactId>
+				<version>${cyclonedx-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>makeAggregateBom</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

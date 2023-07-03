@@ -27,7 +27,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.kafka.KafkaException
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
-import org.springframework.util.concurrent.SettableListenableFuture
+import java.util.concurrent.CompletableFuture
 
 class ReceiverTests {
 
@@ -105,8 +105,9 @@ class ReceiverTests {
 			ProducerRecord(topic, "123", melding),
 			RecordMetadata(TopicPartition(topic, 1), 1L, 1, 1L, 1, 1))
 
-	private fun <T> setFuture(v: SendResult<String, T>) =
-		SettableListenableFuture<SendResult<String, T>>().also { it.set(v) }
+	private fun <T> setFuture(v: SendResult<String, T>): CompletableFuture<SendResult<String, T>> {
+		return CompletableFuture.completedFuture(v)
+	}
 
 	private fun mockReceiver(metrics: InnsendtMetrics): RestApi {
 		val conf = KafkaConfig().also {
