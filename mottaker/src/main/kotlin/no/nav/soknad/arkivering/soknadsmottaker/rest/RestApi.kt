@@ -4,7 +4,9 @@ import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.SoknadApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
+import no.nav.soknad.arkivering.soknadsmottaker.util.Constants.MDC_INNSENDINGS_ID
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -17,6 +19,7 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	@Protected
 	override fun receive(soknad: Soknad, xDryRun: String?): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
+		MDC.put(MDC_INNSENDINGS_ID, key)
 		log(key, soknad)
 
 		if (xDryRun.isDryRunEnabled()) {
