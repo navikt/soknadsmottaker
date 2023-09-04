@@ -41,7 +41,7 @@
 		<!--Kafka-->
 		<confluent.version>7.5.0</confluent.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
-		<utkast-schema.version>20230427133709-1262b97</utkast-schema.version>
+		<utkast-schema.version>20230829114432-d23aa9a</utkast-schema.version>
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
 
 		<!--Logging-->
