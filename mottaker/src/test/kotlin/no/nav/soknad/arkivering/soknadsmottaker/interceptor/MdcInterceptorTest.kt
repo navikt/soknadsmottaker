@@ -28,7 +28,7 @@ class MdcInterceptorTest {
 	@Test
 	fun `Skal sette MDC fra header`() {
 		// Gitt
-		val headerName = "x-innsendingsid"
+		val headerName = "X-innsendingsId"
 		val headerValue = "header123456"
 
 		request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, emptyMap<String, String>())
@@ -44,7 +44,7 @@ class MdcInterceptorTest {
 	@Test
 	fun `Skal sette MDC fra pathVariable`() {
 		// Gitt
-		val pathVarName = "innsendingsid"
+		val pathVarName = "innsendingsId"
 		val pathVarValue = "path123456"
 
 		request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, mapOf(pathVarName to pathVarValue))
