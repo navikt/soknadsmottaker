@@ -164,14 +164,14 @@ paths:
 
   /health/status:
     get:
-      summary: Returns status of the application
-      description: Checks the application's backend dependencies and returns the most critical status
+      summary: Returnerer operativ status på applikasjonen
+      description: Sjekker om applikasjonen er oppe og kjører som forventet
       operationId: getStatus
 
       security: [ ]   # No security
       responses:
         '200':
-          description: Successful operation; application is responding
+          description: Status på applikasjonen er OK
           content:
             application/json:
               schema:
