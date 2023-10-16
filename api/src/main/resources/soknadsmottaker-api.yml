@@ -168,7 +168,7 @@ paths:
       description: Sjekker om applikasjonen er oppe og kjører som forventet
       operationId: getStatus
 
-      security: [ ]   # No security
+      security: [ ]
       responses:
         '200':
           description: Status på applikasjonen er OK

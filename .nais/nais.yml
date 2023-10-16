@@ -42,6 +42,8 @@ spec:
   accessPolicy:
     inbound:
       rules:
+        - application: statuspoll
+          namespace: navdig
         {{#each inbound}}
         - application: "{{this}}"
         {{/each}}

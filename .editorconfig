@@ -10,5 +10,6 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 
-[*.yml]
+[{*.yaml,*.yml}]
+ij_formatter_enabled = false
 indent_style = space
