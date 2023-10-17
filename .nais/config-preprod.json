@@ -11,5 +11,9 @@
 	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1",
 	"kafka-utkast-topic": "min-side.aapen-utkast-v1",
 	"kafka-pool": "nav-dev",
-	"inbound": [ "sendsoknad-q1","innsending-api"]
+	"inbound": [
+		"sendsoknad-q1",
+		"innsending-api"
+	],
+	"status_log_url": "https://logs.adeo.no/app/discover#/view/0a747190-e8ed-11ed-be11-d159f65225af"
 }

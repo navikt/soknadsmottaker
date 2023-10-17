@@ -42,6 +42,8 @@ spec:
   accessPolicy:
     inbound:
       rules:
+        - application: statuspoll
+          namespace: navdig
         {{#each inbound}}
         - application: "{{this}}"
         {{/each}}
@@ -73,3 +75,5 @@ spec:
       value: {{kafka-brukernotifikasjon-oppgave-topic}}
     - name: KAFKA_UTKAST_TOPIC
       value: {{kafka-utkast-topic}}
+    - name: STATUS_LOG_URL
+      value: {{status_log_url}}

@@ -31,6 +31,7 @@ spring:
       on-profile: prod | dev
 
 userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
+status_log_url: ${STATUS_LOG_URL}
 
 service:
   dryRun: ${ENABLE_SERVICE_DRYRUN}
@@ -70,6 +71,8 @@ spring:
     activate:
       on-profile: docker
 
+status_log_url: "https://logs.adeo.no"
+
 restconfig:
   username: ${INNSENDING_USERNAME}
   password: ${INNSENDING_PASSWORD}
@@ -96,6 +99,8 @@ spring:
   config:
     activate:
       on-profile: default | test
+
+status_log_url: "https://logs.adeo.no"
 
 restconfig:
   username: innsending
