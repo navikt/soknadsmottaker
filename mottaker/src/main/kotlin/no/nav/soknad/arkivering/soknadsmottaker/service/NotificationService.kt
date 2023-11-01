@@ -127,7 +127,7 @@ class NotificationService(
 
 	}
 
-	private fun publishDoneUtkastNotification(
+	public fun publishDoneUtkastNotification(
 		eventId: String,
 		ident: String
 	) {
