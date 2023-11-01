@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.schedule
 
+import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
 import no.nav.soknad.arkivering.soknadsmottaker.service.NotificationService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.time.OffsetDateTime
 
 @Service
 @EnableScheduling
@@ -22,9 +24,9 @@ class FjernUtkastTilSlettedeSoknader(
 	@Scheduled(cron = "\${cron.fjernGamleUtkast}")
 	fun start() {
 		if (leaderSelectionUtility.isLeader()) {
-			val utkastIds = listOf("e3127252-e111-4924-942d-5a64a188f679")
+			val utkastIds = listOf("eb0ac392-9ba9-4e68-91f9-cdd7f9081c45")
 
-			utkastIds.forEach { notificationService.publishDoneUtkastNotification(it, "") }
+			utkastIds.forEach { notificationService.cancelNotification(it, SoknadRef(it, false, it, "", OffsetDateTime.now(), false)) }
 		}
 
 	}

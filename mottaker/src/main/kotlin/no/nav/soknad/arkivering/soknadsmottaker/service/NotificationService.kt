@@ -76,7 +76,7 @@ class NotificationService(
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		publishDoneNotification(key, hendelsestidspunkt, notifikasjonsNokkel)
-		publishDoneUtkastNotification(eventId, soknad.personId)
+		publishDoneUtkastNotification(eventId)
 
 	}
 
@@ -127,13 +127,11 @@ class NotificationService(
 
 	}
 
-	public fun publishDoneUtkastNotification(
+	fun publishDoneUtkastNotification(
 		eventId: String,
-		ident: String
 	) {
 		val utkast = UtkastJsonBuilder()
 			.withUtkastId(eventId)
-			.withIdent(ident)
 			.delete()
 
 		kafkaSender.publishUtkastNotification(eventId, utkast)
