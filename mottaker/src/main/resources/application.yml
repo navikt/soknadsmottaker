@@ -6,6 +6,7 @@ userNotificationMessageJson: ""
 cron:
   startSendBrukerBeskjed: 0 30 09 19 DEC ?
   fjernGamleUtkast: 0 45 10 01 NOV ?
+  fjernGamleUtkastInputFil: slett-utkast-dev.json
 
 management:
   endpoint:
@@ -30,6 +31,9 @@ spring:
   config:
     activate:
       on-profile: prod | dev
+
+cron:
+  fjernGamleUtkastInputFil: {{fjernGamleUtkastInputFil}}
 
 userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
 status_log_url: ${STATUS_LOG_URL}
