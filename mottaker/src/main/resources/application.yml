@@ -32,7 +32,7 @@ spring:
       on-profile: prod | dev
 
 cron:
-  fjernGamleUtkastInputFil: {{fjernGamleUtkastInputFil}}
+  fjernGamleUtkastInputFil: ${{fjernGamleUtkastInputFil}}
 
 userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
 status_log_url: ${STATUS_LOG_URL}
@@ -78,7 +78,7 @@ spring:
 status_log_url: "https://logs.adeo.no"
 
 cron:
-  fjernGamleUtkastInputFil: slett-utkast-dev.json
+  fjernGamleUtkastInputFil: "slett-utkast-dev.json"
 
 restconfig:
   username: ${INNSENDING_USERNAME}
@@ -110,7 +110,7 @@ spring:
 status_log_url: "https://logs.adeo.no"
 
 cron:
-  fjernGamleUtkastInputFil: slett-utkast-dev.json
+  fjernGamleUtkastInputFil: "slett-utkast-dev.json"
 
 restconfig:
   username: innsending
