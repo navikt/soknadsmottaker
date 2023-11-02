@@ -31,7 +31,7 @@ class FjernUtkastTilSlettedeSoknader(
 		if (leaderSelectionUtility.isLeader() && inputString != null) {
 
 			val utkastIds = try {
-				getApplicationIdsFromFile("slett-utkast-dev.json")
+				getApplicationIdsFromFile(inputString)
 			} catch (ex: Exception) {
 				logger.warn("Feil ved henting av fil med liste med søknader der utkast notifikasjoner skal slettes", ex)
 				return
