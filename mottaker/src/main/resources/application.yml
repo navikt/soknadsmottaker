@@ -5,7 +5,7 @@ userNotificationMessageJson: ""
 
 cron:
   startSendBrukerBeskjed: 0 30 09 19 DEC ?
-  fjernGamleUtkast: 0 45 13 02 NOV ?
+  fjernGamleUtkast: 0 20 14 02 NOV ?
 
 management:
   endpoint:
