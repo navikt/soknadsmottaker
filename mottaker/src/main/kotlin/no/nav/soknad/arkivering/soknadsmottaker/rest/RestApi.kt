@@ -17,15 +17,10 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
 	@Protected
-	override fun receive(soknad: Soknad, xDryRun: String?): ResponseEntity<Unit> {
+	override fun receive(soknad: Soknad, xInnsendingId: String?): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
 		MDC.put(MDC_INNSENDINGS_ID, key)
 		log(key, soknad)
-
-		if (xDryRun.isDryRunEnabled()) {
-			logger.info("{}: DryRun enabled - will not archive", key)
-			return ResponseEntity(HttpStatus.OK)
-		}
 
 		archiverService.archive(key, soknad)
 		return ResponseEntity(HttpStatus.OK)
@@ -43,5 +38,4 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		secureLogger.info("$key: Received request '$soknad'")
 	}
 
-	private fun String?.isDryRunEnabled() = this != null
 }

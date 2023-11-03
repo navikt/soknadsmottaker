@@ -30,15 +30,12 @@ paths:
 
       parameters:
         - in: header
-          name: X-dryRun
-          description: >
-            If this value is passed in, the service will only log the requests sent, nothing will be sent to
-            Kafka topics. Omit setting this header to properly archive.
-          example: enabled
+          name: X-innsendingId
+          description: Tracing id that will be used in logging statements.
+          example: 92ee15dd-dc49-4c95-b9b6-6224bae088a0
           required: false
           schema:
             type: string
-            default: null
 
       requestBody:
         description: Metadata about the benefit application being sent in.
@@ -62,15 +59,12 @@ paths:
 
       parameters:
         - in: header
-          name: X-dryRun
-          description: >
-            If this value is passed in, the service will only log the requests sent, nothing will be sent to
-            Kafka topics. Omit setting this header to send proper notifications.
-          example: enabled
+          name: X-innsendingId
+          description: Tracing id that will be used in logging statements.
+          example: 92ee15dd-dc49-4c95-b9b6-6224bae088a0
           required: false
           schema:
             type: string
-            default: null
 
       requestBody:
         description: Data neccessary in order to publish a new task or message user notification.
@@ -94,15 +88,12 @@ paths:
 
       parameters:
         - in: header
-          name: X-dryRun
-          description: >
-            If this value is passed in, the service will only log the requests sent, nothing will be sent to
-            Kafka topics. Omit setting this header to send proper notifications.
-          example: enabled
+          name: X-innsendingId
+          description: Tracing id that will be used in logging statements.
+          example: 92ee15dd-dc49-4c95-b9b6-6224bae088a0
           required: false
           schema:
             type: string
-            default: null
 
       requestBody:
         description: Data neccessary to identify user notification to be closed.
