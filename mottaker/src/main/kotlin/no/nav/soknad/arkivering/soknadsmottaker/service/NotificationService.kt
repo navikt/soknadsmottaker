@@ -49,8 +49,7 @@ class NotificationService(
 			return
 		}
 
-		val eventId = if (isIdFromHenvendelse(key)) createULIDEventId(key, soknad.erEttersendelse) else	key
-		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
+		val notifikasjonsNokkel = createNotificationKey(key, soknad.personId, soknad.groupId)
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		logger.info("$key: skal opprette ny notifikasjon")
@@ -58,7 +57,7 @@ class NotificationService(
 		//  Når en bruker tar initiativ til å opprette en søknad/ettersending lages det et utkast.
 		//  Når systemet ser at det mangler påkrevde vedlegg som skal ettersendes, lages det en oppgave i stedet.
 		if (soknad.erSystemGenerert == true) {
-			publishOppgaveNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, eventId, notifikasjonsNokkel)
+			publishOppgaveNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, key, notifikasjonsNokkel)
 		} else {
 			publishNewUtkastNotification(brukerNotifikasjonInfo, notifikasjonsNokkel.eventId, notifikasjonsNokkel.fodselsnummer)
 		}
@@ -71,12 +70,11 @@ class NotificationService(
 			return
 		}
 
-		val eventId = if (isIdFromHenvendelse(key)) createULIDEventId(key, soknad.erEttersendelse) else	key
-		val notifikasjonsNokkel = createNotificationKey(eventId, soknad.personId, soknad.groupId)
+		val notifikasjonsNokkel = createNotificationKey(key, soknad.personId, soknad.groupId)
 		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
 
 		publishDoneNotification(key, hendelsestidspunkt, notifikasjonsNokkel)
-		publishDoneUtkastNotification(eventId, soknad.personId)
+		publishDoneUtkastNotification(key)
 
 	}
 
@@ -127,13 +125,11 @@ class NotificationService(
 
 	}
 
-	private fun publishDoneUtkastNotification(
+	fun publishDoneUtkastNotification(
 		eventId: String,
-		ident: String
 	) {
 		val utkast = UtkastJsonBuilder()
 			.withUtkastId(eventId)
-			.withIdent(ident)
 			.delete()
 
 		kafkaSender.publishUtkastNotification(eventId, utkast)
@@ -266,23 +262,6 @@ class NotificationService(
 			.withFodselsnummer(fnr)
 			.withGrupperingsId(groupId)
 			.build()
-	}
-
-
-	private fun isIdFromHenvendelse(id: String): Boolean {
-		// behandlingsid opprettet av henvendelse består av 9 karakterer, prefix=10 [A-Z,a-z]
-		// UUID eller ULID vil være 36 karakterer.
-		return "10019To00".length == id.length
-	}
-
-	private fun createULIDEventId(henvendelsesId: String, oppgave: Boolean): String {
-		val prefix = "00HENVEND1"
-		val type = if (oppgave) "0P" else "BE"
-		val henvendelsesIdFiltrert = henvendelsesId.substring(2).replace("""[ILOUilou]""".toRegex(), "0")
-		val erstatningsStreng = henvendelsesId.substring(2)
-			.toCharArray().map { erstattKarakter(it) }.joinToString("")
-
-		return prefix + type + henvendelsesIdFiltrert + erstatningsStreng
 	}
 
 

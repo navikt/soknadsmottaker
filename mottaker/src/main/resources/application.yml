@@ -33,9 +33,6 @@ spring:
 userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
 status_log_url: ${STATUS_LOG_URL}
 
-service:
-  dryRun: ${ENABLE_SERVICE_DRYRUN}
-
 restconfig:
   username: ${INNSENDING_USERNAME}
   password: ${INNSENDING_PASSWORD}
