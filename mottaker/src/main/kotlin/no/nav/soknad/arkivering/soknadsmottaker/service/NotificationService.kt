@@ -126,7 +126,7 @@ class NotificationService(
 	}
 
 	fun publishDoneUtkastNotification(
-		eventId: String,
+		eventId: String
 	) {
 		val utkast = UtkastJsonBuilder()
 			.withUtkastId(eventId)

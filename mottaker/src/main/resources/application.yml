@@ -5,7 +5,6 @@ userNotificationMessageJson: ""
 
 cron:
   startSendBrukerBeskjed: 0 30 09 19 DEC ?
-  fjernGamleUtkast: 0 00 15 02 NOV ?
 
 management:
   endpoint:
@@ -30,9 +29,6 @@ spring:
   config:
     activate:
       on-profile: prod | dev
-
-cron:
-  fjernGamleUtkastInputFil: ${fjernGamleUtkastInputFil}
 
 userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
 status_log_url: ${STATUS_LOG_URL}
@@ -74,9 +70,6 @@ spring:
 
 status_log_url: "https://logs.adeo.no"
 
-cron:
-  fjernGamleUtkastInputFil: "slett-utkast-dev.json"
-
 restconfig:
   username: ${INNSENDING_USERNAME}
   password: ${INNSENDING_PASSWORD}
@@ -105,9 +98,6 @@ spring:
       on-profile: default | test
 
 status_log_url: "https://logs.adeo.no"
-
-cron:
-  fjernGamleUtkastInputFil: "slett-utkast-dev.json"
 
 restconfig:
   username: innsending
