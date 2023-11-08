@@ -16,5 +16,5 @@
 		"innsending-api"
 	],
 	"status_log_url": "https://logs.adeo.no/app/discover#/view/0a747190-e8ed-11ed-be11-d159f65225af",
-	"fjernGamleUtkastInputFil": "slett-utkast-dev.json"
+	"fjernGamleUtkastInputFil": "empty-slett-utkast.json"
 }
