@@ -19,31 +19,21 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 
 
 	@Protected
-	override fun newNotification(addNotification: AddNotification, xDryRun: String?): ResponseEntity<Unit> {
+	override fun newNotification(addNotification: AddNotification, xInnsendingId: String?): ResponseEntity<Unit> {
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
 		MDC.put(Constants.MDC_INNSENDINGS_ID, key)
 		log(key, "Request to publish message or task notification for", soknadRef)
-
-		if (xDryRun.isDryRunEnabled()) {
-			logger.info("{}: DryRun enabled - will not create new Notification", key)
-			return ResponseEntity(HttpStatus.OK)
-		}
 
 		notificationService.newNotification(key, soknadRef, addNotification.brukernotifikasjonInfo)
 		return ResponseEntity(HttpStatus.OK)
 	}
 
 	@Protected
-	override fun cancelNotification(soknadRef: SoknadRef, xDryRun: String?): ResponseEntity<Unit> {
+	override fun cancelNotification(soknadRef: SoknadRef, xInnsendingId: String?): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
 		MDC.put(Constants.MDC_INNSENDINGS_ID, key)
 		log(key, "Request to publish done notification for", soknadRef)
-
-		if (xDryRun.isDryRunEnabled()) {
-			logger.info("{}: DryRun enabled - will not create cancel Notification", key)
-			return ResponseEntity(HttpStatus.OK)
-		}
 
 		notificationService.cancelNotification(key, soknadRef)
 		return ResponseEntity(HttpStatus.OK)
@@ -61,5 +51,4 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		secureLogger.info("$key: $message '$soknad'")
 	}
 
-	private fun String?.isDryRunEnabled() = this != null
 }

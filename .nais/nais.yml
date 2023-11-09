@@ -77,5 +77,3 @@ spec:
       value: {{kafka-utkast-topic}}
     - name: STATUS_LOG_URL
       value: {{status_log_url}}
-    - name: fjernGamleUtkastInputFil
-      value: {{fjernGamleUtkastInputFil}}
