@@ -40,7 +40,7 @@
 
 		<!--Kafka-->
 		<confluent.version>7.5.2</confluent.version>
-		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
+		<brukernotifikasjon-schemas.version>3.0.0</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>20230829114432-d23aa9a</utkast-schema.version>
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
 
