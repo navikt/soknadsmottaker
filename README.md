@@ -57,42 +57,6 @@ apprunner@soknadsmottaker-86745fb779-lndkn:/app$ cat /secure-logs/secure.log
 <LOG CONTENT>
 ```
 
-## Resending requests
-
-If a Soknad for some reason fails to be sent through the whole archiving chain, a last resort is to manually resend it,
-as explained below. Save your data into a json-file called "soknader.json" (an example can be
-seen [here](mottaker/src/main/resources/soknader.json)), and run the script below (requires curl
-and [jq](https://github.com/stedolan/jq)). To send failed files to Soknadsfillager,
-see [its documentation](https://github.com/navikt/soknadsfillager#manually-sending-files-to-soknadsfillager).
-
-Run the script first against localhost:8090 (i.e. start Soknadsmottaker on your own machine) to see that it works as
-expected. Then do a test run against preprod (i.e. replace `soknadsmottakerurl`
-with https://soknadsmottaker-gcp.dev.intern.nav.no). When you have verified that the behaviour and data is as expected,
-you can run against production with care.
-
-One must never send in a Soknad with the same innsendingId as a previous one. The script will replace whatever
-innsendingId is set to, with a newly generated UUID.
-
-Update `credentials` with the username and password, which you can find
-in [GCP Secret Manager](https://console.cloud.google.com/security/secret-manager/secret/shared-innsending-secret/versions?project=team-soknad-dev-ee5e) (
-remember to select the correct project - dev or prod). Note that the script will save the password to your shell
-history (e.g. in ~/.bash_history), which is a bad side effect. Two options are available:
-
-* After running the script, you can manually remove the password from your shell history file.
-* You can set `credentials=innsending` rather than `credentials=innsending:password`. This will make curl prompt you for
-	the password for each Soknad in soknader.json. If you have only a few Soknader to send in it should be no problem, but
-	if you have many it might be cumbersome, and you should in that case opt for manually cleaning your shell history file
-	instead.
-
-```
-soknadsmottakerurl=http://localhost:8090/soknad ;\
-credentials=innsending:password ;\
-jq -c '.[] | objects' soknader.json  | while read obj ; do
-    jq -c --arg id $(uuidgen) '.innsendingId = $id' <<< "$obj" \
-    | curl -X POST -H 'Content-Type: application/json' -d @- $soknadsmottakerurl -u $credentials
-done
-```
-
 ## Inquiries
 
 Questions regarding the code or the project can be asked to the team

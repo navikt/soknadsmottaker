@@ -52,10 +52,7 @@ spec:
 
   envFrom:
     - secret: send-message-to-applicants
-    - secret: shared-innsending-secret
-      metadata:
-        annotations:
-          reloader.stakater.com/match: "true"
+
   kafka:
     pool: {{ kafka-pool }}
   env:
