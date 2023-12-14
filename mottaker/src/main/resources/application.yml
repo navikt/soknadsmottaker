@@ -33,10 +33,6 @@ spring:
 userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
 status_log_url: ${STATUS_LOG_URL}
 
-restconfig:
-  username: ${INNSENDING_USERNAME}
-  password: ${INNSENDING_PASSWORD}
-
 kafkaconfig:
   namespace: ${NAIS_NAMESPACE}
   secure: ${KAFKA_SECURITY}
@@ -70,10 +66,6 @@ spring:
 
 status_log_url: "https://logs.adeo.no"
 
-restconfig:
-  username: ${INNSENDING_USERNAME}
-  password: ${INNSENDING_PASSWORD}
-
 kafkaconfig:
   namespace: ${NAIS_NAMESPACE}
   secure: ${KAFKA_SECURITY}
@@ -98,10 +90,6 @@ spring:
       on-profile: default | test
 
 status_log_url: "https://logs.adeo.no"
-
-restconfig:
-  username: innsending
-  password: password
 
 kafkaconfig:
   namespace: default
