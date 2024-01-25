@@ -1,5 +1,5 @@
 FROM gcr.io/distroless/java21-debian12:nonroot
-FROM ghcr.io/navikt/tms-varsel-authority/tms-varsel-authority:20240117130701-cc041fd
+#FROM ghcr.io/navikt/tms-varsel-authority/tms-varsel-authority:20240117130701-cc041fd
 
 ENV SPRING_PROFILES_ACTIVE="docker"
 ENV KAFKA_BROKERS=kafka-broker:29092
