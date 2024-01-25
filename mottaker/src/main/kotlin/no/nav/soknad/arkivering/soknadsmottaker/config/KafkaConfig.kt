@@ -4,10 +4,6 @@ import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGI
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig.USER_INFO_CONFIG
-import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
-import no.nav.brukernotifikasjon.schemas.input.DoneInput
-import no.nav.brukernotifikasjon.schemas.input.NokkelInput
-import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
@@ -25,7 +21,6 @@ import org.springframework.kafka.core.KafkaTemplate
 @Configuration
 class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	private val stringKeySerializerClass = StringSerializer::class.java
-	private val avroKeySerializerClass = KafkaAvroSerializer::class.java
 	private val stringValueSerializerClass = StringSerializer::class.java
 
 	fun <T : Serializer<*>> createKafkaConfig(keySerializer: Class<T>, valueSerializer: Class<T>? = null): HashMap<String, Any> {
@@ -62,13 +57,13 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(createKafkaConfig(stringKeySerializerClass))
 
 	@Bean
-	fun beskjedNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, BeskjedInput>(createKafkaConfig(avroKeySerializerClass))
+	fun beskjedNotificationFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass, stringValueSerializerClass))
 
 	@Bean
-	fun oppgaveNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, OppgaveInput>(createKafkaConfig(avroKeySerializerClass))
+	fun oppgaveNotificationFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass, stringValueSerializerClass))
 
 	@Bean
-	fun doneNotificationFactory() = DefaultKafkaProducerFactory<NokkelInput, DoneInput>(createKafkaConfig(avroKeySerializerClass))
+	fun doneNotificationFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass, stringValueSerializerClass))
 
 	@Bean
 	fun utkastFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass, stringValueSerializerClass))

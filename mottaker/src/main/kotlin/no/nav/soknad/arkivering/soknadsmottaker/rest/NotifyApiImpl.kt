@@ -25,7 +25,7 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		MDC.put(Constants.MDC_INNSENDINGS_ID, key)
 		log(key, "Request to publish message or task notification for", soknadRef)
 
-		notificationService.createNewNotification(key, soknadRef, addNotification.brukernotifikasjonInfo)
+		notificationService.selectNotificationTypeAndPublish(key, soknadRef, addNotification.brukernotifikasjonInfo)
 		return ResponseEntity(HttpStatus.OK)
 	}
 

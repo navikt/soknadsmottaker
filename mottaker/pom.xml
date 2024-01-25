@@ -106,11 +106,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.navikt</groupId>
-			<artifactId>brukernotifikasjon-schemas</artifactId>
-			<version>${brukernotifikasjon-schemas.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.navikt</groupId>
 			<artifactId>tms-utkast</artifactId>
 			<version>${utkast-schema.version}</version>
 		</dependency>
@@ -146,18 +141,6 @@
 			<artifactId>springdoc-openapi-starter-common</artifactId>
 			<version>${springdoc-openapi.version}</version>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>${springdoc-openapi.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-kotlin</artifactId>
-			<version>${springdoc-openapi.version}</version>
-		</dependency>
--->
 
 		<dependency>
 			<groupId>net.logstash.logback</groupId>

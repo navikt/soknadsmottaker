@@ -23,7 +23,7 @@ management:
         request:
           autotime:
             enabled: true
-namespace: local
+
 ---
 spring:
   config:
