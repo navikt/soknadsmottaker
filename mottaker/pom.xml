@@ -200,7 +200,6 @@
 					</args>
 					<compilerPlugins>
 						<plugin>spring</plugin>
-						<jvmTarget>${java.version}</jvmTarget>
 						<plugin>kotlinx-serialization</plugin>
 					</compilerPlugins>
 				</configuration>
