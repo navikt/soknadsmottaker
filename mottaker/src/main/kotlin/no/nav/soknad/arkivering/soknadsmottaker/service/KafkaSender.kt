@@ -25,9 +25,9 @@ class KafkaSender(
 	private val kafkaConfig: KafkaConfig,
 	private val kafkaTemplate: KafkaTemplate<String, Soknadarkivschema>,
 	private val metricKafkaTemplate: KafkaTemplate<String, InnsendingMetrics>,
-	private val kafkaBeskjedTemplate: KafkaTemplate<NokkelInput, BeskjedInput>,
-	private val kafkaOppgaveTemplate: KafkaTemplate<NokkelInput, OppgaveInput>,
-	private val kafkaDoneTemplate: KafkaTemplate<NokkelInput, DoneInput>,
+	private val kafkaBeskjedTemplate: KafkaTemplate<String, String>,
+	private val kafkaOppgaveTemplate: KafkaTemplate<String, String>,
+	private val kafkaDoneTemplate: KafkaTemplate<String, String>,
 	private val kafkaUtkastTemplate: KafkaTemplate<String, String>
 ) {
 	private val logger = LoggerFactory.getLogger(javaClass)
@@ -44,50 +44,32 @@ class KafkaSender(
 		logger.info("$key: Published to $topic")
 	}
 
-	fun publishDoneNotification(key: NokkelInput, value: DoneInput) {
+	fun publishDoneNotification(key: String, value: String) {
 		val topic = kafkaConfig.brukernotifikasjonDoneTopic
 		publishBrukernotifikasjon(topic, key, value, kafkaDoneTemplate)
 	}
 
 	fun publishUtkastNotification(key: String, value: String) {
 		val topic = kafkaConfig.utkastTopic
+		logger.info("$key: shall publish Utkast to topic $topic")
 		publish(topic, key, value, kafkaUtkastTemplate)
 		logger.info("$key: published to topic $topic")
-/*
-		try {
-			//publish(topic, key, value, kafkaUtkastTemplate)
-			logger.debug("$key. Skal publisere Utkast $value")
-			val props = Properties()
-			props[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.qualifiedName
-			props[VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.qualifiedName
-
-			KafkaProducer<String, String>(props).use { producer ->
-				producer.send(ProducerRecord(topic, key, value)) {
-					m: RecordMetadata, e: Exception? ->
-					when (e) {
-						// no exception, good to go!
-						null -> println("Produced record to topic ${m.topic()} partition [${m.partition()}] @ offset ${m.offset()}")
-						// print stacktrace in case of exception
-						else -> logger.error("$key: Feil ved publisering til $topic, ${e.message}")
-					}
-				}
-				producer.flush()
-			}
-
-		} catch (ex: Exception) {
-			logger.warn("$key: Feil ved publisering av utkast, ${ex.message}")
-		}
-*/
 	}
 
-	fun publishBeskjedNotification(key: NokkelInput, value: BeskjedInput) {
+	fun publishBeskjedNotification(key: String, value: String) {
 		val topic = kafkaConfig.brukernotifikasjonBeskjedTopic
 		publishBrukernotifikasjon(topic, key, value, kafkaBeskjedTemplate)
 	}
 
-	fun publishOppgaveNotification(key: NokkelInput, value: OppgaveInput) {
+	fun publishOppgaveNotification(key: String, value: String) {
 		val topic = kafkaConfig.brukernotifikasjonOppgaveTopic
 		publishBrukernotifikasjon(topic, key, value, kafkaOppgaveTemplate)
+	}
+
+	private fun publishBrukernotifikasjon(topic: String, key: String, value: String, kafkaTemplate: KafkaTemplate<String,String>) {
+		logger.info("${key}: Shall publish notification to topic $topic")
+		publish(topic, key, value, kafkaTemplate)
+		logger.info("${key}: Published to $topic")
 	}
 
 	private fun <T> publishBrukernotifikasjon(topic: String, key: NokkelInput, value: T, kafkaTemplate: KafkaTemplate<NokkelInput, T>) {

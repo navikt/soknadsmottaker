@@ -115,6 +115,16 @@
 			<version>${utkast-schema.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>no.nav.tms.varsel</groupId>
+			<artifactId>varsel-action</artifactId>
+			<version>${tms-varsel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.tms.varsel</groupId>
+			<artifactId>kotlin-builder</artifactId>
+			<version>${tms-varsel.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>no.nav.security</groupId>
 			<artifactId>token-validation-spring</artifactId>
 			<version>${token-support.version}</version>
@@ -190,6 +200,7 @@
 					</args>
 					<compilerPlugins>
 						<plugin>spring</plugin>
+						<jvmTarget>${java.version}</jvmTarget>
 						<plugin>kotlinx-serialization</plugin>
 					</compilerPlugins>
 				</configuration>

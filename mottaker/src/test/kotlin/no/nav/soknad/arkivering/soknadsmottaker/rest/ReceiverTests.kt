@@ -36,9 +36,9 @@ class ReceiverTests {
 
 	private val kafkaMock = mockk<KafkaTemplate<String, Soknadarkivschema>>()
 	private val metricsKafkaMock = mockk<KafkaTemplate<String, InnsendingMetrics>>()
-	private val beskjedKafkaMock = mockk<KafkaTemplate<NokkelInput, BeskjedInput>>()
-	private val oppgaveKafkaMock = mockk<KafkaTemplate<NokkelInput, OppgaveInput>>()
-	private val doneKafkaMock = mockk<KafkaTemplate<NokkelInput, DoneInput>>()
+	private val beskjedKafkaMock = mockk<KafkaTemplate<String, String>>()
+	private val oppgaveKafkaMock = mockk<KafkaTemplate<String, String>>()
+	private val doneKafkaMock = mockk<KafkaTemplate<String, String>>()
 	private val utkastKafkaMock = mockk<KafkaTemplate<String, String>>()
 
 	private val metrics = InnsendtMetrics(CollectorRegistry(true))
