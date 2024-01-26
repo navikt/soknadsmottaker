@@ -26,13 +26,13 @@ class NotificationService(
 	private val sensitivityLevel = Sensitivitet.High // Forutsetter at brukere har logget seg på f.eks. bankId slik at nivå 4 er oppnådd
 	private val sleepTimes = listOf(5, 15, 30)
 
-
 	fun userMessageNotification(key:String, brukerNotifikasjonInfo: NotificationInfo, userId: String, groupId: String) {
 		if (!correctNamespace(kafkaConfig.namespace)) {
 			logger.info("$key: Will not publish Beskjed, the namespace '${kafkaConfig.namespace}' is not correct.")
 			return
 		}
-		publishBeskjedNotification(brukerNotifikasjonInfo = brukerNotifikasjonInfo, key = key, eventId = key, fodselsnummer = userId)
+		publishNewNotification(varselType = Varseltype.Beskjed, brukerNotifikasjonInfo = brukerNotifikasjonInfo,
+			key = key, eventId = key, fodselsnummer = userId)
 	}
 
 	fun selectNotificationTypeAndPublish(key: String, soknad: SoknadRef, brukerNotifikasjonInfo: NotificationInfo) {
@@ -46,7 +46,7 @@ class NotificationService(
 		//  Når en bruker tar initiativ til å opprette en søknad/ettersending lages det et utkast.
 		//  Når systemet ser at det mangler påkrevde vedlegg som skal ettersendes, lages det en oppgave i stedet.
 		if (soknad.erSystemGenerert == true) {
-			publishOppgaveNotification(
+			publishNewNotification(varselType = Varseltype.Oppgave,
 				brukerNotifikasjonInfo = brukerNotifikasjonInfo, key = key, eventId = key, fodselsnummer = soknad.personId)
 		} else {
 			publishNewUtkastNotification(brukerNotifikasjonInfo = brukerNotifikasjonInfo, eventId = key, ident = soknad.personId)
@@ -66,23 +66,34 @@ class NotificationService(
 
 	}
 
-	private fun publishOppgaveNotification(
+	private fun publishNewNotification(
+		varselType: Varseltype,
 		brukerNotifikasjonInfo: NotificationInfo,
 		key: String,
 		eventId: String,
 		fodselsnummer: String
 	) {
 
-		val notification = selectNotificationTypeAndPublish(
-			varseltype = Varseltype.Oppgave, eventId = eventId,
+		val notification = generateNotificationType(
+			varseltype = varselType, eventId = eventId,
 			persId = fodselsnummer, notificationInfo = brukerNotifikasjonInfo )
 
-		loopAndPublishToKafka(key, Varseltype.Oppgave.name) {
+		loopAndPublishToKafka(key,varselType.name) {
 			logger.info(
-				"$key: Varsel om ${Varseltype.Oppgave} skal publiseres med eventId=$eventId og med lenke " +
+				"$key: Varsel om $varselType skal publiseres med eventId=$eventId og med lenke " +
 					brukerNotifikasjonInfo.lenke
 			)
-			kafkaSender.publishOppgaveNotification(key = key, value = notification)
+			when {
+				varselType == Varseltype.Oppgave -> {
+					kafkaSender.publishOppgaveNotification(key = key, value = notification)
+				}
+				varselType == Varseltype.Beskjed -> {
+					kafkaSender.publishBeskjedNotification(key = key, value = notification)
+				}
+				else -> {
+					logger.warn("$key: Unexpected varselType = $varselType. Will not be published")
+				}
+			}
 		}
 	}
 
@@ -119,26 +130,6 @@ class NotificationService(
 
 	}
 
-	private fun publishBeskjedNotification(
-		brukerNotifikasjonInfo: NotificationInfo,
-		key: String,
-		eventId: String,
-		fodselsnummer: String
-	) {
-
-		val notification = selectNotificationTypeAndPublish(
-			varseltype = Varseltype.Beskjed, eventId = eventId,
-			persId = fodselsnummer, notificationInfo = brukerNotifikasjonInfo )
-
-		loopAndPublishToKafka(key, Varseltype.Beskjed.name) {
-			logger.info(
-				"$key: Varsel om ${Varseltype.Beskjed} skal publiseres med eventId=$eventId og med lenke " +
-					brukerNotifikasjonInfo.lenke
-			)
-			kafkaSender.publishBeskjedNotification(key, notification)
-		}
-	}
-
 	private fun publishDoneNotification(
 		key: String,
 	) {
@@ -170,7 +161,7 @@ class NotificationService(
 
 	private fun correctNamespace(currentNamespace: String) = allowedNamespace.contains(currentNamespace)
 
-	private fun selectNotificationTypeAndPublish(
+	private fun generateNotificationType(
 		varseltype: Varseltype?,
 		eventId: String,
 		persId: String,
