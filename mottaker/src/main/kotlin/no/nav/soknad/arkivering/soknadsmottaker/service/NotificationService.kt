@@ -187,7 +187,7 @@ class NotificationService(
 
 
 	private fun externalNotification(eksternVarsling: List<Varsel>?): EksternVarslingBestilling? =
-		if (eksternVarsling == null || eksternVarsling.isNotEmpty())
+		if (eksternVarsling == null || eksternVarsling.isEmpty())
 			null
 		else
 			EksternVarslingBestilling(
