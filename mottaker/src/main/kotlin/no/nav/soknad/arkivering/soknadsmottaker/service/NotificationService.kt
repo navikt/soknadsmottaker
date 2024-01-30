@@ -80,8 +80,7 @@ class NotificationService(
 
 		loopAndPublishToKafka(key,varselType.name) {
 			logger.info(
-				"$key: Varsel om $varselType skal publiseres med eventId=$eventId og med lenke " +
-					brukerNotifikasjonInfo.lenke
+				"$key: Varsel om $varselType skal publiseres med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke}"
 			)
 			when {
 				varselType == Varseltype.Oppgave -> {
