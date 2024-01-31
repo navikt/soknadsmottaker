@@ -106,13 +106,18 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.navikt</groupId>
-			<artifactId>brukernotifikasjon-schemas</artifactId>
-			<version>${brukernotifikasjon-schemas.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.navikt</groupId>
 			<artifactId>tms-utkast</artifactId>
 			<version>${utkast-schema.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.tms.varsel</groupId>
+			<artifactId>varsel-action</artifactId>
+			<version>${tms-varsel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.tms.varsel</groupId>
+			<artifactId>kotlin-builder</artifactId>
+			<version>${tms-varsel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>no.nav.security</groupId>
@@ -128,12 +133,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${springdoc-openapi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-kotlin</artifactId>
+			<artifactId>springdoc-openapi-starter-common</artifactId>
 			<version>${springdoc-openapi.version}</version>
 		</dependency>
 

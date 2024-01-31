@@ -1,24 +1,16 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import no.nav.brukernotifikasjon.schemas.builders.BeskjedInputBuilder
-import no.nav.brukernotifikasjon.schemas.builders.DoneInputBuilder
-import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
-import no.nav.brukernotifikasjon.schemas.builders.OppgaveInputBuilder
-import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
-import no.nav.brukernotifikasjon.schemas.input.NokkelInput
-import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
 import no.nav.soknad.arkivering.soknadsmottaker.model.NotificationInfo
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel
-import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel.Kanal.epost
-import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel.Kanal.sms
 import no.nav.tms.utkast.builder.UtkastJsonBuilder
+import no.nav.tms.varsel.action.*
+import no.nav.tms.varsel.builder.VarselActionBuilder
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.net.URL
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -29,37 +21,35 @@ class NotificationService(
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	private val defaultVarselTittel = "Notifikasjon fra NAV"
-	val appNavn = "soknadsmottaker"
 	val allowedNamespace = listOf("team-soknad")
-	val notificationNamespace = "min-side."
 
-	private val securityLevel = 4 // Forutsetter at brukere har logget seg på f.eks. bankId slik at nivå 4 er oppnådd
+	private val sensitivityLevel = Sensitivitet.High // Forutsetter at brukere har logget seg på f.eks. bankId slik at nivå 4 er oppnådd
 	private val sleepTimes = listOf(5, 15, 30)
 
-
 	fun userMessageNotification(key:String, brukerNotifikasjonInfo: NotificationInfo, userId: String, groupId: String) {
-		val notifikasjonsNokkel = createNotificationKey(key, userId, groupId)
-		publishBeskjedNotification(brukerNotifikasjonInfo, LocalDateTime.now(), key, key, notifikasjonsNokkel)
-	}
-
-	fun newNotification(key: String, soknad: SoknadRef, brukerNotifikasjonInfo: NotificationInfo) {
 		if (!correctNamespace(kafkaConfig.namespace)) {
-			logger.info("$key: Will not publish Beskjed/Oppgave, the namespace '${kafkaConfig.namespace}' is not correct.")
+			logger.info("$key: Will not publish Beskjed, the namespace '${kafkaConfig.namespace}' is not correct.")
 			return
 		}
+		publishNewNotification(varselType = Varseltype.Beskjed, brukerNotifikasjonInfo = brukerNotifikasjonInfo,
+			key = key, eventId = key, fodselsnummer = userId)
+	}
 
-		val notifikasjonsNokkel = createNotificationKey(key, soknad.personId, soknad.groupId)
-		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
+	fun selectNotificationTypeAndPublish(key: String, soknad: SoknadRef, brukerNotifikasjonInfo: NotificationInfo) {
+		if (!correctNamespace(kafkaConfig.namespace)) {
+			logger.info("$key: Will not publish Utkast/Oppgave, the namespace '${kafkaConfig.namespace}' is not correct.")
+			return
+		}
 
 		logger.info("$key: skal opprette ny notifikasjon")
 
 		//  Når en bruker tar initiativ til å opprette en søknad/ettersending lages det et utkast.
 		//  Når systemet ser at det mangler påkrevde vedlegg som skal ettersendes, lages det en oppgave i stedet.
 		if (soknad.erSystemGenerert == true) {
-			publishOppgaveNotification(brukerNotifikasjonInfo, hendelsestidspunkt, key, key, notifikasjonsNokkel)
+			publishNewNotification(varselType = Varseltype.Oppgave,
+				brukerNotifikasjonInfo = brukerNotifikasjonInfo, key = key, eventId = key, fodselsnummer = soknad.personId)
 		} else {
-			publishNewUtkastNotification(brukerNotifikasjonInfo, notifikasjonsNokkel.eventId, notifikasjonsNokkel.fodselsnummer)
+			publishNewUtkastNotification(brukerNotifikasjonInfo = brukerNotifikasjonInfo, eventId = key, ident = soknad.personId)
 		}
 
 	}
@@ -70,36 +60,39 @@ class NotificationService(
 			return
 		}
 
-		val notifikasjonsNokkel = createNotificationKey(key, soknad.personId, soknad.groupId)
-		val hendelsestidspunkt = soknad.tidpunktEndret.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
-
-		publishDoneNotification(key, hendelsestidspunkt, notifikasjonsNokkel)
-		publishDoneUtkastNotification(key)
+		// Publiserer done/slett/inaktiver event på både oppgave/beskjed topic OG utkast topic da vi ikke sikkert vet hvor eventen ble publisert.
+		publishDoneNotification(key = key)
+		publishDoneUtkastNotification(eventId = key)
 
 	}
 
-	private fun publishOppgaveNotification(
+	private fun publishNewNotification(
+		varselType: Varseltype,
 		brukerNotifikasjonInfo: NotificationInfo,
-		hendelsestidspunkt: LocalDateTime,
 		key: String,
 		eventId: String,
-		notifikasjonsNokkel: NokkelInput
+		fodselsnummer: String
 	) {
-		val oppgaveNotifikasjon = nyOppgaveNotifikasjon(
-			brukerNotifikasjonInfo.notifikasjonsTittel,
-			brukerNotifikasjonInfo.lenke,
-			hendelsestidspunkt,
-			brukerNotifikasjonInfo.antallAktiveDager,
-			brukerNotifikasjonInfo.eksternVarsling
-		)
 
-		val notificationType = "Oppgave"
-		loopAndPublishToKafka(key, notificationType) {
+		val notification = generateNotificationType(
+			varseltype = varselType, eventId = eventId,
+			persId = fodselsnummer, notificationInfo = brukerNotifikasjonInfo )
+
+		loopAndPublishToKafka(key,varselType.name) {
 			logger.info(
-				"$key: Varsel om $notificationType skal publiseres med eventId=$eventId og med lenke " +
-					brukerNotifikasjonInfo.lenke
+				"$key: Varsel om $varselType skal publiseres med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke}"
 			)
-			kafkaSender.publishOppgaveNotification(notifikasjonsNokkel, oppgaveNotifikasjon)
+			when {
+				varselType == Varseltype.Oppgave -> {
+					kafkaSender.publishOppgaveNotification(key = key, value = notification)
+				}
+				varselType == Varseltype.Beskjed -> {
+					kafkaSender.publishBeskjedNotification(key = key, value = notification)
+				}
+				else -> {
+					logger.warn("$key: Unexpected varselType = $varselType. Will not be published")
+				}
+			}
 		}
 	}
 
@@ -136,42 +129,12 @@ class NotificationService(
 
 	}
 
-	private fun publishBeskjedNotification(
-		brukerNotifikasjonInfo: NotificationInfo,
-		hendelsestidspunkt: LocalDateTime,
-		key: String,
-		eventId: String,
-		notifikasjonsNokkel: NokkelInput
-	) {
-		val beskjedNotifikasjon = nyBeskjedNotifikasjon(
-			brukerNotifikasjonInfo.notifikasjonsTittel,
-			brukerNotifikasjonInfo.lenke,
-			hendelsestidspunkt,
-			brukerNotifikasjonInfo.antallAktiveDager,
-			brukerNotifikasjonInfo.eksternVarsling
-		)
-
-		val notificationType = "Beskjed"
-		loopAndPublishToKafka(key, notificationType) {
-			logger.info(
-				"$key: Varsel om $notificationType skal publiseres med eventId=$eventId og med lenke " +
-					brukerNotifikasjonInfo.lenke
-			)
-			kafkaSender.publishBeskjedNotification(notifikasjonsNokkel, beskjedNotifikasjon)
-		}
-	}
-
 	private fun publishDoneNotification(
 		key: String,
-		hendelsestidspunkt: LocalDateTime?,
-		notifikasjonsNokkel: NokkelInput
 	) {
-		val doneNotifikasjon = DoneInputBuilder()
-			.withTidspunkt(hendelsestidspunkt)
-			.build()
-
+		val doneNotification = createDeleteNotification(eventId = key)
 		loopAndPublishToKafka(key, "Done") {
-			kafkaSender.publishDoneNotification(notifikasjonsNokkel, doneNotifikasjon)
+			kafkaSender.publishDoneNotification(key, doneNotification)
 		}
 	}
 
@@ -195,83 +158,41 @@ class NotificationService(
 		}
 	}
 
-	private fun nyBeskjedNotifikasjon(
-		title: String,
-		lenke: String,
-		hendelsestidspunkt: LocalDateTime,
-		antallAktiveDager: Int,
-		eksternVarsling: List<Varsel>
-	): BeskjedInput {
-
-		val synligFremTil = LocalDateTime.now().plusDays(antallAktiveDager.toLong())
-		val builder = BeskjedInputBuilder()
-			.withTekst(title)
-			.withLink(URL(lenke))
-			.withSikkerhetsnivaa(securityLevel)
-			.withTidspunkt(hendelsestidspunkt)
-			.withSynligFremTil(synligFremTil)
-			.withEksternVarsling(eksternVarsling.isNotEmpty())
-
-		for (varsel in eksternVarsling) {
-			if (varsel.kanal == sms && varsel.tekst != null)
-				builder.withSmsVarslingstekst(varsel.tekst)
-			if (varsel.kanal == epost) {
-				builder.withEpostVarslingstekst(varsel.tekst)
-				builder.withEpostVarslingstittel(if (varsel.tittel == null || varsel.tittel?.length!! > 40)  defaultVarselTittel else varsel.tittel)
-			}
-		}
-
-
-		return builder.build()
-	}
-
-	private fun nyOppgaveNotifikasjon(
-		title: String,
-		lenke: String,
-		hendelsestidspunkt: LocalDateTime,
-		antallAktiveDager: Int,
-		eksternVarsling: List<Varsel>
-	): OppgaveInput {
-
-		val synligFremTil = LocalDateTime.now().plusDays(antallAktiveDager.toLong())
-		val builder = OppgaveInputBuilder()
-			.withTekst(title)
-			.withLink(URL(lenke))
-			.withSikkerhetsnivaa(securityLevel)
-			.withTidspunkt(hendelsestidspunkt)
-			.withSynligFremTil(synligFremTil)
-			.withEksternVarsling(eksternVarsling.isNotEmpty())
-
-		for (varsel in eksternVarsling) {
-			if (varsel.kanal == epost) {
-				builder.withEpostVarslingstekst(varsel.tekst)
-				builder.withEpostVarslingstittel(varsel.tittel ?: defaultVarselTittel)
-			}
-			if (varsel.kanal == sms)
-				builder.withSmsVarslingstekst(varsel.tekst)
-		}
-
-		return builder.build()
-	}
-
-	private fun createNotificationKey(eventId: String, fnr: String, groupId: String): NokkelInput {
-		return NokkelInputBuilder()
-			.withNamespace(notificationNamespace)
-			.withAppnavn(appNavn)
-			.withEventId(eventId)
-			.withFodselsnummer(fnr)
-			.withGrupperingsId(groupId)
-			.build()
-	}
-
-
-	private fun erstattKarakter(ch: Char): Char {
-		return if ('I'.equals(ch, true)) '1'
-		else if ('L'.equals(ch, true)) '2'
-		else if ('O'.equals(ch, true)) '3'
-		else if ('U'.equals(ch, true)) '4'
-		else '0'
-	}
-
 	private fun correctNamespace(currentNamespace: String) = allowedNamespace.contains(currentNamespace)
-}
+
+	private fun generateNotificationType(
+		varseltype: Varseltype?,
+		eventId: String,
+		persId: String,
+		notificationInfo: NotificationInfo
+	): String =
+		VarselActionBuilder.opprett {
+			type = varseltype
+			varselId = eventId
+			sensitivitet = sensitivityLevel
+			ident = persId
+			tekster += Tekst(
+				spraakkode = "nb",
+				tekst = notificationInfo.notifikasjonsTittel,
+				default = true
+			)
+			link = notificationInfo.lenke
+			aktivFremTil = ZonedDateTime.now(ZoneId.of("Z")).plusDays(notificationInfo.antallAktiveDager.toLong())
+			eksternVarsling = externalNotification(notificationInfo.eksternVarsling)
+		}
+
+	private fun createDeleteNotification(eventId: String): String =
+		VarselActionBuilder.inaktiver { varselId = eventId }
+
+
+	private fun externalNotification(eksternVarsling: List<Varsel>?): EksternVarslingBestilling? =
+		if (eksternVarsling == null || eksternVarsling.isEmpty())
+			null
+		else
+			EksternVarslingBestilling(
+				prefererteKanaler = eksternVarsling.map{ if (it.kanal == Varsel.Kanal.sms) EksternKanal.SMS else EksternKanal.EPOST },
+				smsVarslingstekst =  eksternVarsling.firstOrNull{it.kanal == Varsel.Kanal.sms}?.tekst,
+				epostVarslingstittel = eksternVarsling.firstOrNull{it.kanal == Varsel.Kanal.epost}?.tittel,
+				epostVarslingstekst = eksternVarsling.firstOrNull{it.kanal == Varsel.Kanal.epost}?.tekst
+			)
+	}

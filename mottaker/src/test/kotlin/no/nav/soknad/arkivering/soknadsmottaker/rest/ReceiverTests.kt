@@ -4,10 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.prometheus.client.CollectorRegistry
-import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
-import no.nav.brukernotifikasjon.schemas.input.DoneInput
-import no.nav.brukernotifikasjon.schemas.input.NokkelInput
-import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
@@ -36,9 +32,9 @@ class ReceiverTests {
 
 	private val kafkaMock = mockk<KafkaTemplate<String, Soknadarkivschema>>()
 	private val metricsKafkaMock = mockk<KafkaTemplate<String, InnsendingMetrics>>()
-	private val beskjedKafkaMock = mockk<KafkaTemplate<NokkelInput, BeskjedInput>>()
-	private val oppgaveKafkaMock = mockk<KafkaTemplate<NokkelInput, OppgaveInput>>()
-	private val doneKafkaMock = mockk<KafkaTemplate<NokkelInput, DoneInput>>()
+	private val beskjedKafkaMock = mockk<KafkaTemplate<String, String>>()
+	private val oppgaveKafkaMock = mockk<KafkaTemplate<String, String>>()
+	private val doneKafkaMock = mockk<KafkaTemplate<String, String>>()
 	private val utkastKafkaMock = mockk<KafkaTemplate<String, String>>()
 
 	private val metrics = InnsendtMetrics(CollectorRegistry(true))
