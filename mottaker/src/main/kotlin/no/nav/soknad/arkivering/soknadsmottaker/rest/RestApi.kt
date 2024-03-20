@@ -2,6 +2,7 @@ package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.SoknadApi
+import no.nav.soknad.arkivering.soknadsmottaker.model.DocumentData
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.util.Constants.MDC_INNSENDINGS_ID
@@ -32,10 +33,14 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 			soknad.erEttersendelse,
 			personId = "**fnr can be found in secure logs**",
 			soknad.tema,
-			soknad.dokumenter
+			maskDocumentTitle(soknad.dokumenter)
 		)
 		logger.info("$key: Received request '$fnrMasked'")
 		secureLogger.info("$key: Received request '$soknad'")
+	}
+
+	private fun maskDocumentTitle(documents:List<DocumentData>): List<DocumentData> {
+		return documents.map{DocumentData(it.skjemanummer, it.erHovedskjema, if (it.skjemanummer == "N6") "**Maskert**" else it.tittel, it.varianter)}
 	}
 
 }
