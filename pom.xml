@@ -43,7 +43,7 @@
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>20230829114432-d23aa9a</utkast-schema.version>
 		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
-		<tms-varsel.version>1.0.3-test-3</tms-varsel.version>
+		<tms-varsel.version>1.0.4</tms-varsel.version>
 
 		<!--Logging-->
 		<prometheus-simpleclient.version>0.16.0</prometheus-simpleclient.version>
