@@ -41,6 +41,7 @@ class InnsendtMetrics(private val registry: PrometheusRegistry) {
 			.name("${soknadNamespace}_${name}")
 			.help(help)
 			.labelNames(labelName, appName)
+			.withoutExemplars()
 			.register(registry)
 	}
 

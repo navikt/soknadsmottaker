@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker
 
-import io.prometheus.client.CollectorRegistry
+import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -15,7 +15,7 @@ class SoknadsmottakerApplicationTests {
 	private lateinit var kafkaConfig: KafkaConfig
 
 	@MockBean
-	lateinit var collectorRegistry: CollectorRegistry
+	lateinit var prometheusRegistry: PrometheusRegistry
 
 	@Test
 	fun `Spring context loads`() {
