@@ -3,7 +3,7 @@ package no.nav.soknad.arkivering.soknadsmottaker.rest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import io.prometheus.client.CollectorRegistry
+import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
@@ -37,7 +37,7 @@ class ReceiverTests {
 	private val doneKafkaMock = mockk<KafkaTemplate<String, String>>()
 	private val utkastKafkaMock = mockk<KafkaTemplate<String, String>>()
 
-	private val metrics = InnsendtMetrics(CollectorRegistry(true))
+	private val metrics = InnsendtMetrics(PrometheusRegistry.defaultRegistry)
 	private val receiver = mockReceiver(metrics)
 
 	@Test
@@ -50,7 +50,12 @@ class ReceiverTests {
 		val metricRecord = slot<ProducerRecord<String, InnsendingMetrics>>()
 
 		every { kafkaMock.send(capture(record)) } returns setFuture(makeSendResult(topic, convert(soknad)))
-		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, InnsendingMetrics()))
+		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(
+			makeSendResult(
+				metricsTopic,
+				InnsendingMetrics()
+			)
+		)
 
 		receiver.receive(soknad, null)
 
@@ -62,15 +67,23 @@ class ReceiverTests {
 		assertEquals(sentInBefore!! + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
 
 		assertEquals(metricsTopic, metricRecord.captured.topic(), "Should send metrics to the right topic")
-		assertEquals(1, metricRecord.captured.headers().headers(MESSAGE_ID).count(),
-			"Metrics should have a MESSAGE_ID header")
-		assertEquals("soknadsmottaker", metricRecord.captured.value().application,
-			"Metrics should have correct application name")
+		assertEquals(
+			1, metricRecord.captured.headers().headers(MESSAGE_ID).count(),
+			"Metrics should have a MESSAGE_ID header"
+		)
+		assertEquals(
+			"soknadsmottaker", metricRecord.captured.value().application,
+			"Metrics should have correct application name"
+		)
 		assertEquals("publish to kafka", metricRecord.captured.value().action, "Metrics should have correct action")
-		assertTrue(metricRecord.captured.value().startTime <= System.currentTimeMillis(),
-			"Metrics should have correct startTime")
-		assertTrue(metricRecord.captured.value().duration <= metricRecord.captured.value().startTime,
-			"Metrics should have a duration")
+		assertTrue(
+			metricRecord.captured.value().startTime <= System.currentTimeMillis(),
+			"Metrics should have correct startTime"
+		)
+		assertTrue(
+			metricRecord.captured.value().duration <= metricRecord.captured.value().startTime,
+			"Metrics should have a duration"
+		)
 
 		metrics.unregister()
 	}
@@ -84,7 +97,12 @@ class ReceiverTests {
 		val metricRecord = slot<ProducerRecord<String, InnsendingMetrics>>()
 
 		every { kafkaMock.send(capture(record)) } throws KafkaException("Mocked Exception")
-		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(makeSendResult(metricsTopic, metricMessage))
+		every { metricsKafkaMock.send(capture(metricRecord)) } returns setFuture(
+			makeSendResult(
+				metricsTopic,
+				metricMessage
+			)
+		)
 
 		assertThrows<KafkaException> {
 			receiver.receive(soknad, null)
@@ -98,8 +116,9 @@ class ReceiverTests {
 	}
 
 	private fun <T> makeSendResult(topic: String, melding: T) = SendResult(
-			ProducerRecord(topic, "123", melding),
-			RecordMetadata(TopicPartition(topic, 1), 1L, 1, 1L, 1, 1))
+		ProducerRecord(topic, "123", melding),
+		RecordMetadata(TopicPartition(topic, 1), 1L, 1, 1L, 1, 1)
+	)
 
 	private fun <T> setFuture(v: SendResult<String, T>): CompletableFuture<SendResult<String, T>> {
 		return CompletableFuture.completedFuture(v)
@@ -123,7 +142,8 @@ class ReceiverTests {
 			it.brukernotifikasjonBeskjedTopic = "min-side.aapen-brukernotifikasjon-beskjed-v1"
 			it.brukernotifikasjonOppgaveTopic = "min-side.aapen-brukernotifikasjon-oppgave-v1"
 		}
-		val kafkaSender = KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock, utkastKafkaMock)
+		val kafkaSender =
+			KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock, utkastKafkaMock)
 		val archiverService = ArchiverService(kafkaSender, metrics)
 		return RestApi(archiverService)
 	}

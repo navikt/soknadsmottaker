@@ -3,7 +3,6 @@ package no.nav.soknad.arkivering.soknadsmottaker.service
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.prometheus.client.CollectorRegistry
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import org.junit.jupiter.api.Test
@@ -12,12 +11,13 @@ import java.util.*
 class ArchiverServiceTests {
 	private val kafkaSender = mockk<KafkaSender>()
 
+	private val metrics = mockk<InnsendtMetrics>(relaxed = true)
+
 	@Test
 	fun `Calls Kafka sender`() {
 		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
 
-		val metrics = InnsendtMetrics(CollectorRegistry.defaultRegistry)
 		val archiverService = ArchiverService(kafkaSender, metrics)
 
 		archiverService.archive(UUID.randomUUID().toString(), createSoknad())
