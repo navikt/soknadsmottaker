@@ -22,10 +22,10 @@ jobs:
           component_name: soknadsmottaker
           branch: ${GITHUB_HEAD_REF} # Branch of current PR
 
-      - name: 'Build the code for soknadsfillager'
+      - name: 'Build the code for innsending-api'
         uses: navikt/archiving-infrastructure/.github/checkout-and-build@main
         with:
-          component_name: soknadsfillager
+          component_name: innsending-api
 
       - name: 'Build the code for soknadsarkiverer'
         uses: navikt/archiving-infrastructure/.github/checkout-and-build@main
