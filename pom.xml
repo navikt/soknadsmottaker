@@ -36,7 +36,7 @@
 		<gson.version>2.11.0</gson.version>
 
 		<!--NAV-->
-		<token-support.version>4.1.8</token-support.version>
+		<token-support.version>5.0.5</token-support.version>
 
 		<!--Kafka-->
 		<confluent.version>7.6.1</confluent.version>
