@@ -178,21 +178,20 @@ class NotificationService(
 			)
 			link = notificationInfo.lenke
 			aktivFremTil = ZonedDateTime.now(ZoneId.of("Z")).plusDays(notificationInfo.antallAktiveDager.toLong())
-			eksternVarsling = externalNotification(notificationInfo.eksternVarsling)
+			if (notificationInfo.eksternVarsling.isNotEmpty()) {
+				eksternVarsling {
+					preferertKanal =
+						notificationInfo.eksternVarsling.map { if (it.kanal == Varsel.Kanal.sms) EksternKanal.SMS else EksternKanal.EPOST }
+							.first()
+					smsVarslingstekst = notificationInfo.eksternVarsling.firstOrNull { it.kanal == Varsel.Kanal.sms }?.tekst
+					epostVarslingstittel =
+						notificationInfo.eksternVarsling.firstOrNull { it.kanal == Varsel.Kanal.epost }?.tittel
+					epostVarslingstekst = notificationInfo.eksternVarsling.firstOrNull { it.kanal == Varsel.Kanal.epost }?.tekst
+				}
+			}
 		}
 
 	private fun createDeleteNotification(eventId: String): String =
 		VarselActionBuilder.inaktiver { varselId = eventId }
 
-
-	private fun externalNotification(eksternVarsling: List<Varsel>?): EksternVarslingBestilling? =
-		if (eksternVarsling == null || eksternVarsling.isEmpty())
-			null
-		else
-			EksternVarslingBestilling(
-				prefererteKanaler = eksternVarsling.map{ if (it.kanal == Varsel.Kanal.sms) EksternKanal.SMS else EksternKanal.EPOST },
-				smsVarslingstekst =  eksternVarsling.firstOrNull{it.kanal == Varsel.Kanal.sms}?.tekst,
-				epostVarslingstittel = eksternVarsling.firstOrNull{it.kanal == Varsel.Kanal.epost}?.tittel,
-				epostVarslingstekst = eksternVarsling.firstOrNull{it.kanal == Varsel.Kanal.epost}?.tekst
-			)
 	}
