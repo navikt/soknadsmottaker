@@ -92,13 +92,13 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.github.navikt</groupId>
-			<artifactId>soknadarkiv-schema</artifactId>
+			<groupId>no.nav.soknad.arkivering</groupId>
+			<artifactId>avro-schemas</artifactId>
 			<version>${arkivering-schemas.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.navikt</groupId>
-			<artifactId>tms-utkast</artifactId>
+			<groupId>no.nav.tms.utkast</groupId>
+			<artifactId>builder</artifactId>
 			<version>${utkast-schema.version}</version>
 		</dependency>
 		<dependency>
@@ -212,10 +212,6 @@
 	</build>
 
 	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
 		<repository>
 			<id>confluent</id>
 			<url>https://packages.confluent.io/maven</url>

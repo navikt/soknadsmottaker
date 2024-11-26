@@ -41,8 +41,8 @@
 		<!--Kafka-->
 		<confluent.version>7.7.1</confluent.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
-		<utkast-schema.version>20230829114432-d23aa9a</utkast-schema.version>
-		<arkivering-schemas.version>f52ace8dcc</arkivering-schemas.version>
+		<utkast-schema.version>20230203100430-ecf5208</utkast-schema.version>
+		<arkivering-schemas.version>1.4.4-48e96305a5d2</arkivering-schemas.version>
 		<tms-varsel.version>2.0.0</tms-varsel.version>
 
 		<!--Logging-->
@@ -81,6 +81,10 @@
 		<repository>
 			<id>navikt-varsel</id>
 			<url>https://maven.pkg.github.com/navikt/tms-varsel-authority</url>
+		</repository>
+		<repository>
+			<id>navikt</id>
+			<url>https://maven.pkg.github.com/navikt/soknadarkiv-schema</url>
 		</repository>
 		<repository>
 			<id>github</id>
