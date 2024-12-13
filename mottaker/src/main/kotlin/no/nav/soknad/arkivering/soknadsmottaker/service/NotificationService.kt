@@ -187,6 +187,7 @@ class NotificationService(
 					epostVarslingstittel =
 						notificationInfo.eksternVarsling.firstOrNull { it.kanal == Varsel.Kanal.epost }?.tittel
 					epostVarslingstekst = notificationInfo.eksternVarsling.firstOrNull { it.kanal == Varsel.Kanal.epost }?.tekst
+					utsettSendingTil = notificationInfo.utsettSendingTil?.toZonedDateTime()
 				}
 			}
 		}
