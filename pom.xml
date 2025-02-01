@@ -42,7 +42,7 @@
 		<confluent.version>7.8.0</confluent.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>20230203100430-ecf5208</utkast-schema.version>
-		<arkivering-schemas.version>1.4.4-bf301c4492e2</arkivering-schemas.version>
+		<arkivering-schemas.version>29ee75ed</arkivering-schemas.version>
 		<tms-varsel.version>2.1.1</tms-varsel.version>
 
 		<!--Logging-->
