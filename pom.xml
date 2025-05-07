@@ -32,7 +32,7 @@
 
 		<!--Serialization-->
 		<jackson.version>2.18.3</jackson.version>
-<!--
+<!-- Kall for å sende inn søknader feiler ved oppdatering til 2.19.1
 		<jackson.version>2.19.0</jackson.version>
 -->
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
@@ -68,9 +68,6 @@
 		<versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
 		<cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
 		<maven-enforcer.version>3.5.0</maven-enforcer.version>
-<!--
-		<openapi-generator-maven-plugin.version>7.12.0</openapi-generator-maven-plugin.version>
--->
 		<openapi-generator-maven-plugin.version>7.13.0</openapi-generator-maven-plugin.version>
 	</properties>
 
