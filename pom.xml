@@ -29,10 +29,12 @@
 		<!--Spring-->
 		<springdoc-openapi.version>2.8.6</springdoc-openapi.version>
 		<spring-web.version>6.2.6</spring-web.version>
+		<spring-cloud.version>4.2.0</spring-cloud.version>
 
 		<!--Serialization-->
 		<jackson.version>2.18.3</jackson.version>
-<!-- Kall for å sende inn søknader feiler ved oppdatering til 2.19.1
+<!--
+ 		Kall for å sende inn søknader feiler ved oppdatering til 2.19.0, mangler annotation for optBoolean
 		<jackson.version>2.19.0</jackson.version>
 -->
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
@@ -63,6 +65,7 @@
 
 		<!--Test-->
 		<mockk.version>1.14.2</mockk.version>
+		<springmockk.version>4.0.2</springmockk.version>
 
 		<!--Plugins-->
 		<versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>

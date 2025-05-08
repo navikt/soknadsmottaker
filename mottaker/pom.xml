@@ -116,6 +116,11 @@
 			<artifactId>token-validation-spring</artifactId>
 			<version>${token-support.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>no.nav.security</groupId>
+			<artifactId>token-client-spring</artifactId>
+			<version>${token-support.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>no.nav.soknad.arkivering</groupId>
@@ -164,6 +169,25 @@
 			<version>${mockk.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-contract-wiremock</artifactId>
+			<version>${spring-cloud.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.security</groupId>
+			<artifactId>token-validation-spring-test</artifactId>
+			<version>${token-support.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ninja-squad</groupId>
+			<artifactId>springmockk</artifactId>
+			<version>${springmockk.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
