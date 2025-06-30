@@ -80,5 +80,7 @@ spec:
       value: {{kafka-brukernotifikasjon-oppgave-topic}}
     - name: KAFKA_UTKAST_TOPIC
       value: {{kafka-utkast-topic}}
+    - name: KAFKA_NOLOGIN_SUBMISSION_TOPIC
+      value: {{kafka-nologin-submission-topic}}
     - name: STATUS_LOG_URL
       value: {{status_log_url}}

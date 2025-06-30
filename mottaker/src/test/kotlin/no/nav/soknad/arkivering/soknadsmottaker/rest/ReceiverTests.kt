@@ -36,6 +36,7 @@ class ReceiverTests {
 	private val oppgaveKafkaMock = mockk<KafkaTemplate<String, String>>()
 	private val doneKafkaMock = mockk<KafkaTemplate<String, String>>()
 	private val utkastKafkaMock = mockk<KafkaTemplate<String, String>>()
+	private val nologinSubmissionKafkaMock = mockk<KafkaTemplate<String, String>>()
 
 	private val metrics = InnsendtMetrics(PrometheusRegistry.defaultRegistry)
 	private val receiver = mockReceiver(metrics)
@@ -141,9 +142,18 @@ class ReceiverTests {
 			it.brukernotifikasjonDoneTopic = "min-side.aapen-brukernotifikasjon-done-v1"
 			it.brukernotifikasjonBeskjedTopic = "min-side.aapen-brukernotifikasjon-beskjed-v1"
 			it.brukernotifikasjonOppgaveTopic = "min-side.aapen-brukernotifikasjon-oppgave-v1"
+			it.nologinSubmissionTopic = "privat-soknadinnsending-nologin-v1-dev"
 		}
 		val kafkaSender =
-			KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock, utkastKafkaMock)
+			KafkaSender(conf,
+				kafkaMock,
+				metricsKafkaMock,
+				beskjedKafkaMock,
+				oppgaveKafkaMock,
+				doneKafkaMock,
+				utkastKafkaMock,
+				nologinKafkaTemplate = nologinSubmissionKafkaMock
+			)
 		val archiverService = ArchiverService(kafkaSender, metrics)
 		return RestApi(archiverService)
 	}

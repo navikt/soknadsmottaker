@@ -69,6 +69,9 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	fun utkastFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass, stringValueSerializerClass))
 
 	@Bean
+	fun nologinProducerFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass, stringValueSerializerClass))
+
+	@Bean
 	fun kafkaBeskjedTemplate() = KafkaTemplate(beskjedNotificationFactory())
 
 	@Bean
@@ -85,6 +88,10 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 
 	@Bean
 	fun metricKafkaTemplate() = KafkaTemplate(metricProducerFactory())
+
+	@Bean
+	fun nologinKafkaTemplate() = KafkaTemplate(nologinProducerFactory())
+
 }
 
 @ConfigurationProperties("kafkaconfig")
@@ -105,4 +112,5 @@ class KafkaConfig {
 	lateinit var brukernotifikasjonBeskjedTopic: String
 	lateinit var brukernotifikasjonOppgaveTopic: String
 	lateinit var utkastTopic: String
+	lateinit var nologinSubmissionTopic: String
 }

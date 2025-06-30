@@ -12,18 +12,20 @@ fun createSoknad() = Soknad(
 	createDocuments()
 )
 
-fun createDocuments(variants: List<Varianter> = createVariants()) = listOf(DocumentData(
-	"NAV 10-07.40",
-	true,
-	"Søknad om stønad til anskaffelse av motorkjøretøy",
-	variants
-))
+fun createDocuments(variants: List<Varianter> = createVariants()) = listOf(
+	DocumentData(
+		"NAV 10-07.40",
+		true,
+		"Søknad om stønad til anskaffelse av motorkjøretøy",
+		variants
+	)
+)
 
 fun createVariants() = listOf(createVariant())
 
 fun createVariant(mediaType: String = "application/pdf") = Varianter(
-	"e7179251-635e-493a-948c-749a39eedacc",
-	mediaType,
-	"innsending.pdf",
-	"PDFA"
+	id = "e7179251-635e-493a-948c-749a39eedacc",
+	mediaType = mediaType,
+	filnavn = "innsending.pdf",
+	filtype = "PDFA",
 )

@@ -10,6 +10,7 @@
 	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukervarsel-v1",
 	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukervarsel-v1",
 	"kafka-utkast-topic": "min-side.aapen-utkast-v1",
+	"kafka-nologin-submission-topic": "team-soknad.privat-nologinsubmission-v1",
 	"kafka-pool": "nav-prod",
 	"inbound": [
 		"sendsoknad",

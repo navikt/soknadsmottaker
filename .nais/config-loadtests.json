@@ -9,6 +9,7 @@
 	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukernotifikasjon-done-v1",
 	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukernotifikasjon-beskjed-v1",
 	"kafka-brukernotifikasjon-oppgave-topic": "min-side.aapen-brukernotifikasjon-oppgave-v1",
+	"kafka-nologin-submission-topic": "team-soknad.privat-nologinsubmission-v1",
 	"kafka-pool": "nav-dev",
 	"inbound": [ "innsending-system-tests", "innsending-api-loadtests"],
 	"status_log_url": "https://logs.adeo.no/app/discover#/view/0a747190-e8ed-11ed-be11-d159f65225af"
