@@ -2,19 +2,14 @@ package no.nav.soknad.arkivering.soknadsmottaker.rest
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.slot
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
-import no.nav.soknad.arkivering.soknadsmottaker.service.InnsendingService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.MetricNames
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createInnsending
-import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.clients.producer.RecordMetadata
-import org.apache.kafka.common.TopicPartition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -23,9 +18,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.kafka.KafkaException
-import org.springframework.kafka.support.SendResult
 import org.springframework.test.context.bean.override.mockito.MockitoBean
-import java.util.concurrent.CompletableFuture
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -109,15 +102,6 @@ val nologinSubmission: NologinSubmission? = null
 		assertEquals(errorsBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE"), "Should not cause errors")
 		assertEquals(sentInBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE"), "Should increase counter by 1")
 
-	}
-
-	private fun <T> makeSendResult(topic: String, melding: T) = SendResult(
-		ProducerRecord(topic, "123", melding),
-		RecordMetadata(TopicPartition(topic, 1), 1L, 1, 1L, 1, 1)
-	)
-
-	private fun <T> setFuture(v: SendResult<String, T>): CompletableFuture<SendResult<String, T>> {
-		return CompletableFuture.completedFuture(v)
 	}
 
 }
