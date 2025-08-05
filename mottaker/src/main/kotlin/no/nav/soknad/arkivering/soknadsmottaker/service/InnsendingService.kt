@@ -1,13 +1,12 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
-import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingTopicMsg
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.supervision.MetricNames
+import no.nav.soknad.arkivering.soknadsmottaker.util.mapTilInnsendingTopicMsg
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.time.OffsetDateTime
 
 @Service
 class InnsendingService( private val kafkaSender: KafkaSender, private val metrics: InnsendtMetrics) {
@@ -21,33 +20,14 @@ class InnsendingService( private val kafkaSender: KafkaSender, private val metri
 		try {
 			kafkaSender.publishNologinSubmission(key, msg)
 			logger.info("$key: Published to NoLogintopic. skjemanr: ${innsending.skjemanr}")
+			metrics.mottattSoknadInc(MetricNames.INNSENDT_UINNLOGGET.name, innsending.tema)
 		} catch (error: Exception) {
 			logger.error("$key: Error publishing to NoLoginTopic. skjemanr: ${innsending.skjemanr}", error)
-			metrics.mottattErrorInc(innsending.tema)
+			metrics.mottattSoknadInc(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, innsending.tema)
 			throw error
 		} finally {
 			tryPublishingMetrics(key, startTime)
 		}
-
-	}
-
-	private fun mapTilInnsendingTopicMsg(innsending: Innsending, erInnlogget: Boolean): String {
-		val msg = InnsendingTopicMsg(
-			innsendtDato = OffsetDateTime.now(),
-			innlogget = erInnlogget,
-			innsendingsId = innsending.innsendingsId,
-			ettersendelseTilId = innsending.ettersendelseTilId,
-			avsenderDto = innsending.avsenderDto,
-			brukerDto = innsending.brukerDto,
-			kanal = innsending.kanal,
-			skjemanr = innsending.tittel,
-			tittel = innsending.tittel,
-			arkivtema = innsending.tema,
-			dokumenter = innsending.dokumenter
-		)
-		val mapper = jacksonObjectMapper()
-		mapper.findAndRegisterModules()
-		return mapper.writeValueAsString(msg)
 
 	}
 

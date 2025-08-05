@@ -43,8 +43,8 @@ class ReceiverTests {
 
 	@Test
 	fun `When receiving REST call, message is put on Kafka`() {
-		val errorsBefore = metrics.mottattErrorGet("BIL")
-		val sentInBefore = metrics.mottattSoknadGet("BIL")
+		val errorsBefore = metrics.mottattErrorGet("BIL") ?: 0.0
+		val sentInBefore = metrics.mottattSoknadGet("BIL") ?: 0.0
 		val soknad = createSoknad()
 
 		val record = slot<ProducerRecord<String, Soknadarkivschema>>()
@@ -64,8 +64,8 @@ class ReceiverTests {
 		assertEquals(topic, record.captured.topic(), "Should send to the right topic")
 		assertEquals(1, record.captured.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
 		assertEquals("BIL", record.captured.value().arkivtema, "Should have correct tema")
-		assertEquals(errorsBefore!! + 0.0, metrics.mottattErrorGet("BIL"), "Should not cause errors")
-		assertEquals(sentInBefore!! + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
+		assertEquals(errorsBefore + 0.0, metrics.mottattErrorGet("BIL"), "Should not cause errors")
+		assertEquals(sentInBefore + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
 
 		assertEquals(metricsTopic, metricRecord.captured.topic(), "Should send metrics to the right topic")
 		assertEquals(

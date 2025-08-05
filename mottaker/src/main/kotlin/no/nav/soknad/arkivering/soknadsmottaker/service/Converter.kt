@@ -5,6 +5,7 @@ import no.nav.soknad.arkivering.avroschemas.MottattVariant
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.avroschemas.Soknadstyper
 import no.nav.soknad.arkivering.soknadsmottaker.model.DocumentData
+import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varianter
 import java.time.OffsetDateTime
@@ -42,3 +43,5 @@ private fun getVariantformat(mediaType: String): String {
 	else
 		"ORIGINAL"
 }
+
+
