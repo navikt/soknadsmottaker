@@ -38,7 +38,7 @@ fun mapTilInnsendingTopicMsg(innsending: Innsending, erInnlogget: Boolean): Stri
 		avsenderDto = innsending.avsenderDto,
 		brukerDto = innsending.brukerDto,
 		kanal = innsending.kanal,
-		skjemanr = innsending.tittel,
+		skjemanr = innsending.skjemanr,
 		tittel = innsending.tittel,
 		arkivtema = innsending.tema,
 		dokumenter = innsending.dokumenter

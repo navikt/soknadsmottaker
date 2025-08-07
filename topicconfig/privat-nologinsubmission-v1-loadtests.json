@@ -1,0 +1,29 @@
+{
+	"apiVersion": "kafka.nais.io/v1",
+	"kind": "Topic",
+	"metadata": {
+		"name": "privat-nologinsubmission-v1-loadtests",
+		"namespace": "team-soknad",
+		"labels": {
+			"team": "team-soknad"
+		}
+	},
+	"spec": {
+		"config": {
+			"partitions": 12
+		},
+		"acl": [
+			{
+				"application": "soknadsmottaker",
+				"team": "team-soknad",
+				"access": "readwrite"
+			},
+			{
+				"application": "soknadsarkiverer",
+				"team": "team-soknad",
+				"access": "read"
+			}
+		],
+		"pool": "nav-dev"
+	}
+}
