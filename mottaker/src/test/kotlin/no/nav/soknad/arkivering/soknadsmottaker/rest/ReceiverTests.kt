@@ -36,14 +36,15 @@ class ReceiverTests {
 	private val oppgaveKafkaMock = mockk<KafkaTemplate<String, String>>()
 	private val doneKafkaMock = mockk<KafkaTemplate<String, String>>()
 	private val utkastKafkaMock = mockk<KafkaTemplate<String, String>>()
+	private val nologinSubmissionKafkaMock = mockk<KafkaTemplate<String, String>>()
 
 	private val metrics = InnsendtMetrics(PrometheusRegistry.defaultRegistry)
 	private val receiver = mockReceiver(metrics)
 
 	@Test
 	fun `When receiving REST call, message is put on Kafka`() {
-		val errorsBefore = metrics.mottattErrorGet("BIL")
-		val sentInBefore = metrics.mottattSoknadGet("BIL")
+		val errorsBefore = metrics.mottattErrorGet("BIL") ?: 0.0
+		val sentInBefore = metrics.mottattSoknadGet("BIL") ?: 0.0
 		val soknad = createSoknad()
 
 		val record = slot<ProducerRecord<String, Soknadarkivschema>>()
@@ -63,8 +64,8 @@ class ReceiverTests {
 		assertEquals(topic, record.captured.topic(), "Should send to the right topic")
 		assertEquals(1, record.captured.headers().headers(MESSAGE_ID).count(), "Should have a MESSAGE_ID header")
 		assertEquals("BIL", record.captured.value().arkivtema, "Should have correct tema")
-		assertEquals(errorsBefore!! + 0.0, metrics.mottattErrorGet("BIL"), "Should not cause errors")
-		assertEquals(sentInBefore!! + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
+		assertEquals(errorsBefore + 0.0, metrics.mottattErrorGet("BIL"), "Should not cause errors")
+		assertEquals(sentInBefore + 1.0, metrics.mottattSoknadGet("BIL"), "Should increase counter by 1")
 
 		assertEquals(metricsTopic, metricRecord.captured.topic(), "Should send metrics to the right topic")
 		assertEquals(
@@ -141,9 +142,18 @@ class ReceiverTests {
 			it.brukernotifikasjonDoneTopic = "min-side.aapen-brukernotifikasjon-done-v1"
 			it.brukernotifikasjonBeskjedTopic = "min-side.aapen-brukernotifikasjon-beskjed-v1"
 			it.brukernotifikasjonOppgaveTopic = "min-side.aapen-brukernotifikasjon-oppgave-v1"
+			it.nologinSubmissionTopic = "privat-soknadinnsending-nologin-v1-dev"
 		}
 		val kafkaSender =
-			KafkaSender(conf, kafkaMock, metricsKafkaMock, beskjedKafkaMock, oppgaveKafkaMock, doneKafkaMock, utkastKafkaMock)
+			KafkaSender(conf,
+				kafkaMock,
+				metricsKafkaMock,
+				beskjedKafkaMock,
+				oppgaveKafkaMock,
+				doneKafkaMock,
+				utkastKafkaMock,
+				nologinKafkaTemplate = nologinSubmissionKafkaMock
+			)
 		val archiverService = ArchiverService(kafkaSender, metrics)
 		return RestApi(archiverService)
 	}
