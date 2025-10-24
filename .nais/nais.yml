@@ -55,6 +55,10 @@ spec:
         {{#each inbound}}
         - application: "{{this}}"
         {{/each}}
+    outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
 
   leaderElection: true
 

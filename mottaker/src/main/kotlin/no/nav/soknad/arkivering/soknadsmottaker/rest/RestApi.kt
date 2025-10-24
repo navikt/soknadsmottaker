@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller
 class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
+	private val teamLogger = LoggerFactory.getLogger("team-logs")
 
 	@Protected
 	override fun receive(soknad: Soknad, xInnsendingId: String?): ResponseEntity<Unit> {
@@ -37,6 +38,7 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		)
 		logger.info("$key: Received request '$fnrMasked'")
 		secureLogger.info("$key: Received request '$soknad'")
+		teamLogger.info("$key: Received request '$soknad'")
 	}
 
 	private fun maskDocumentTitle(documents:List<DocumentData>): List<DocumentData> {
