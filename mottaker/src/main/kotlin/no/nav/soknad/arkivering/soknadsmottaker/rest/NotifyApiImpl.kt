@@ -8,6 +8,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.service.NotificationService
 import no.nav.soknad.arkivering.soknadsmottaker.util.Constants
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
+import org.slf4j.MarkerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller
 class NotifyApiImpl(private val notificationService: NotificationService) : NotifyApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
+	private val teamLogger = MarkerFactory.getMarker("TEAM_LOGS")
 
 
 	@Protected
@@ -49,6 +51,7 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		)
 		logger.info("$key: $message '$fnrMasked'")
 		secureLogger.info("$key: $message '$soknad'")
+		logger.info(teamLogger, "$key: $message '$soknad'")
 	}
 
 }
