@@ -8,6 +8,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.service.ArchiverService
 import no.nav.soknad.arkivering.soknadsmottaker.util.Constants.MDC_INNSENDINGS_ID
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
+import org.slf4j.Marker
 import org.slf4j.MarkerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Controller
 class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
-	private val teamLogger = MarkerFactory.getMarker("TEAM_LOGS")
+	private val secureLogsMarker: Marker = MarkerFactory.getMarker("TEAM_LOGS")
 
 	@Protected
 	override fun receive(soknad: Soknad, xInnsendingId: String?): ResponseEntity<Unit> {
@@ -39,7 +40,7 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 		)
 		logger.info("$key: Received request '$fnrMasked'")
 		secureLogger.info("$key: Received request '$soknad'")
-		logger.info(teamLogger, "$key: Received request '$soknad'")
+		logger.info(secureLogsMarker, "$key: Received request '$soknad'")
 	}
 
 	private fun maskDocumentTitle(documents:List<DocumentData>): List<DocumentData> {

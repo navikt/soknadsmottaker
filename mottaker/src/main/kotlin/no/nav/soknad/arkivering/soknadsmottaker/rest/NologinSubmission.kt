@@ -21,7 +21,7 @@ class NologinSubmission(private val innsendingService: InnsendingService): Nolog
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
-	private val teamLogger = MarkerFactory.getMarker("TEAM_LOGS")
+	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
 	@Protected
 	override fun nologinSubmission(
@@ -38,7 +38,7 @@ class NologinSubmission(private val innsendingService: InnsendingService): Nolog
 	private fun log(key: String, soknad: Innsending) {
 		logger.info("$key: Received request ${maskIdsInInnsending(soknad)}")
 		secureLogger.info("$key: Received request '$soknad'")
-		logger.info(teamLogger, "$key: Received request '$soknad'")
+		logger.info(secureLogsMarker, "$key: Received request '$soknad'")
 	}
 
 }
