@@ -9,6 +9,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
 import no.nav.soknad.arkivering.soknadsmottaker.service.InnsendingService
 import no.nav.soknad.arkivering.soknadsmottaker.util.maskIdsInInnsending
 import org.slf4j.LoggerFactory
+import org.slf4j.MarkerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -20,6 +21,7 @@ class NologinSubmission(private val innsendingService: InnsendingService): Nolog
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
+	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
 	@Protected
 	override fun nologinSubmission(
@@ -36,6 +38,7 @@ class NologinSubmission(private val innsendingService: InnsendingService): Nolog
 	private fun log(key: String, soknad: Innsending) {
 		logger.info("$key: Received request ${maskIdsInInnsending(soknad)}")
 		secureLogger.info("$key: Received request '$soknad'")
+		logger.info(secureLogsMarker, "$key: Received request '$soknad'")
 	}
 
 }
