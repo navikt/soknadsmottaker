@@ -51,7 +51,7 @@
 		<tms-varsel.version>2.1.1</tms-varsel.version>
 
 		<!--Logging-->
-		<logstash.version>8.1</logstash.version>
+		<logstash.version>9.0</logstash.version>
 		<prometheus.version>1.4.2</prometheus.version>
 
 		<!--Jakarta-->
