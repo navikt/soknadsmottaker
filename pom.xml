@@ -52,7 +52,7 @@
 
 		<!--Logging-->
 		<logstash.version>8.1</logstash.version>
-		<prometheus.version>1.4.2</prometheus.version>
+		<prometheus.version>1.4.3</prometheus.version>
 
 		<!--Jakarta-->
 		<jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
@@ -61,14 +61,14 @@
 
 		<!--Other -->
 		<okhttp3.version>4.12.0</okhttp3.version>
-		<swagger-annotations.version>2.2.40</swagger-annotations.version>
+		<swagger-annotations.version>2.2.41</swagger-annotations.version>
 
 		<!--Test-->
 		<mockk.version>1.14.6</mockk.version>
 		<springmockk.version>4.0.2</springmockk.version>
 
 		<!--Plugins-->
-		<versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
+		<versions-maven-plugin.version>2.20.1</versions-maven-plugin.version>
 		<cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
 		<maven-enforcer.version>3.6.2</maven-enforcer.version>
 		<openapi-generator-maven-plugin.version>7.17.0</openapi-generator-maven-plugin.version>
