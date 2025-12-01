@@ -65,7 +65,7 @@
 
 		<!--Test-->
 		<mockk.version>1.14.6</mockk.version>
-		<springmockk.version>4.0.2</springmockk.version>
+		<springmockk.version>5.0.1</springmockk.version>
 
 		<!--Plugins-->
 		<versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
