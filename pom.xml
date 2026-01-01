@@ -19,7 +19,7 @@
 	<properties>
 		<spring-boot.version>3.5.7</spring-boot.version>
 		<java.version>21</java.version>
-		<kotlin.version>2.2.21</kotlin.version>
+		<kotlin.version>2.3.0</kotlin.version>
 		<maven.version>3.8.8</maven.version>
 
 		<!--Kotlin-->
@@ -44,7 +44,7 @@
 		<token-support.version>5.0.34</token-support.version>
 
 		<!--Kafka-->
-		<confluent.version>8.1.0</confluent.version>
+		<confluent.version>8.1.1</confluent.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>20230203100430-ecf5208</utkast-schema.version>
 		<arkivering-schemas.version>1.4.4-bf301c4492e2</arkivering-schemas.version>
@@ -52,7 +52,7 @@
 
 		<!--Logging-->
 		<logstash.version>8.1</logstash.version>
-		<prometheus.version>1.4.2</prometheus.version>
+		<prometheus.version>1.4.3</prometheus.version>
 
 		<!--Jakarta-->
 		<jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
@@ -61,17 +61,17 @@
 
 		<!--Other -->
 		<okhttp3.version>4.12.0</okhttp3.version>
-		<swagger-annotations.version>2.2.40</swagger-annotations.version>
+		<swagger-annotations.version>2.2.41</swagger-annotations.version>
 
 		<!--Test-->
-		<mockk.version>1.14.6</mockk.version>
+		<mockk.version>1.14.7</mockk.version>
 		<springmockk.version>4.0.2</springmockk.version>
 
 		<!--Plugins-->
-		<versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
+		<versions-maven-plugin.version>2.20.1</versions-maven-plugin.version>
 		<cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
 		<maven-enforcer.version>3.6.2</maven-enforcer.version>
-		<openapi-generator-maven-plugin.version>7.17.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.18.0</openapi-generator-maven-plugin.version>
 	</properties>
 
 	<modules>
