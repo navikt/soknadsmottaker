@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.7</version>
+		<version>4.0.1</version>
 		<relativePath/>
 	</parent>
 
@@ -17,34 +17,38 @@
 	<description>Receives benefit applications</description>
 
 	<properties>
-		<spring-boot.version>3.5.7</spring-boot.version>
+		<spring-boot.version>4.0.1</spring-boot.version>
+		<spring-security-client.version>7.0.0</spring-security-client.version>
 		<java.version>21</java.version>
 		<kotlin.version>2.2.21</kotlin.version>
-		<maven.version>3.8.8</maven.version>
+		<maven.version>3.9.0</maven.version>
 
 		<!--Kotlin-->
 		<kotlin-serialization.version>1.9.0</kotlin-serialization.version>
 		<coroutines.version>1.10.2</coroutines.version>
 
 		<!--Spring-->
-		<springdoc-openapi.version>2.8.13</springdoc-openapi.version>
-		<spring-web.version>6.2.12</spring-web.version>
-		<spring-cloud.version>4.3.0</spring-cloud.version>
+		<spring-boot-starter-aop.version>4.0.0-M2</spring-boot-starter-aop.version>
+		<springdoc-openapi.version>3.0.0</springdoc-openapi.version>
+		<spring-web.version>7.0.2</spring-web.version>
+		<spring-cloud.version>5.0.1</spring-cloud.version>
+		<spring-core.version>7.0.1</spring-core.version>
+		<spring-security-test.version>7.0.0</spring-security-test.version>
 
 		<!--Serialization-->
+		<jackson-module-kotlin.version>3.0.2</jackson-module-kotlin.version>
+		<jackson-module-yaml.version>3.0.2</jackson-module-yaml.version>
 		<jackson.version>2.20.1</jackson.version>
-<!--
- 		Kall for å sende inn søknader feiler ved oppdatering til 2.19.0, mangler annotation for optBoolean
-		<jackson.version>2.19.0</jackson.version>
--->
 		<jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
+		<jackson-datataype.version>3.0.0-rc2</jackson-datataype.version>
 		<gson.version>2.13.2</gson.version>
 
 		<!--NAV-->
-		<token-support.version>5.0.34</token-support.version>
+		<token-support.version>6.0.1</token-support.version>
 
 		<!--Kafka-->
-		<confluent.version>8.1.0</confluent.version>
+		<spring-kafka.version>4.0.1</spring-kafka.version>
+		<confluent.version>8.1.1</confluent.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>20230203100430-ecf5208</utkast-schema.version>
 		<arkivering-schemas.version>1.4.4-bf301c4492e2</arkivering-schemas.version>
@@ -56,16 +60,24 @@
 
 		<!--Jakarta-->
 		<jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
-		<jakarta-validation-api.version>3.1.1</jakarta-validation-api.version>
+		<jakarta-validation-api.version>4.0.0-M1</jakarta-validation-api.version>
 		<jakarta-annotation.version>3.0.0</jakarta-annotation.version>
 
 		<!--Other -->
-		<okhttp3.version>4.12.0</okhttp3.version>
+		<okhttp3.version>5.3.2</okhttp3.version>
 		<swagger-annotations.version>2.2.41</swagger-annotations.version>
 
 		<!--Test-->
 		<mockk.version>1.14.6</mockk.version>
-		<springmockk.version>4.0.2</springmockk.version>
+		<springmockk.version>5.0.1</springmockk.version>
+		<mockito-junit-jupiter.version>5.21.0</mockito-junit-jupiter.version>
+		<junit-jupiter.version>6.0.1</junit-jupiter.version>
+		<spring-cloud-contract-wiremock.version>5.0.0</spring-cloud-contract-wiremock.version>
+		<wiremock.version>4.0.0-beta.24</wiremock.version>
+		<wiremock.core.version>4.0.0-beta.20</wiremock.core.version>
+		<wiremock-junit5.version>4.0.0-beta.20</wiremock-junit5.version>
+		<wiremock.integrations.version>4.0.8</wiremock.integrations.version>
+		<mock-oauth2-server.version>3.0.1</mock-oauth2-server.version>
 
 		<!--Plugins-->
 		<versions-maven-plugin.version>2.20.1</versions-maven-plugin.version>
@@ -83,6 +95,10 @@
 		<repository>
 			<id>central</id>
 			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>github</id>
+			<url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
 		</repository>
 	</repositories>
 

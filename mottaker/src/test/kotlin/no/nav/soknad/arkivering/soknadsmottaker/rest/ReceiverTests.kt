@@ -116,12 +116,12 @@ class ReceiverTests {
 		metrics.unregister()
 	}
 
-	private fun <T> makeSendResult(topic: String, melding: T) = SendResult(
+	private fun <T: Any> makeSendResult(topic: String, melding: T) = SendResult(
 		ProducerRecord(topic, "123", melding),
 		RecordMetadata(TopicPartition(topic, 1), 1L, 1, 1L, 1, 1)
 	)
 
-	private fun <T> setFuture(v: SendResult<String, T>): CompletableFuture<SendResult<String, T>> {
+	private fun <T: Any> setFuture(v: SendResult<String, T>): CompletableFuture<SendResult<String, T>> {
 		return CompletableFuture.completedFuture(v)
 	}
 

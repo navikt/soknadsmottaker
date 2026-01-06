@@ -1,10 +1,10 @@
 package no.nav.soknad.arkivering.soknadsmottaker.schedule
 
-import kotlinx.serialization.Serializable
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDateTime
 
-@Serializable
 data class LeaderElection(
 	val name: String,
-	val last_update: String? = LocalDateTime.now().toString()
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	val lastUpdate: LocalDateTime? = LocalDateTime.now()
 )

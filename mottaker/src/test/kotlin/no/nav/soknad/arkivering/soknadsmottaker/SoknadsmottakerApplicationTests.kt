@@ -6,15 +6,20 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 
-@SpringBootTest
+@ActiveProfiles("test")
+@SpringBootTest(
+	properties = ["spring.main.allow-bean-definition-overriding=true"],
+	classes = [SoknadsmottakerApplication::class]
+)
 class SoknadsmottakerApplicationTests {
 
 	@Autowired
 	private lateinit var kafkaConfig: KafkaConfig
 
-	@MockBean
+	@MockitoBean
 	lateinit var prometheusRegistry: PrometheusRegistry
 
 	@Test

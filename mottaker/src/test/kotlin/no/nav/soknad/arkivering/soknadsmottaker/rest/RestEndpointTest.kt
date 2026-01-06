@@ -12,8 +12,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.utils.Api
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
+import org.springframework.test.web.reactive.server.WebTestClient
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import io.prometheus.metrics.model.registry.PrometheusRegistry
@@ -24,24 +23,30 @@ import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.bean.override.mockito.MockitoBean
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ActiveProfiles("test")
 @SpringBootTest(
-	webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	properties = ["spring.main.allow-bean-definition-overriding=true"],
 	classes = [SoknadsmottakerApplication::class]
 )
+@ExtendWith(
+	SpringExtension::class
+)
 @EnableTransactionManagement
 @EnableMockOAuth2Server(port = 1888)
-@AutoConfigureWireMock(port = 5490)
+@AutoConfigureWebTestClient
 class RestEndpointTest {
 
 	@Autowired
-	lateinit var restTemplate: TestRestTemplate
+	lateinit var restTemplate: WebTestClient
 
-	@MockBean
+	@MockitoBean
 	lateinit var prometheusRegistry: PrometheusRegistry
 
 	@Autowired
@@ -61,7 +66,7 @@ class RestEndpointTest {
 	@BeforeEach
 	fun setup() {
 		clearAllMocks()
-		api = Api(restTemplate, serverPort!!, mockOAuth2Server)
+		api = Api(restTemplate, mockOAuth2Server)
 		every { oauth2TokenService.getAccessToken(any()) } returns OAuth2AccessTokenResponse(access_token = "token")
 	}
 

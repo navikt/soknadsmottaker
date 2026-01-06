@@ -5,7 +5,10 @@ import io.mockk.every
 import io.mockk.slot
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.SoknadsmottakerApplication
+import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
 import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
+import no.nav.soknad.arkivering.soknadsmottaker.service.InnsendingService
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.MetricNames
@@ -15,26 +18,42 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.kafka.KafkaException
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.bean.override.mockito.MockitoBean
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
-@SpringBootTest
+@ActiveProfiles("test")
+@SpringBootTest(
+	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+	properties = ["spring.main.allow-bean-definition-overriding=true"],
+	classes = [SoknadsmottakerApplication::class]
+)
+@ExtendWith(
+	SpringExtension::class
+)
+@AutoConfigureWebTestClient
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class NologinSubmissionTests {
 
 	@MockitoBean
 	lateinit var prometheusRegistry: PrometheusRegistry
 
-	@Autowired
+	@MockitoSpyBean
 	private lateinit var metrics: InnsendtMetrics
 
 	@MockkBean(relaxed = true)
 	private lateinit var kafkaSender: KafkaSender
 
 	@Autowired
-val nologinSubmission: NologinSubmission? = null
+	private lateinit var nologinSubmission: NologinSubmission
+
 
 	@Test
 	fun `When receiving call on nologin Rest endpoint, message is put on Kafka`() {
@@ -52,7 +71,7 @@ val nologinSubmission: NologinSubmission? = null
 		every { kafkaSender.publishNologinSubmission(capture(msgKey), capture(innsendingMsg)) } returns Unit
 		every { kafkaSender.publishMetric(capture(metricKey), capture(metricMsg)) } returns Unit
 
-		nologinSubmission?.nologinSubmission(soknad, null)
+		nologinSubmission.nologinSubmission(soknad, null)
 
 		assertTrue(msgKey.isCaptured, "Should capture message key")
 		assertEquals(soknad.innsendingsId, msgKey.captured, "Should use innsendingsId as message key")
