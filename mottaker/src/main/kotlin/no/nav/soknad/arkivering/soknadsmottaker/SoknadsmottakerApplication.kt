@@ -5,10 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 //import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
+import org.springframework.boot.security.oauth2.server.resource.autoconfigure.servlet.OAuth2ResourceServerAutoConfiguration
 import org.springframework.context.annotation.Import
 
 @Import(SpringDocConfiguration::class)
-@SpringBootApplication()
+@SpringBootApplication(
+	exclude = [OAuth2ResourceServerAutoConfiguration::class]
+)
 @ConfigurationPropertiesScan
 class SoknadsmottakerApplication
 

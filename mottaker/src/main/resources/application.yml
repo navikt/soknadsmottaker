@@ -24,6 +24,17 @@ management:
           autotime:
             enabled: true
 
+auth:
+  issuers:
+    azuread:
+      issuer-uri: http://localhost:${token.server.port}/azuread
+      accepted-audience: aud-localhost
+      jwk-set-uri: http://localhost:${token.server.port}/azuread/.well-known/openid-configuration
+
+token:
+  server:
+    port: 1888
+
 ---
 spring:
   config:
@@ -58,6 +69,14 @@ no.nav.security.jwt:
       discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
       #https://soknad-oauth2-mock.dev.nav.no/default/.well-known/openid-configuration
       accepted_audience: ${AZURE_APP_CLIENT_ID}
+
+auth:
+  issuers:
+    azuread:
+      token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
+      issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
+      jwk-set-uri: ${AZURE_OPENID_CONFIG_JWKS_URI}
+      audiences: ${AZURE_APP_CLIENT_ID}
 
 ---
 spring:

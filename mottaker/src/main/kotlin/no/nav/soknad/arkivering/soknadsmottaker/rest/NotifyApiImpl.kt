@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.security.token.support.core.api.Protected
+//import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.NotifyApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.AddNotification
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
@@ -11,6 +11,7 @@ import org.slf4j.MDC
 import org.slf4j.MarkerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -20,7 +21,8 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
 
-	@Protected
+	//@Protected
+	@PreAuthorize("@issuerChecker.hasIssuer(authentication, {'azuread'})")
 	override fun newNotification(addNotification: AddNotification, xInnsendingId: String?): ResponseEntity<Unit> {
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
@@ -31,7 +33,8 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		return ResponseEntity(HttpStatus.OK)
 	}
 
-	@Protected
+	//@Protected
+	@PreAuthorize("@issuerChecker.hasIssuer(authentication, {'azuread'})")
 	override fun cancelNotification(soknadRef: SoknadRef, xInnsendingId: String?): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
 		MDC.put(Constants.MDC_INNSENDINGS_ID, key)

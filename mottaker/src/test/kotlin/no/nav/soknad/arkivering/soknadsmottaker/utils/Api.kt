@@ -7,13 +7,14 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.time.Duration
 
 class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Server) {
 
 	private val BEARER = "Bearer "
 
 	private fun <T: Any> createHttpEntity(body: T, map: Map<String, String>? = mapOf()): HttpEntity<T> {
-		val token: String = TokenGenerator(mockOAuth2Server).lagTokenXToken()
+		val token: String = TokenGenerator(mockOAuth2Server).lagAzureADToken()
 		return HttpEntity(body, createHeaders(token, map))
 	}
 
@@ -35,10 +36,15 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 	fun receiveSoknad(soknad: Soknad): HttpStatusCode {
 
 		val response = restTemplate
+			.mutate()
+			.responseTimeout(Duration.ofMinutes(2))
+			.build()
+
 			.post()
 			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
-			.headers { createHeaders(TokenGenerator(mockOAuth2Server).lagTokenXToken()) }
+			.headers { it.addAll(createHeaders(TokenGenerator(mockOAuth2Server).lagAzureADToken())) }
 			.bodyValue(soknad)
+
 			.exchange()
 			.returnResult()
 

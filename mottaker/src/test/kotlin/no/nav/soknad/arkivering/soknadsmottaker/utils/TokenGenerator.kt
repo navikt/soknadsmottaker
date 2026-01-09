@@ -14,6 +14,7 @@ class TokenGenerator(
 	}
 
 	private val tokenx = "tokenx"
+	private val azuread = "azuread"
 	private val audience = "aud-localhost"
 	private val expiry = 2 * 3600L
 
@@ -28,6 +29,22 @@ class TokenGenerator(
 				typeHeader = JOSEObjectType.JWT.type,
 				audience = listOf(audience),
 				claims = mapOf("acr" to "idporten-loa-high", "pid" to pid),
+				expiry = expiry
+			)
+		).serialize()
+	}
+
+	fun lagAzureADToken(fnr: String? = null): String {
+		val pid = fnr ?: subject
+		return mockOAuth2Server.issueToken(
+			issuerId = azuread,
+			clientId = "application",
+			tokenCallback = DefaultOAuth2TokenCallback(
+				issuerId = azuread,
+				subject = pid,
+				typeHeader = JOSEObjectType.JWT.type,
+				audience = listOf(audience),
+				claims = mapOf("aud" to "aud-localhost"),
 				expiry = expiry
 			)
 		).serialize()
