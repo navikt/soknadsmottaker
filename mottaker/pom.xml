@@ -47,6 +47,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-core</artifactId>
@@ -140,18 +141,6 @@
 			<artifactId>kotlin-builder</artifactId>
 			<version>${tms-varsel.version}</version>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>no.nav.security</groupId>
-			<artifactId>token-validation-spring</artifactId>
-			<version>${token-support.version}</version>
-		</dependency>
--->
-		<dependency>
-			<groupId>no.nav.security</groupId>
-			<artifactId>token-client-spring</artifactId>
-			<version>${token-support.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>no.nav.soknad.arkivering</groupId>
@@ -217,6 +206,12 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<version>${spring-security-client.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.security</groupId>
+			<artifactId>token-client-spring</artifactId>
+			<version>${token-support.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

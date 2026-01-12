@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyString
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.http.HttpStatus
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtDecoder

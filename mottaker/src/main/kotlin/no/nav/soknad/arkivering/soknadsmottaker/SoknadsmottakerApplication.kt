@@ -2,7 +2,6 @@ package no.nav.soknad.arkivering.soknadsmottaker
 
 import org.openapitools.SpringDocConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
-//import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 import org.springframework.boot.security.oauth2.server.resource.autoconfigure.servlet.OAuth2ResourceServerAutoConfiguration

@@ -20,9 +20,6 @@ import java.util.Base64
 
 
 @Configuration
-//@Profile("dev | prod")
-//@EnableJwtTokenValidation
-//@EnableWebSecurity
 class SecurityConfig(
 	@Value("\${auth.issuers.azuread.issuer-uri}") private val azureadIssuer: String,
 	@Value("\${auth.issuers.azuread.jwk-set-uri}") private val azureadJwkUri: String,
@@ -60,16 +57,15 @@ class SecurityConfig(
 	): SecurityFilterChain {
 
 		val delegatingDecoder = JwtDecoder { token ->
-			// KORRIGERING: Bruk throw i stedet for lambda-blokk
 			val iss = extractIssuer(token)
 				?: throw BadCredentialsException("Klarte ikke å utlede issuer fra token")
 
-			// KORRIGERING: Logg hva vi faktisk sammenligner for enklere feilsøking
-			logger.debug("Dekoder token med issuer: $iss. Forventet azure issuer: $azureadIssuer")
-
 			when (iss) {
 				azureadIssuer -> azureJwtDecoder.decode(token)
-				else -> throw BadCredentialsException("Ukjent issuer: $iss")
+				else -> {
+					logger.debug("Dekoder token med issuer: $iss. Forventet azure issuer: $azureadIssuer")
+					throw BadCredentialsException("Ukjent issuer: $iss")
+				}
 			}
 		}
 

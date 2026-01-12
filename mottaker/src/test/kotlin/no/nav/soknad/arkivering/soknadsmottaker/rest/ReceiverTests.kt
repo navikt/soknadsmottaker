@@ -12,7 +12,6 @@ import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.service.MESSAGE_ID
 import no.nav.soknad.arkivering.soknadsmottaker.service.convert
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
-import no.nav.soknad.arkivering.soknadsmottaker.util.OidcUtils
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
@@ -156,6 +155,6 @@ class ReceiverTests {
 				nologinKafkaTemplate = nologinSubmissionKafkaMock
 			)
 		val archiverService = ArchiverService(kafkaSender, metrics)
-		return RestApi(archiverService, oidcUtils = OidcUtils())
+		return RestApi(archiverService)
 	}
 }

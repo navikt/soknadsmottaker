@@ -3,7 +3,6 @@ package no.nav.soknad.arkivering.soknadsmottaker.rest
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
 import jakarta.validation.Valid
-//import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.NologinSoknadApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
 import no.nav.soknad.arkivering.soknadsmottaker.service.InnsendingService
@@ -24,7 +23,6 @@ class NologinSubmission(private val innsendingService: InnsendingService): Nolog
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
-	//@Protected
 	@PreAuthorize("@issuerChecker.hasIssuer(authentication, {'azuread'})")
 	override fun nologinSubmission(
 		@Parameter(description = "Metadata about the benefit application being sent in.", required = true) @Valid @RequestBody innsending: Innsending,
