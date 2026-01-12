@@ -49,6 +49,7 @@
 		<!--Kafka-->
 		<spring-kafka.version>4.0.1</spring-kafka.version>
 		<confluent.version>8.1.1</confluent.version>
+		<avro.version>1.12.1</avro.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>20230203100430-ecf5208</utkast-schema.version>
 		<arkivering-schemas.version>1.4.4-bf301c4492e2</arkivering-schemas.version>

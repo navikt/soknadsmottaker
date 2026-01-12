@@ -116,6 +116,11 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro</artifactId>
+			<version>${avro.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>no.nav.soknad.arkivering</groupId>
 			<artifactId>avro-schemas</artifactId>
 			<version>${arkivering-schemas.version}</version>
