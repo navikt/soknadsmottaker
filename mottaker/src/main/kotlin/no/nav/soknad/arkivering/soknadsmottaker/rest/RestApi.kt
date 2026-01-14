@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller
 @Controller
 class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
-	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 	private val secureLogsMarker: Marker = MarkerFactory.getMarker("TEAM_LOGS")
 
 	@Protected
@@ -39,7 +38,6 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 			maskDocumentTitle(soknad.dokumenter)
 		)
 		logger.info("$key: Received request '$fnrMasked'")
-		secureLogger.info("$key: Received request '$soknad'")
 		logger.info(secureLogsMarker, "$key: Received request '$soknad'")
 	}
 
