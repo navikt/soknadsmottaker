@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller
 @Controller
 class NotifyApiImpl(private val notificationService: NotificationService) : NotifyApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
-	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
 
@@ -50,7 +49,6 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 			soknad.tidpunktEndret
 		)
 		logger.info("$key: $message '$fnrMasked'")
-		secureLogger.info("$key: $message '$soknad'")
 		logger.info(secureLogsMarker, "$key: $message '$soknad'")
 	}
 

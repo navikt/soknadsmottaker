@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 class NologinSubmission(private val innsendingService: InnsendingService): NologinSoknadApi {
 
 	private val logger = LoggerFactory.getLogger(javaClass)
-	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
 	@Protected
@@ -37,7 +36,6 @@ class NologinSubmission(private val innsendingService: InnsendingService): Nolog
 
 	private fun log(key: String, soknad: Innsending) {
 		logger.info("$key: Received request ${maskIdsInInnsending(soknad)}")
-		secureLogger.info("$key: Received request '$soknad'")
 		logger.info(secureLogsMarker, "$key: Received request '$soknad'")
 	}
 
