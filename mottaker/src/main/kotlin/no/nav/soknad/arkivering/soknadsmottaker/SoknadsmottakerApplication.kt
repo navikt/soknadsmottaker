@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import
 
 @Import(SpringDocConfiguration::class)
 @SpringBootApplication(
-	exclude = [OAuth2ResourceServerAutoConfiguration::class]
+	//exclude = [OAuth2ResourceServerAutoConfiguration::class]
 )
 @ConfigurationPropertiesScan
 class SoknadsmottakerApplication

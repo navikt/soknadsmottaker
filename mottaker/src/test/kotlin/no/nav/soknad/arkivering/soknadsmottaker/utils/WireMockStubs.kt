@@ -7,22 +7,14 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 
 object WireMockStubs {
 
-	fun stubTokenEndpoint() {
+	fun stubTokenEndpoint(expectedResponse: String = "mocked-token") {
 		stubFor(
-			post(urlEqualTo("/fake/token"))
+			post(urlEqualTo("/azuread"))
 				.willReturn(
 					aResponse()
 						.withStatus(200)
 						.withHeader("Content-Type", "application/json")
-						.withBody(
-							"""
-                            {
-                              "access_token": "mocked-token",
-                              "token_type": "Bearer",
-                              "expires_in": 3600
-                            }
-                            """.trimIndent()
-						)
+						.withBody(expectedResponse)
 				)
 		)
 	}

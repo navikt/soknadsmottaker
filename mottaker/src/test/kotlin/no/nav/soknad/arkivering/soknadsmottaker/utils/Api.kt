@@ -1,6 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.utils
 
 import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -18,10 +19,16 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 		return HttpEntity(body, createHeaders(token, map))
 	}
 
-	fun createHeaders(token: String, map: Map<String, String>? = mapOf()): HttpHeaders {
+	fun createHeaders(issuer: String?, map: Map<String, String>? = mapOf()): HttpHeaders {
+		val token = when {
+			issuer == null -> null
+			issuer == "azuread" -> TokenGenerator(mockOAuth2Server).lagAzureADToken()
+			issuer == "tokenx"	-> TokenGenerator(mockOAuth2Server).lagTokenXToken()
+			else -> null
+		}
 		val headers = HttpHeaders()
 		headers.contentType = MediaType.APPLICATION_JSON
-		headers.add(HttpHeaders.AUTHORIZATION, "$BEARER$token")
+		if (token != null) 	headers.add(HttpHeaders.AUTHORIZATION, "$BEARER$token")
 		map?.forEach { (headerName, headerValue) -> headers.add(headerName, headerValue) }
 		return headers
 	}
@@ -42,13 +49,51 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 
 			.post()
 			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
-			.headers { it.addAll(createHeaders(TokenGenerator(mockOAuth2Server).lagAzureADToken())) }
+			.headers { it.addAll(createHeaders(issuer = "azuread")) }
 			.bodyValue(soknad)
 
 			.exchange()
 			.returnResult()
 
 		return response.status
-
 	}
+
+	fun receiveSoknad(soknad: Soknad, issuer: String? = "azuread"): HttpStatusCode {
+
+		val response = restTemplate
+			.mutate()
+			.responseTimeout(Duration.ofMinutes(2))
+			.build()
+
+			.post()
+			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
+			.headers { it.addAll(createHeaders(issuer = issuer)) }
+			.bodyValue(soknad)
+
+			.exchange()
+			.returnResult()
+
+		return response.status
+	}
+
+
+
+	fun receiveNoLoginSoknad(soknad: Innsending, issuer: String? = "azuread"): HttpStatusCode {
+
+		val response = restTemplate
+			.mutate()
+			.responseTimeout(Duration.ofMinutes(2))
+			.build()
+
+			.post()
+			.uri { uriBuilder -> uriBuilder.path("/nologin-soknad").build() }
+			.headers { it.addAll(createHeaders(issuer = issuer)) }
+			.bodyValue(soknad)
+
+			.exchange()
+			.returnResult()
+
+		return response.status
+	}
+
 }
