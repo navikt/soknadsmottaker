@@ -11,11 +11,9 @@ import org.slf4j.Marker
 import org.slf4j.MarkerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-//import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-//@PreAuthorize("@issuerChecker.hasIssuer(authentication, {'azuread'})")
 class RestApi(private val archiverService: ArchiverService,
 ) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)

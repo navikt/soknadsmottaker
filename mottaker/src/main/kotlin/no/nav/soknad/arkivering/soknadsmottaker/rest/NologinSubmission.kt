@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MarkerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-//import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -23,7 +22,6 @@ class NologinSubmission(private val innsendingService: InnsendingService): Nolog
 	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
-	//@PreAuthorize("@issuerChecker.hasIssuer(authentication, {'azuread'})")
 	override fun nologinSubmission(
 		@Parameter(description = "Metadata about the benefit application being sent in.", required = true) @Valid @RequestBody innsending: Innsending,
 		@Parameter(description = "Tracing id that will be used in logging statements.", `in` = ParameterIn.HEADER) @RequestHeader(value = "X-innsendingId", required = false) xInnsendingId: String?

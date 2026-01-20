@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.test.web.reactive.server.WebTestClient
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
-import io.mockk.InternalPlatformDsl.toStr
 import org.mockito.Mockito.`when`
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics

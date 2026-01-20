@@ -10,7 +10,6 @@ import org.slf4j.MDC
 import org.slf4j.MarkerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-//import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -20,7 +19,6 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
 
-	//@PreAuthorize("@issuerChecker.hasIssuer(authentication, {'azuread'})")
 	override fun newNotification(addNotification: AddNotification, xInnsendingId: String?): ResponseEntity<Unit> {
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
@@ -31,7 +29,6 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		return ResponseEntity(HttpStatus.OK)
 	}
 
-	//@PreAuthorize("@issuerChecker.hasIssuer(authentication, {'azuread'})")
 	override fun cancelNotification(soknadRef: SoknadRef, xInnsendingId: String?): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
 		MDC.put(Constants.MDC_INNSENDINGS_ID, key)
