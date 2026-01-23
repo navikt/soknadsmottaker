@@ -14,15 +14,10 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 
 	private val BEARER = "Bearer "
 
-	private fun <T: Any> createHttpEntity(body: T, map: Map<String, String>? = mapOf()): HttpEntity<T> {
-		val token: String = TokenGenerator(mockOAuth2Server).lagAzureADToken()
-		return HttpEntity(body, createHeaders(token, map))
-	}
-
-	fun createHeaders(issuer: String?, map: Map<String, String>? = mapOf()): HttpHeaders {
+	fun createHeaders(issuer: String?, audience: String?, map: Map<String, String>? = mapOf()): HttpHeaders {
 		val token = when {
 			issuer == null -> null
-			issuer == "azuread" -> TokenGenerator(mockOAuth2Server).lagAzureADToken()
+			issuer == "azuread" -> TokenGenerator(mockOAuth2Server).lagAzureADToken(audience_ = audience)
 			issuer == "tokenx"	-> TokenGenerator(mockOAuth2Server).lagTokenXToken()
 			else -> null
 		}
@@ -49,7 +44,7 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 
 			.post()
 			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
-			.headers { it.addAll(createHeaders(issuer = "azuread")) }
+			.headers { it.addAll(createHeaders(issuer = "azuread", audience = null)) }
 			.bodyValue(soknad)
 
 			.exchange()
@@ -58,7 +53,7 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 		return response.status
 	}
 
-	fun receiveSoknad(soknad: Soknad, issuer: String? = "azuread"): HttpStatusCode {
+	fun receiveSoknad(soknad: Soknad, issuer: String? = "azuread", audience: String?): HttpStatusCode {
 
 		val response = restTemplate
 			.mutate()
@@ -67,7 +62,7 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 
 			.post()
 			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
-			.headers { it.addAll(createHeaders(issuer = issuer)) }
+			.headers { it.addAll(createHeaders(issuer = issuer, audience = audience)) }
 			.bodyValue(soknad)
 
 			.exchange()
@@ -87,7 +82,7 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 
 			.post()
 			.uri { uriBuilder -> uriBuilder.path("/nologin-soknad").build() }
-			.headers { it.addAll(createHeaders(issuer = issuer)) }
+			.headers { it.addAll(createHeaders(issuer = issuer, audience = null)) }
 			.bodyValue(soknad)
 
 			.exchange()

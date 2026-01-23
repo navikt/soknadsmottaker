@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
-import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenResponse
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.soknad.arkivering.soknadsmottaker.utils.Api
 import org.junit.jupiter.api.BeforeEach
@@ -18,12 +17,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.test.web.reactive.server.WebTestClient
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
-import org.mockito.Mockito.`when`
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
-import no.nav.soknad.arkivering.soknadsmottaker.utils.WireMockStubs
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createInnsending
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -31,7 +28,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.RegisterExtension
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.doReturn
+
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.http.HttpStatus
 import org.springframework.security.oauth2.jwt.Jwt
@@ -39,9 +38,10 @@ import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
-@ActiveProfiles("itest")
+@ActiveProfiles("test")
 @SpringBootTest(
 	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	properties = ["spring.main.allow-bean-definition-overriding=true"],
@@ -55,7 +55,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @AutoConfigureWebTestClient
 class RestEndpointTest {
 
-	@MockitoBean
+	@MockitoSpyBean
 	protected lateinit var azureJwtDecoder: JwtDecoder
 
 	@Autowired
@@ -91,7 +91,7 @@ class RestEndpointTest {
 			.configureStaticDsl(true)
 			.options(
 				wireMockConfig()
-					//.port(8099)
+					.port(1888)
 					.notifier(ConsoleNotifier(true))
 					.withRootDirectory("src/test/resources")
 					.asynchronousResponseEnabled(false)
@@ -103,7 +103,7 @@ class RestEndpointTest {
 		fun properties(reg: DynamicPropertyRegistry) {
 			val base = "http://localhost:1888"
 
-			reg.add("spring.security.auth.issuers.azuread.issuer-uri") { "$base/azuread" }
+			reg.add("spring.security.auth.issuers.azuread.issuer-uri") { "$base/azuread/.well-known/openid-configuration" }
 		}
 	}
 
@@ -112,17 +112,16 @@ class RestEndpointTest {
 	fun setup() {
 		clearAllMocks()
 		api = Api(restTemplate, mockOAuth2Server)
-		every { oauth2TokenService.getAccessToken(any()) } returns OAuth2AccessTokenResponse(access_token = "token")
 	}
 
 	private fun createMockJwt(issuer: String, audience: String? = AUD): Jwt {
 		// returnere en Jwt som har en tokenValue som er en gyldig JWT-streng fra MockOAuth2Server.
-		val token = mockOAuth2Server.issueToken(issuerId = "azuread", audience = AUD)
+		val token = mockOAuth2Server.issueToken(issuerId = "azuread", audience = audience)
 
 		return Jwt.withTokenValue(token.serialize())
 			.header("alg", "RS256")
 			.claim("iss", issuer)
-			.claim("aud", audience)
+			.claim("aud", listOf(audience))
 			.build()
 	}
 
@@ -132,8 +131,7 @@ class RestEndpointTest {
 		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
 		val mockJwt = createMockJwt(AZURE_ISSUER)
-		WireMockStubs.stubTokenEndpoint(mockJwt.tokenValue)
-		`when`(azureJwtDecoder.decode(anyString())).thenReturn(mockJwt)
+		(doReturn(mockJwt).`when` (azureJwtDecoder).decode(any()))
 
 		val status = api?.receiveSoknad(soknad)
 
@@ -169,8 +167,7 @@ class RestEndpointTest {
 		every { kafkaSender.publishNologinSubmission(any(), any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
 		val mockJwt = createMockJwt(AZURE_ISSUER)
-		WireMockStubs.stubTokenEndpoint(mockJwt.tokenValue)
-		`when`(azureJwtDecoder.decode(anyString())).thenReturn(mockJwt)
+		(doReturn(mockJwt).`when` (azureJwtDecoder).decode(any()))
 
 		val status = api?.receiveNoLoginSoknad(soknad)
 
@@ -204,10 +201,9 @@ class RestEndpointTest {
 		val soknad = createSoknad()
 		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
-		WireMockStubs.stubTokenEndpoint("")
-		`when`(azureJwtDecoder.decode(anyString())).thenReturn(null)
+		(doReturn(null).`when` (azureJwtDecoder).decode(any()))
 
-		val status = api?.receiveSoknad(soknad, "tokenx")
+		val status = api?.receiveSoknad(soknad, issuer = null, audience = null)
 
 		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.OK")
 
@@ -219,12 +215,11 @@ class RestEndpointTest {
 		val soknad = createSoknad()
 		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
-		WireMockStubs.stubTokenEndpoint("")
 		val mockJwt = createMockJwt(TOKENX_ISSUER)
 
-		`when`(azureJwtDecoder.decode(anyString())).thenReturn(mockJwt)
+		(doReturn(mockJwt).`when` (azureJwtDecoder).decode(any()))
 
-		val status = api?.receiveSoknad(soknad, "tokenx")
+		val status = api?.receiveSoknad(soknad, "tokenx", audience = AUD)
 
 		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.OK")
 
@@ -236,12 +231,11 @@ class RestEndpointTest {
 		val soknad = createSoknad()
 		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
-		WireMockStubs.stubTokenEndpoint("")
-		val mockJwt = createMockJwt(issuer = AZURE_ISSUER, audience = "another-audience")
 
-		`when`(azureJwtDecoder.decode(anyString())).thenReturn(mockJwt)
+		val mockJwt = createMockJwt(issuer = AZURE_ISSUER, audience = "wrongAudience")
+		(doReturn(mockJwt).`when` (azureJwtDecoder).decode(any()))
 
-		val status = api?.receiveSoknad(soknad, AZURE_ISSUER)
+		val status = api?.receiveSoknad(soknad = soknad, issuer = "azuread", audience = "wrongAudience")
 
 		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.OK")
 

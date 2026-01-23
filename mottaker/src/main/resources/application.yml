@@ -24,22 +24,20 @@ management:
           autotime:
             enabled: true
 
-auth:
-  issuers:
-    azuread:
-      issuer-uri: http://localhost:${token.server.port}/azuread
-      accepted-audience: aud-localhost
-      jwk-set-uri: http://localhost:${token.server.port}/azuread/.well-known/openid-configuration
-
-token:
-  server:
-    port: 1888
-
 ---
 spring:
   config:
     activate:
       on-profile: prod | dev
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
+          issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
+          jwk-set-uri: ${AZURE_OPENID_CONFIG_JWKS_URI}
+          audiences: ${AZURE_APP_CLIENT_ID}
 
 userNotificationMessageJson: ${SEND_MESSAGE_TO_USERS}
 status_log_url: ${STATUS_LOG_URL}
@@ -63,19 +61,24 @@ kafkaconfig:
   utkastTopic: ${KAFKA_UTKAST_TOPIC}
   nologinSubmissionTopic: ${KAFKA_NOLOGIN_SUBMISSION_TOPIC}
 
-auth:
-  issuers:
-    azuread:
-      token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
-      issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
-      jwk-set-uri: ${AZURE_OPENID_CONFIG_JWKS_URI}
-      audiences: ${AZURE_APP_CLIENT_ID}
 
 ---
 spring:
   config:
     activate:
       on-profile: docker
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:${token.server.port}/azuread
+          audiences: aud-localhost
+          jwk-set-uri: http://localhost:${token.server.port}/azuread/.well-known/openid-configuration
+
+token:
+  server:
+    port: 1888
 
 status_log_url: "https://logs.adeo.no"
 
@@ -103,6 +106,18 @@ spring:
     activate:
       on-profile: default | test
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:${token.server.port}/azuread
+          audiences: aud-localhost
+          jwk-set-uri: http://localhost:${token.server.port}/azuread/.well-known/openid-configuration
+
+token:
+  server:
+    port: 1888
+
 status_log_url: "https://logs.adeo.no"
 
 kafkaconfig:
@@ -122,3 +137,4 @@ kafkaconfig:
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC:min-side.aapen-brukernotifikasjon-beskjed-v1}
   brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC:min-side.aapen-brukernotifikasjon-oppgave-v1}
   nologinSubmissionTopic: ${KAFKA_NOLOGIN_SUBMISSION_TOPIC:privat-soknadinnsending-nologin-submission-v1-dev}
+

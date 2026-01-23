@@ -70,9 +70,9 @@ fun createKvitteringDokument(): DokumentData {
 
 fun createHovedkumentDokument(skjemanr: String, tittel: String): DokumentData {
 	return DokumentData(
-		skjemanummer = "NAV 10-07.54",
+		skjemanummer = skjemanr,
 		erHovedskjema = true,
-		tittel = "Søknad om servicehund",
+		tittel = tittel,
 		varianter = createHovedkumentVariant()
 	)
 }
