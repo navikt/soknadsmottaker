@@ -35,9 +35,6 @@ class SecurityConfig(
 		return nimbusJwtDecoder
 	}
 
-	// JSON mapper from Jackson 3 (tools.jackson)
-	private val mapper = jacksonObjectMapper()
-
 
 	@Bean
 	fun securityFilterChain(

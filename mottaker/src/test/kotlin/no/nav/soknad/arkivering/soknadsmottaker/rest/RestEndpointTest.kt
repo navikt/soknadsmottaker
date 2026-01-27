@@ -1,8 +1,5 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-//import com.github.tomakehurst.wiremock.common.ConsoleNotifier
-//import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-//import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.soknad.arkivering.soknadsmottaker.SoknadsmottakerApplication
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,8 +23,6 @@ import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-//import org.junit.jupiter.api.extension.ExtendWith
-//import org.junit.jupiter.api.extension.RegisterExtension
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.doReturn
 
@@ -35,11 +30,8 @@ import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtDecoder
-//import org.springframework.test.context.DynamicPropertyRegistry
-//import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
-//import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ActiveProfiles("test")
 @SpringBootTest(
@@ -47,11 +39,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
 	properties = ["spring.main.allow-bean-definition-overriding=true"],
 	classes = [SoknadsmottakerApplication::class]
 )
-/*
-@ExtendWith(
-	SpringExtension::class
-)
-*/
 @EnableTransactionManagement
 @EnableMockOAuth2Server(port = 1888)
 @AutoConfigureWebTestClient
@@ -84,32 +71,6 @@ class RestEndpointTest {
 
 	private val AZURE_ISSUER = "http://localhost:1888/azuread"
 	private val TOKENX_ISSUER = "http://localhost:1888/tokenx"
-
-/*
-
-	companion object {
-		@JvmField
-		@RegisterExtension
-		val wm: WireMockExtension = WireMockExtension.newInstance()
-			.configureStaticDsl(true)
-			.options(
-				wireMockConfig()
-					.port(1888)
-					.notifier(ConsoleNotifier(true))
-					.withRootDirectory("src/test/resources")
-					.asynchronousResponseEnabled(false)
-			)
-			.build()
-
-		@JvmStatic
-		@DynamicPropertySource
-		fun properties(reg: DynamicPropertyRegistry) {
-			val base = "http://localhost:1888"
-
-			reg.add("spring.security.auth.issuers.azuread.issuer-uri") { "$base/azuread/.well-known/openid-configuration" }
-		}
-	}
-*/
 
 
 	@BeforeEach
