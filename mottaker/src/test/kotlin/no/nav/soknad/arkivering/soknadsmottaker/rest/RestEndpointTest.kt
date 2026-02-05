@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
-import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.soknad.arkivering.soknadsmottaker.utils.Api
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,9 +54,6 @@ class RestEndpointTest {
 
 	@Autowired
 	lateinit var mockOAuth2Server: MockOAuth2Server
-
-	@MockkBean
-	lateinit var oauth2TokenService: OAuth2AccessTokenService
 
 	@MockkBean
 	lateinit var kafkaSender: KafkaSender
