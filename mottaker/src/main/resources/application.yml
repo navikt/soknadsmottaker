@@ -18,11 +18,6 @@ management:
     export:
       prometheus:
         enabled: true
-    web:
-      server:
-        request:
-          autotime:
-            enabled: true
 
 ---
 spring:
@@ -60,7 +55,6 @@ kafkaconfig:
   brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC}
   utkastTopic: ${KAFKA_UTKAST_TOPIC}
   nologinSubmissionTopic: ${KAFKA_NOLOGIN_SUBMISSION_TOPIC}
-
 
 ---
 spring:

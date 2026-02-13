@@ -32,7 +32,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
 
-@ActiveProfiles("test")
+@ActiveProfiles("default")
 @SpringBootTest(
 	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	properties = ["spring.main.allow-bean-definition-overriding=true"],
@@ -182,7 +182,7 @@ class RestEndpointTest {
 
 		val status = api?.receiveSoknad(soknad, "tokenx", audience = AUD)
 
-		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.OK")
+		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.UNAUTHORIZED")
 
 	}
 
@@ -198,7 +198,7 @@ class RestEndpointTest {
 
 		val status = api?.receiveSoknad(soknad = soknad, issuer = "azuread", audience = "wrongAudience")
 
-		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.OK")
+		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.UNAUTHORIZED")
 
 	}
 
