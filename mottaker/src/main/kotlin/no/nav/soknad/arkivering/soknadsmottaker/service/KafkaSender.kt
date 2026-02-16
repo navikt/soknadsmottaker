@@ -72,7 +72,7 @@ class KafkaSender(
 	}
 
 
-	private fun <K, V> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
+	private fun <K: Any , V: Any> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
 		val producerRecord = ProducerRecord(topic, key, value)
 		val headers = RecordHeaders()
 		headers.add(MESSAGE_ID, UUID.randomUUID().toString().toByteArray())

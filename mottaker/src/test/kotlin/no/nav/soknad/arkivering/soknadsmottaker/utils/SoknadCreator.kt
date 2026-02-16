@@ -10,10 +10,12 @@ import no.nav.soknad.arkivering.soknadsmottaker.model.Variant
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varianter
 import java.util.UUID
 
+private val brukerId: String = "01234567891"
+
 fun createSoknad() = Soknad(
 	"17e10f63-443c-4aba-829b-d598c3a74248",
 	false,
-	"01234567891",
+	brukerId,
 	"BIL",
 	createDocuments()
 )
@@ -68,9 +70,9 @@ fun createKvitteringDokument(): DokumentData {
 
 fun createHovedkumentDokument(skjemanr: String, tittel: String): DokumentData {
 	return DokumentData(
-		skjemanummer = "NAV 10-07.54",
+		skjemanummer = skjemanr,
 		erHovedskjema = true,
-		tittel = "Søknad om servicehund",
+		tittel = tittel,
 		varianter = createHovedkumentVariant()
 	)
 }
@@ -121,4 +123,22 @@ fun createVedleggVariant(skjemanr: String = "L8"): Variant  {
 			filtype = "PDFA",
 			variantFormat = "ARKIV"
 		)
+}
+
+private val defaultSkjemanr = "NAV 10-07.54"
+
+fun createInnsending(uuid: String = UUID.randomUUID().toString(), skjemanr: String = defaultSkjemanr, kanal: String = "NAV_NO_UINNLOGGET") = Innsending(
+	innsendingsId = uuid,
+	kanal = kanal,
+	avsenderDto = AvsenderDto(id = "12345678901", idType = AvsenderDto.IdType.FNR, navn = "Test Testesen"),
+	tema = "BIL",
+	skjemanr = skjemanr,
+	tittel = "Skjematittel",
+	dokumenter = createDokuments(defaultSkjemanr),
+	ettersendelseTilId = null,
+	brukerDto = BrukerDto(id = brukerId, idType = BrukerDto.IdType.FNR)
+)
+
+fun createDokuments(skjemanr: String = defaultSkjemanr): List<DokumentData> {
+	return listOf(createHovedkumentDokument(skjemanr, "Skjematittel"), createKvitteringDokument(), createVedleggDokument())
 }

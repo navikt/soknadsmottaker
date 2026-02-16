@@ -1,6 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.util
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.databind.ObjectMapper
 import no.nav.soknad.arkivering.soknadsmottaker.model.AvsenderDto
 import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
 import no.nav.soknad.arkivering.soknadsmottaker.model.DokumentData
@@ -43,8 +43,7 @@ fun mapTilInnsendingTopicMsg(innsending: Innsending, erInnlogget: Boolean): Stri
 		arkivtema = innsending.tema,
 		dokumenter = innsending.dokumenter
 	)
-	val mapper = jacksonObjectMapper()
-	mapper.findAndRegisterModules()
+	val mapper = ObjectMapper()
 	return mapper.writeValueAsString(msg)
 
 }

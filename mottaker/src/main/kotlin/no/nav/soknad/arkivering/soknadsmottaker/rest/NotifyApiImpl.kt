@@ -1,6 +1,5 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.NotifyApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.AddNotification
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
@@ -19,7 +18,6 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 	private val secureLogsMarker = MarkerFactory.getMarker("TEAM_LOGS")
 
 
-	@Protected
 	override fun newNotification(addNotification: AddNotification, xInnsendingId: String?): ResponseEntity<Unit> {
 		val soknadRef = addNotification.soknadRef
 		val key = soknadRef.innsendingId
@@ -30,7 +28,6 @@ class NotifyApiImpl(private val notificationService: NotificationService) : Noti
 		return ResponseEntity(HttpStatus.OK)
 	}
 
-	@Protected
 	override fun cancelNotification(soknadRef: SoknadRef, xInnsendingId: String?): ResponseEntity<Unit> {
 		val key = soknadRef.innsendingId
 		MDC.put(Constants.MDC_INNSENDINGS_ID, key)

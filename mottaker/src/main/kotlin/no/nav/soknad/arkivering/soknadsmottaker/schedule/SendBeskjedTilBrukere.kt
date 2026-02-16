@@ -1,6 +1,5 @@
 package no.nav.soknad.arkivering.soknadsmottaker.schedule
 
-import com.google.gson.Gson
 import no.nav.soknad.arkivering.soknadsmottaker.dto.UserDto
 import no.nav.soknad.arkivering.soknadsmottaker.dto.UserMessageDto
 import no.nav.soknad.arkivering.soknadsmottaker.dto.UserNotificationMessageDto
@@ -9,10 +8,14 @@ import no.nav.soknad.arkivering.soknadsmottaker.model.Varsel
 import no.nav.soknad.arkivering.soknadsmottaker.service.NotificationService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
@@ -33,6 +36,9 @@ class SendBeskjedTilBrukere(
 
 	val logger: Logger = LoggerFactory.getLogger(javaClass)
 
+	@Autowired
+	private val objectMapper: ObjectMapper = jacksonObjectMapper()
+
 	@Value("\${userNotificationMessageJson}")
 	private var envInput: String? = null
 
@@ -44,8 +50,7 @@ class SendBeskjedTilBrukere(
 			if (leaderSelectionUtility.isLeader() && inputString != null) {
 
 
-				val gson = Gson()
-				val input = gson.fromJson(String(Base64.getDecoder().decode(inputString)), UserNotificationMessageDto::class.java)
+				val input = objectMapper.readValue(String(Base64.getDecoder().decode(inputString)), object: TypeReference<UserNotificationMessageDto>(){})
 
 				input.userList.forEach {
 					publiser(
