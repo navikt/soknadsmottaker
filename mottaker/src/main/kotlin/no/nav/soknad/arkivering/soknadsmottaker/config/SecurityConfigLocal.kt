@@ -40,6 +40,9 @@ class SecurityConfigLocal(
 	): SecurityFilterChain {
 
 		http
+			.csrf { csrf ->
+				csrf.disable()
+			}
 			.authorizeHttpRequests { auth ->
 				auth.anyRequest().permitAll()
 			}
