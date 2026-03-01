@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.2</version>
+		<version>4.0.3</version>
 		<relativePath/>
 	</parent>
 
@@ -17,10 +17,10 @@
 	<description>Receives benefit applications</description>
 
 	<properties>
-		<spring-boot.version>4.0.2</spring-boot.version>
-		<spring-security-client.version>7.0.2</spring-security-client.version>
+		<spring-boot.version>4.0.3</spring-boot.version>
+		<spring-security-client.version>7.0.3</spring-security-client.version>
 		<java.version>21</java.version>
-		<kotlin.version>2.2.21</kotlin.version>
+		<kotlin.version>2.3.10</kotlin.version>
 		<maven.version>3.9.0</maven.version>
 
 		<!--Kotlin-->
@@ -31,37 +31,37 @@
 
 		<!--Spring-->
 		<spring-boot-starter-aop.version>4.0.0-M2</spring-boot-starter-aop.version>
-		<springdoc-openapi.version>3.0.1</springdoc-openapi.version>
-		<spring-web.version>7.0.2</spring-web.version>
-		<spring-cloud.version>5.0.1</spring-cloud.version>
+		<springdoc-openapi.version>3.0.2</springdoc-openapi.version>
+		<spring-web.version>7.0.5</spring-web.version>
+		<spring-cloud.version>5.0.2</spring-cloud.version>
 		<spring-core.version>7.0.2</spring-core.version>
 		<spring-security-test.version>7.0.2</spring-security-test.version>
 
 		<!--Serialization-->
-		<jackson-module-kotlin.version>3.0.4</jackson-module-kotlin.version>
-		<jackson-module-yaml.version>3.0.4</jackson-module-yaml.version>
-		<jackson.version>2.21.0</jackson.version>
-		<jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
+		<jackson-module-kotlin.version>3.1.0</jackson-module-kotlin.version>
+		<jackson-module-yaml.version>3.1.0</jackson-module-yaml.version>
+		<jackson.version>2.21.1</jackson.version>
+		<jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
 		<jackson-datataype.version>3.0.0-rc2</jackson-datataype.version>
 <!--
 		<gson.version>2.13.2</gson.version>
 -->
 
 		<!--NAV-->
-		<token-support.version>6.0.2</token-support.version>
+		<token-support.version>6.0.3</token-support.version>
 
 		<!--Kafka-->
-		<spring-kafka.version>4.0.2</spring-kafka.version>
+		<spring-kafka.version>4.0.3</spring-kafka.version>
 		<confluent.version>8.1.1</confluent.version>
 		<avro.version>1.12.1</avro.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>20230203100430-ecf5208</utkast-schema.version>
 		<arkivering-schemas.version>1.4.4-bf301c4492e2</arkivering-schemas.version>
-		<tms-varsel.version>2.1.1</tms-varsel.version>
+		<tms-varsel.version>2.2.0</tms-varsel.version>
 
 		<!--Logging-->
 		<logstash.version>9.0</logstash.version>
-		<prometheus.version>1.4.3</prometheus.version>
+		<prometheus.version>1.5.0</prometheus.version>
 
 		<!--Jakarta-->
 		<jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
@@ -70,25 +70,25 @@
 
 		<!--Other -->
 		<okhttp3.version>5.3.2</okhttp3.version>
-		<swagger-annotations.version>2.2.42</swagger-annotations.version>
+		<swagger-annotations.version>2.2.43</swagger-annotations.version>
 
 		<!--Test-->
-		<mockk.version>1.14.6</mockk.version>
+		<mockk.version>1.14.9</mockk.version>
 		<springmockk.version>5.0.1</springmockk.version>
-		<mockito-junit-jupiter.version>5.21.0</mockito-junit-jupiter.version>
-		<junit-jupiter.version>6.0.1</junit-jupiter.version>
+		<mockito-junit-jupiter.version>5.22.0</mockito-junit-jupiter.version>
+		<junit-jupiter.version>6.0.3</junit-jupiter.version>
 		<spring-cloud-contract-wiremock.version>5.0.2</spring-cloud-contract-wiremock.version>
 		<wiremock.version>4.0.0-beta.24</wiremock.version>
 		<wiremock.core.version>4.0.0-beta.28</wiremock.core.version>
 		<wiremock-junit5.version>4.0.0-beta.28</wiremock-junit5.version>
-		<wiremock.integrations.version>4.1.0</wiremock.integrations.version>
+		<wiremock.integrations.version>4.2.0</wiremock.integrations.version>
 		<mock-oauth2-server.version>3.0.1</mock-oauth2-server.version>
 
 		<!--Plugins-->
 		<versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
 		<cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
 		<maven-enforcer.version>3.6.2</maven-enforcer.version>
-		<openapi-generator-maven-plugin.version>7.19.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.20.0</openapi-generator-maven-plugin.version>
 	</properties>
 
 	<modules>
