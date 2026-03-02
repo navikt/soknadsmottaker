@@ -3,7 +3,6 @@ package no.nav.soknad.arkivering.soknadsmottaker.utils
 import com.nimbusds.jose.JOSEObjectType
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
-import no.nav.security.token.support.spring.test.MockLoginController
 
 
 class TokenGenerator(
@@ -14,6 +13,7 @@ class TokenGenerator(
 	}
 
 	private val tokenx = "tokenx"
+	private val azuread = "azuread"
 	private val audience = "aud-localhost"
 	private val expiry = 2 * 3600L
 
@@ -26,8 +26,23 @@ class TokenGenerator(
 				issuerId = tokenx,
 				subject = pid,
 				typeHeader = JOSEObjectType.JWT.type,
-				audience = listOf(audience),
-				claims = mapOf("acr" to "idporten-loa-high", "pid" to pid),
+				claims = mapOf("aud" to listOf(audience), "acr" to "idporten-loa-high", "pid" to pid),
+				expiry = expiry
+			)
+		).serialize()
+	}
+
+	fun lagAzureADToken(fnr: String? = null, audience_: String?): String {
+		val pid = fnr ?: subject
+		val aud = audience_ ?: audience
+		return mockOAuth2Server.issueToken(
+			issuerId = azuread,
+			clientId = "application",
+			tokenCallback = DefaultOAuth2TokenCallback(
+				issuerId = azuread,
+				subject = pid,
+				typeHeader = JOSEObjectType.JWT.type,
+				claims = mapOf("aud" to listOf(aud), "pid" to pid),
 				expiry = expiry
 			)
 		).serialize()

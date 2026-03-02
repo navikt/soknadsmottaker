@@ -1,6 +1,5 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import no.nav.security.token.support.core.api.Protected
 import no.nav.soknad.arkivering.soknadsmottaker.api.SoknadApi
 import no.nav.soknad.arkivering.soknadsmottaker.model.DocumentData
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
@@ -12,15 +11,14 @@ import org.slf4j.Marker
 import org.slf4j.MarkerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RestController
 
-@Controller
-class RestApi(private val archiverService: ArchiverService) : SoknadApi {
+@RestController
+class RestApi(private val archiverService: ArchiverService,
+) : SoknadApi {
 	private val logger = LoggerFactory.getLogger(javaClass)
-	private val secureLogger = LoggerFactory.getLogger("secureLogger")
 	private val secureLogsMarker: Marker = MarkerFactory.getMarker("TEAM_LOGS")
 
-	@Protected
 	override fun receive(soknad: Soknad, xInnsendingId: String?): ResponseEntity<Unit> {
 		val key = soknad.innsendingId
 		MDC.put(MDC_INNSENDINGS_ID, key)
@@ -39,7 +37,6 @@ class RestApi(private val archiverService: ArchiverService) : SoknadApi {
 			maskDocumentTitle(soknad.dokumenter)
 		)
 		logger.info("$key: Received request '$fnrMasked'")
-		secureLogger.info("$key: Received request '$soknad'")
 		logger.info(secureLogsMarker, "$key: Received request '$soknad'")
 	}
 

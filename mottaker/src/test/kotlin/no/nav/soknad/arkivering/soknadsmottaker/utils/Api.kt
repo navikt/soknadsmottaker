@@ -1,34 +1,28 @@
 package no.nav.soknad.arkivering.soknadsmottaker.utils
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
-import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
-import org.springframework.web.util.UriComponentsBuilder
+import org.springframework.test.web.reactive.server.WebTestClient
+import java.time.Duration
 
-class Api(val restTemplate: TestRestTemplate, val serverPort: Int, val mockOAuth2Server: MockOAuth2Server) {
+class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Server) {
 
 	private val BEARER = "Bearer "
 
-	val baseUrl = "http://localhost:${serverPort}"
-	val objectMapper: ObjectMapper = jacksonObjectMapper().findAndRegisterModules()
-
-	private fun <T> createHttpEntity(body: T, map: Map<String, String>? = mapOf()): HttpEntity<T> {
-		val token: String = TokenGenerator(mockOAuth2Server).lagTokenXToken()
-		return HttpEntity(body, createHeaders(token, map))
-	}
-
-
-	fun createHeaders(token: String, map: Map<String, String>? = mapOf()): HttpHeaders {
+	fun createHeaders(issuer: String?, audience: String?, map: Map<String, String>? = mapOf()): HttpHeaders {
+		val token = when {
+			issuer == null -> null
+			issuer == "azuread" -> TokenGenerator(mockOAuth2Server).lagAzureADToken(audience_ = audience)
+			issuer == "tokenx"	-> TokenGenerator(mockOAuth2Server).lagTokenXToken()
+			else -> null
+		}
 		val headers = HttpHeaders()
 		headers.contentType = MediaType.APPLICATION_JSON
-		headers.add(HttpHeaders.AUTHORIZATION, "$BEARER$token")
+		if (token != null) 	headers.add(HttpHeaders.AUTHORIZATION, "$BEARER$token")
 		map?.forEach { (headerName, headerValue) -> headers.add(headerName, headerValue) }
 		return headers
 	}
@@ -41,14 +35,59 @@ class Api(val restTemplate: TestRestTemplate, val serverPort: Int, val mockOAuth
 	}
 
 	fun receiveSoknad(soknad: Soknad): HttpStatusCode {
-		val headers: Map<String, String>? =  null
-		val uri = UriComponentsBuilder.fromHttpUrl("${baseUrl}/soknad")
+
+		val response = restTemplate
+			.mutate()
+			.responseTimeout(Duration.ofMinutes(2))
 			.build()
-			.toUri()
 
-		val response = restTemplate.exchange(uri, HttpMethod.POST, createHttpEntity(soknad, headers), String::class.java)
+			.post()
+			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
+			.headers { it.addAll(createHeaders(issuer = "azuread", audience = null)) }
+			.bodyValue(soknad)
 
-		return response.statusCode
+			.exchange()
+			.returnResult()
 
+		return response.status
 	}
+
+	fun receiveSoknad(soknad: Soknad, issuer: String? = "azuread", audience: String?): HttpStatusCode {
+
+		val response = restTemplate
+			.mutate()
+			.responseTimeout(Duration.ofMinutes(2))
+			.build()
+
+			.post()
+			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
+			.headers { it.addAll(createHeaders(issuer = issuer, audience = audience)) }
+			.bodyValue(soknad)
+
+			.exchange()
+			.returnResult()
+
+		return response.status
+	}
+
+
+
+	fun receiveNoLoginSoknad(soknad: Innsending, issuer: String? = "azuread"): HttpStatusCode {
+
+		val response = restTemplate
+			.mutate()
+			.responseTimeout(Duration.ofMinutes(2))
+			.build()
+
+			.post()
+			.uri { uriBuilder -> uriBuilder.path("/nologin-soknad").build() }
+			.headers { it.addAll(createHeaders(issuer = issuer, audience = null)) }
+			.bodyValue(soknad)
+
+			.exchange()
+			.returnResult()
+
+		return response.status
+	}
+
 }

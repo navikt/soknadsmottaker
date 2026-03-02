@@ -3,6 +3,7 @@ run-name: Manual ${{ github.event.inputs.environment }} deploy of branch ${{ git
 permissions:
   contents: "read"
   id-token: "write"
+  packages: "write"
 on:
   workflow_dispatch:
     inputs:
@@ -18,11 +19,17 @@ on:
           - prod
 
 jobs:
+  assemble-openapi-spec:
+    uses: ./.github/workflows/assemble-openapi-spec.yml
+    secrets: inherit
+    with:
+      force: true
+
   build-and-push:
     name: Build and push Docker container
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
@@ -50,7 +57,7 @@ jobs:
     if: github.event.inputs.environment == 'preprod'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
@@ -64,7 +71,7 @@ jobs:
     if: github.event.inputs.environment == 'loadtests'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
@@ -78,42 +85,10 @@ jobs:
     if: github.event.inputs.environment == 'prod'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/nais.yml
           VARS: .nais/config-prod.json
           VAR: image=${{needs.build-and-push.outputs.image}}
-
-
-  deploy-alerts-preprod:
-    if: github.event.inputs.environment == 'preprod'
-    needs: deploy-preprod
-    name: Deploy alerts to dev
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-      - name: Deploy to dev
-        uses: nais/deploy/actions/deploy@v2
-        env:
-          CLUSTER: dev-gcp
-          RESOURCE: .nais/alerts.yml
-          VARS: .nais/preprod-alerts.json
-
-  deploy-alerts-prod:
-    if: github.event.inputs.environment == 'prod'
-    needs: deploy-prod
-    name: Deploy alerts to prod
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-      - name: Deploy to prod
-        uses: nais/deploy/actions/deploy@v2
-        env:
-          CLUSTER: prod-gcp
-          RESOURCE: .nais/alerts.yml
-          VARS: .nais/prod-alerts.json
-

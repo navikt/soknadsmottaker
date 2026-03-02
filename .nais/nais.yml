@@ -14,7 +14,6 @@ spec:
       runtime: java
     logging:
       destinations:
-        - id: elastic
         - id: loki
   liveness:
     path: /health/isAlive
@@ -42,8 +41,6 @@ spec:
   {{#each ingress}}
     - "{{this}}"
   {{/each}}
-  secureLogs:
-    enabled: true
   azure:
     application:
       enabled: true
