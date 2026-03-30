@@ -54,6 +54,7 @@ kafkaconfig:
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC}
   brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC}
   utkastTopic: ${KAFKA_UTKAST_TOPIC}
+  loggedinSubmissionTopic: ${KAFKA_LOGGEDIN_SUBMISSION_TOPIC}
   nologinSubmissionTopic: ${KAFKA_NOLOGIN_SUBMISSION_TOPIC}
 
 ---
@@ -92,6 +93,7 @@ kafkaconfig:
   brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC:min-side.aapen-brukernotifikasjon-done-v1}
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC:min-side.aapen-brukernotifikasjon-beskjed-v1}
   brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC:min-side.aapen-brukernotifikasjon-oppgave-v1}
+  loggedinSubmissionTopic: ${KAFKA_LOGGEDIN_SUBMISSION_TOPIC:privat-soknadinnsending-loggedin-submission-v1-dev}
   nologinSubmissionTopic: ${KAFKA_NOLOGIN_SUBMISSION_TOPIC:privat-soknadinnsending-nologin-submission-v1-dev}
 
 ---
@@ -130,5 +132,6 @@ kafkaconfig:
   brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC:min-side.aapen-brukernotifikasjon-done-v1}
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC:min-side.aapen-brukernotifikasjon-beskjed-v1}
   brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC:min-side.aapen-brukernotifikasjon-oppgave-v1}
+  loggedinSubmissionTopic: ${KAFKA_LOGGEDIN_SUBMISSION_TOPIC:privat-soknadinnsending-loggedin-submission-v1-dev}
   nologinSubmissionTopic: ${KAFKA_NOLOGIN_SUBMISSION_TOPIC:privat-soknadinnsending-nologin-submission-v1-dev}
 
