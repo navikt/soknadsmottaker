@@ -3,6 +3,9 @@ package no.nav.soknad.arkivering.soknadsmottaker.service
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
+import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
+import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingTopicMsg
+import no.nav.soknad.arkivering.soknadsmottaker.util.mapTilInnsendingTopicMsg
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeaders
 import org.slf4j.LoggerFactory
@@ -20,6 +23,7 @@ class KafkaSender(
 	private val kafkaOppgaveTemplate: KafkaTemplate<String, String>,
 	private val kafkaDoneTemplate: KafkaTemplate<String, String>,
 	private val kafkaUtkastTemplate: KafkaTemplate<String, String>,
+	private val loggedinKafkaTemplate: KafkaTemplate<String, String>,
 	private val nologinKafkaTemplate: KafkaTemplate<String, String>
 ) {
 	private val logger = LoggerFactory.getLogger(javaClass)
@@ -71,8 +75,21 @@ class KafkaSender(
 		logger.info("${key}: Published to $topic")
 	}
 
+	fun publishSubmission(key: String, value: String, loggedIn: Boolean) {
+		if (loggedIn) {
+			val topic = kafkaConfig.nologinSubmissionTopic
+			logger.info("$key: shall publish loggedinSubmission to topic $topic")
+			publish(kafkaConfig.loggedinSubmissionTopic, key, value, loggedinKafkaTemplate)
+			logger.info("$key: published to topic $topic")
+		} else {
+			val topic = kafkaConfig.nologinSubmissionTopic
+			logger.info("$key: shall publish NologinSubmission to topic $topic")
+			publish(topic, key, value, nologinKafkaTemplate)
+			logger.info("$key: published to topic $topic")
+		}
+	}
 
-	private fun <K: Any , V: Any> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
+	 fun <K: Any , V: Any> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
 		val producerRecord = ProducerRecord(topic, key, value)
 		val headers = RecordHeaders()
 		headers.add(MESSAGE_ID, UUID.randomUUID().toString().toByteArray())

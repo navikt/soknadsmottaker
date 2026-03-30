@@ -14,12 +14,10 @@ class InnsendingService( private val kafkaSender: KafkaSender, private val metri
 	private val logger = LoggerFactory.getLogger(javaClass)
 
 	fun publishToNoLoginTopic(key: String, innsending: Innsending) {
-		val msg = mapTilInnsendingTopicMsg(innsending, false)
-
 		val startTime = System.currentTimeMillis()
 		try {
-			kafkaSender.publishNologinSubmission(key, msg)
-			logger.info("$key: Published to NoLogintopic. skjemanr: ${innsending.skjemanr}")
+			publishSubmission(key, innsending, isLoggedIn=false)
+			logger.info("$key: Not logged in, published to kanal: ${innsending.kanal}, skjemanr: ${innsending.skjemanr}")
 			metrics.mottattSoknadInc(MetricNames.INNSENDT_UINNLOGGET.name, innsending.tema)
 		} catch (error: Exception) {
 			logger.error("$key: Error publishing to NoLoginTopic. skjemanr: ${innsending.skjemanr}", error)
@@ -28,7 +26,27 @@ class InnsendingService( private val kafkaSender: KafkaSender, private val metri
 		} finally {
 			tryPublishingMetrics(key, startTime)
 		}
+	}
 
+
+	fun publishToLoggedinTopic(key: String, innsending: Innsending) {
+		val startTime = System.currentTimeMillis()
+		try {
+			publishSubmission(key, innsending, isLoggedIn=true)
+			logger.info("$key: Logged in, published to kanal: ${innsending.kanal}, skjemanr: ${innsending.skjemanr}")
+			metrics.mottattSoknadInc(MetricNames.INNSENDT_OK.name, innsending.tema)
+		} catch (error: Exception) {
+			logger.error("$key: Error publishing to NoLoginTopic. skjemanr: ${innsending.skjemanr}", error)
+			metrics.mottattSoknadInc(MetricNames.INNSENDT_ERROR.name, innsending.tema)
+			throw error
+		} finally {
+			tryPublishingMetrics(key, startTime)
+		}
+	}
+
+	fun publishSubmission(key: String, value: Innsending, isLoggedIn: Boolean) {
+		logger.info("$key: shall publish submission to kanal ${value.kanal}")
+		kafkaSender.publishSubmission( key, mapTilInnsendingTopicMsg(value, isLoggedIn), isLoggedIn)
 	}
 
 	private fun tryPublishingMetrics(key: String, startTime: Long) {
