@@ -62,23 +62,6 @@
 			<version>${prometheus.version}</version>
 		</dependency>
 
-<!--
-		<dependency>
-			<groupId>tools.jackson.module</groupId>
-			<artifactId>jackson-module-kotlin</artifactId>
-			<version>${jackson-module-kotlin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>tools.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-yaml</artifactId>
-			<version>${jackson-module-yaml.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>tools.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-			<version>${jackson-datataype.version}</version>
-		</dependency>
--->
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>

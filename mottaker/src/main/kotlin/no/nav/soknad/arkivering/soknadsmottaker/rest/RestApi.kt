@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 
-@Deprecated("Use LoggedInSubmission instead")
+@Deprecated("Will be removed in the future. Update client code to use LoggedInSubmission instead")
 @RestController
 class RestApi(private val archiverService: ArchiverService,
 ) : SoknadApi {

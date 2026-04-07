@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
@@ -9,7 +10,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class InnsendingService( private val kafkaSender: KafkaSender, private val metrics: InnsendtMetrics) {
+class InnsendingService(
+	private val kafkaSender: KafkaSender,
+	private val metrics: InnsendtMetrics,
+	private val objectMapper: ObjectMapper) {
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -36,7 +40,7 @@ class InnsendingService( private val kafkaSender: KafkaSender, private val metri
 			logger.info("$key: Logged in, published to kanal: ${innsending.kanal}, skjemanr: ${innsending.skjemanr}")
 			metrics.mottattSoknadInc(MetricNames.INNSENDT_OK.name, innsending.tema)
 		} catch (error: Exception) {
-			logger.error("$key: Error publishing to NoLoginTopic. skjemanr: ${innsending.skjemanr}", error)
+			logger.error("$key: Error publishing to LoggedinTopic. skjemanr: ${innsending.skjemanr}", error)
 			metrics.mottattSoknadInc(MetricNames.INNSENDT_ERROR.name, innsending.tema)
 			throw error
 		} finally {
@@ -46,7 +50,8 @@ class InnsendingService( private val kafkaSender: KafkaSender, private val metri
 
 	fun publishSubmission(key: String, value: Innsending, isLoggedIn: Boolean) {
 		logger.info("$key: shall publish submission to kanal ${value.kanal}")
-		kafkaSender.publishSubmission( key, mapTilInnsendingTopicMsg(value, isLoggedIn), isLoggedIn)
+		val valueAsString = objectMapper.writeValueAsString(mapTilInnsendingTopicMsg(value, isLoggedIn))
+		kafkaSender.publishSubmission( key, valueAsString, isLoggedIn)
 	}
 
 	private fun tryPublishingMetrics(key: String, startTime: Long) {

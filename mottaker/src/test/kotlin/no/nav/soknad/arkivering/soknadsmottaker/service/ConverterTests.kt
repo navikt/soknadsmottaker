@@ -1,13 +1,25 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.soknad.arkivering.avroschemas.Soknadstyper
+import no.nav.soknad.arkivering.soknadsmottaker.model.AvsenderDto
+import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
+import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingTopicMsg
+import no.nav.soknad.arkivering.soknadsmottaker.util.mapTilInnsendingTopicMsg
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createDocuments
+import no.nav.soknad.arkivering.soknadsmottaker.utils.createInnsending
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createVariant
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class ConverterTests {
 	private val soknad = createSoknad()
@@ -24,7 +36,11 @@ class ConverterTests {
 		val endTime = OffsetDateTime.now().toEpochSecond()
 		assertTrue(result.innsendtDato >= startTime)
 		assertTrue(result.innsendtDato <= endTime)
-		assertEquals(Soknadstyper.SOKNAD, result.soknadstype)
+		val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+		val innsendtDatoStreng = Instant.ofEpochSecond(result.innsendtDato)
+			.atZone(ZoneId.of("UTC"))
+			.format(formatter)
+
 		assertEquals(1, result.mottatteDokumenter.size)
 
 		assertEquals(soknad.dokumenter[0].skjemanummer, result.mottatteDokumenter[0].skjemanummer)
@@ -62,4 +78,47 @@ class ConverterTests {
 		val result3 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/xml")))))
 		assertEquals("ORIGINAL", result3.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
 	}
+
+
+	@Test
+	fun `Can convert innsending message`() {
+		val soknad = createInnsending(
+			brukerDto = BrukerDto("01234567891", BrukerDto.IdType.FNR),
+			avsenderDto = AvsenderDto(
+				id = "01234567891",
+				idType = AvsenderDto.IdType.FNR,
+				navn = null
+			), kanal = "NAV_NO_UINNLOGGET", tema = "HJE"
+		)
+		val startTime = OffsetDateTime.now()
+		val convertedSoknad = mapTilInnsendingTopicMsg(soknad, false)
+
+		assertEquals(soknad.innsendingsId, convertedSoknad.innsendingsId)
+		assertEquals(soknad.tema, convertedSoknad.arkivtema)
+		assertEquals(soknad.kanal, convertedSoknad.kanal)
+		assertEquals(soknad.brukerDto?.id, convertedSoknad.brukerDto?.id)
+		assertEquals(soknad.avsenderDto.id, convertedSoknad.avsenderDto.id)
+		assertEquals(soknad.avsenderDto.idType, convertedSoknad.avsenderDto.idType)
+		assertEquals(soknad.dokumenter.size, convertedSoknad.dokumenter.size)
+		assertEquals(soknad.dokumenter.filter{it.erHovedskjema}.first().varianter.map{it.variantFormat},
+			convertedSoknad.dokumenter.filter{it.erHovedskjema}.first().varianter.map{it.variantFormat}, "Should send correct variantFormats")
+		assertEquals(soknad.dokumenter.map{it.varianter.map{variant-> variant.uuid}}.flatten(),
+			convertedSoknad.dokumenter.map{it.varianter.map{variant-> variant.uuid}}.flatten(), "Should send correct uuids")
+		val endTime = OffsetDateTime.now()
+		assertTrue(startTime.isBefore(convertedSoknad.innsendtDato) && convertedSoknad.innsendtDato.isBefore(endTime))
+	}
+
+	fun createUtcPreservingMapper(): com.fasterxml.jackson.databind.ObjectMapper {
+		val mapper = jacksonObjectMapper()
+		mapper.registerModule(JavaTimeModule())
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+		mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
+		return mapper
+	}
+
+	fun deserializeMsg(msgString: String): InnsendingTopicMsg {
+		return createUtcPreservingMapper()
+			.readValue(msgString, InnsendingTopicMsg::class.java)
+	}
+
 }

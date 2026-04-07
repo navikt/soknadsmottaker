@@ -64,7 +64,7 @@ class LoggedinSubmissionTests {
 	private lateinit var objectMapper: ObjectMapper
 
 	@Test
-	fun `When receiving call on nologin Rest endpoint, message is put on Kafka`() {
+	fun `When receiving call on loggedin Rest endpoint, message is put on Kafka`() {
 
 		// Given
 		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE") ?: 0.0
@@ -96,7 +96,7 @@ class LoggedinSubmissionTests {
 		assertTrue(msgKey.isCaptured, "Should capture message key")
 		assertEquals(soknad.innsendingsId, msgKey.captured, "Should use innsendingsId as message key")
 		assertTrue(isLoggedIn.isCaptured)
-		assertEquals(true, isLoggedIn.captured, "Should not be logged in")
+		assertEquals(true, isLoggedIn.captured, "Should be logged in")
 		assertTrue(innsendingMsg.isCaptured, "Should capture innsending message")
 		val submission = objectMapper.readValue(innsendingMsg.captured, InnsendingTopicMsg::class.java)
 		assertEquals(soknad.tema, submission.arkivtema, "Should send correct tema")
@@ -115,7 +115,7 @@ class LoggedinSubmissionTests {
 	}
 
 	@Test
-	fun `When receiving call on nologin Rest endpoint test input mapping`() {
+	fun `When receiving call on loggedin Rest endpoint with empty brukerDto test input mapping`() {
 
 		// Given
 		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE") ?: 0.0
@@ -128,7 +128,7 @@ class LoggedinSubmissionTests {
 				idType = AvsenderDto.IdType.ORGNR,
 				navn = null
 			),
-			kanal = "NAV_NO_UINNLOGGET",
+			kanal = "NAV_NO",
 			tema = "HJE"
 		)
 
@@ -148,7 +148,7 @@ class LoggedinSubmissionTests {
 		assertTrue(msgKey.isCaptured, "Should capture message key")
 		assertEquals(soknad.innsendingsId, msgKey.captured, "Should use innsendingsId as message key")
 		assertTrue(isLoggedIn.isCaptured)
-		assertEquals(true, isLoggedIn.captured, "Should not be logged in")
+		assertEquals(true, isLoggedIn.captured, "Should be logged in")
 		assertTrue(innsendingMsg.isCaptured, "Should capture innsending message")
 		val submission = objectMapper.readValue(innsendingMsg.captured, InnsendingTopicMsg::class.java)
 		assertEquals(soknad.tema, submission.arkivtema, "Should send correct tema")
@@ -181,7 +181,7 @@ class LoggedinSubmissionTests {
 				id = "01234567891",
 				idType = AvsenderDto.IdType.FNR,
 				navn = null
-			), kanal = "NAV_NO_UINNLOGGET", tema = "HJE"
+			), kanal = "NAV_NO", tema = "HJE"
 		)
 		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE") ?: 0.0
 		val sentInBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_OK.name,"HJE")	?: 0.0
@@ -203,8 +203,7 @@ class LoggedinSubmissionTests {
 		// Expect
 		assertTrue(msgKey.isCaptured, "Should capture message key")
 		assertEquals(soknad.innsendingsId, msgKey.captured, "Should use innsendingsId as message key")
-		assertEquals(true, isLoggedIn.captured, "Should not be logged in")
-		assertTrue(innsendingMsg.isCaptured, "Should capture innsending message")
+		assertEquals(true, isLoggedIn.captured, "Should be logged in")
 		assertTrue(innsendingMsg.isCaptured, "Should capture innsending message")
 		val submission = objectMapper.readValue(innsendingMsg.captured, InnsendingTopicMsg::class.java)
 		assertEquals(soknad.tema, submission.arkivtema, "Should send correct tema")
