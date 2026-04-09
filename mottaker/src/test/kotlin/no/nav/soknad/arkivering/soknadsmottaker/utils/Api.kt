@@ -90,4 +90,22 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 		return response.status
 	}
 
+
+	fun receiveLoggedinSoknad(soknad: Innsending, issuer: String? = "azuread"): HttpStatusCode {
+
+		val response = restTemplate
+			.mutate()
+			.responseTimeout(Duration.ofMinutes(2))
+			.build()
+
+			.post()
+			.uri { uriBuilder -> uriBuilder.path("/loggedin-soknad").build() }
+			.headers { it.addAll(createHeaders(issuer = issuer, audience = null)) }
+			.bodyValue(soknad)
+
+			.exchange()
+			.returnResult()
+
+		return response.status
+	}
 }

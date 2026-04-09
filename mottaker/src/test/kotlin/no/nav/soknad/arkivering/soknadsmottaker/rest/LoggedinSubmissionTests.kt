@@ -1,5 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.slot
@@ -28,7 +29,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import com.fasterxml.jackson.databind.ObjectMapper
+
 
 @ActiveProfiles("test")
 @SpringBootTest(
@@ -42,10 +43,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 @AutoConfigureWebTestClient
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class NologinSubmissionTests {
+class LoggedinSubmissionTests {
 
 	@MockitoBean
-lateinit var prometheusRegistry: PrometheusRegistry
+	lateinit var prometheusRegistry: PrometheusRegistry
 
 	@MockitoSpyBean
 	private lateinit var metrics: InnsendtMetrics
@@ -57,17 +58,17 @@ lateinit var prometheusRegistry: PrometheusRegistry
 	private lateinit var kafkaSender: KafkaSender
 
 	@Autowired
-	private lateinit var nologinSubmission: NologinSubmission
+	private lateinit var loggedInSubmission: LoggedInSubmission
 
 	@Autowired
 	private lateinit var objectMapper: ObjectMapper
 
 	@Test
-	fun `When receiving call on nologin Rest endpoint, message is put on Kafka`() {
+	fun `When receiving call on loggedin Rest endpoint, message is put on Kafka`() {
 
 		// Given
-		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE") ?: 0.0
-		val sentInBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE") ?: 0.0
+		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE") ?: 0.0
+		val sentInBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_OK.name,"HJE") ?: 0.0
 		val brukerId = "01234567891"
 		val avsenderId = "12345678901"
 		val soknad = createInnsending(
@@ -76,7 +77,7 @@ lateinit var prometheusRegistry: PrometheusRegistry
 				id = avsenderId,
 				idType = AvsenderDto.IdType.FNR,
 				navn = null
-			), kanal = "NAV_NO_UINNLOGGET", tema = "HJE"
+			), kanal = "NAV_NO", tema = "HJE"
 		)
 
 		val msgKey = slot<String>()
@@ -89,13 +90,13 @@ lateinit var prometheusRegistry: PrometheusRegistry
 		every { kafkaSender.publishMetric(capture(metricKey), capture(metricMsg)) } returns Unit
 
 		// When
-		nologinSubmission.nologinSubmission(soknad, null)
+		loggedInSubmission.loggedInSubmission(soknad, null)
 
 		// Expect
 		assertTrue(msgKey.isCaptured, "Should capture message key")
 		assertEquals(soknad.innsendingsId, msgKey.captured, "Should use innsendingsId as message key")
 		assertTrue(isLoggedIn.isCaptured)
-		assertEquals(false, isLoggedIn.captured, "Should not be logged in")
+		assertEquals(true, isLoggedIn.captured, "Should be logged in")
 		assertTrue(innsendingMsg.isCaptured, "Should capture innsending message")
 		val submission = objectMapper.readValue(innsendingMsg.captured, InnsendingTopicMsg::class.java)
 		assertEquals(soknad.tema, submission.arkivtema, "Should send correct tema")
@@ -108,17 +109,17 @@ lateinit var prometheusRegistry: PrometheusRegistry
 		assertTrue(metricMsg.isCaptured, "Should capture metric message")
 		assertEquals("soknadsmottaker", metricMsg.captured.application, "Metrics should have correct application name")
 
-		assertEquals(errorsBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE"), "Should not cause errors")
-		assertEquals(sentInBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE"), "Should increase counter by 1")
+		assertEquals(errorsBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE"), "Should not cause errors")
+		assertEquals(sentInBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_OK.name,"HJE"), "Should increase counter by 1")
 
 	}
 
 	@Test
-	fun `When receiving call on nologin Rest endpoint test input mapping`() {
+	fun `When receiving call on loggedin Rest endpoint with empty brukerDto test input mapping`() {
 
 		// Given
-		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE") ?: 0.0
-		val sentInBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE") ?: 0.0
+		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE") ?: 0.0
+		val sentInBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_OK.name,"HJE") ?: 0.0
 		val avsenderId = "123456789"
 		val soknad = createInnsending(
 			brukerDto = null,
@@ -126,8 +127,8 @@ lateinit var prometheusRegistry: PrometheusRegistry
 				id = avsenderId,
 				idType = AvsenderDto.IdType.ORGNR,
 				navn = null
-				),
-			kanal = "NAV_NO_UINNLOGGET",
+			),
+			kanal = "NAV_NO",
 			tema = "HJE"
 		)
 
@@ -141,13 +142,13 @@ lateinit var prometheusRegistry: PrometheusRegistry
 		every { kafkaSender.publishMetric(capture(metricKey), capture(metricMsg)) } returns Unit
 
 		// When
-		nologinSubmission.nologinSubmission(soknad, null)
+		loggedInSubmission.loggedInSubmission(soknad, null)
 
 		// Expect
 		assertTrue(msgKey.isCaptured, "Should capture message key")
 		assertEquals(soknad.innsendingsId, msgKey.captured, "Should use innsendingsId as message key")
 		assertTrue(isLoggedIn.isCaptured)
-		assertEquals(false, isLoggedIn.captured, "Should not be logged in")
+		assertEquals(true, isLoggedIn.captured, "Should be logged in")
 		assertTrue(innsendingMsg.isCaptured, "Should capture innsending message")
 		val submission = objectMapper.readValue(innsendingMsg.captured, InnsendingTopicMsg::class.java)
 		assertEquals(soknad.tema, submission.arkivtema, "Should send correct tema")
@@ -166,8 +167,8 @@ lateinit var prometheusRegistry: PrometheusRegistry
 		assertTrue(metricMsg.isCaptured, "Should capture metric message")
 		assertEquals("soknadsmottaker", metricMsg.captured.application, "Metrics should have correct application name")
 
-		assertEquals(errorsBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE"), "Should not cause errors")
-		assertEquals(sentInBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE"), "Should increase counter by 1")
+		assertEquals(errorsBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE"), "Should not cause errors")
+		assertEquals(sentInBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_OK.name,"HJE"), "Should increase counter by 1")
 
 	}
 
@@ -180,10 +181,10 @@ lateinit var prometheusRegistry: PrometheusRegistry
 				id = "01234567891",
 				idType = AvsenderDto.IdType.FNR,
 				navn = null
-			), kanal = "NAV_NO_UINNLOGGET", tema = "HJE"
+			), kanal = "NAV_NO", tema = "HJE"
 		)
-		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE") ?: 0.0
-		val sentInBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE")	?: 0.0
+		val errorsBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE") ?: 0.0
+		val sentInBefore = metrics.mottattSoknadGet(MetricNames.INNSENDT_OK.name,"HJE")	?: 0.0
 
 		val msgKey = slot<String>()
 		val innsendingMsg = slot<String>()
@@ -196,14 +197,13 @@ lateinit var prometheusRegistry: PrometheusRegistry
 
 		// When
 		assertThrows<KafkaException> {
-			nologinSubmission.nologinSubmission(soknad, null)
+			loggedInSubmission.loggedInSubmission(soknad, null)
 		}
 
 		// Expect
 		assertTrue(msgKey.isCaptured, "Should capture message key")
 		assertEquals(soknad.innsendingsId, msgKey.captured, "Should use innsendingsId as message key")
-		assertEquals(false, isLoggedIn.captured, "Should not be logged in")
-		assertTrue(innsendingMsg.isCaptured, "Should capture innsending message")
+		assertEquals(true, isLoggedIn.captured, "Should be logged in")
 		assertTrue(innsendingMsg.isCaptured, "Should capture innsending message")
 		val submission = objectMapper.readValue(innsendingMsg.captured, InnsendingTopicMsg::class.java)
 		assertEquals(soknad.tema, submission.arkivtema, "Should send correct tema")
@@ -215,10 +215,10 @@ lateinit var prometheusRegistry: PrometheusRegistry
 		assertTrue(metricMsg.isCaptured, "Should capture metric message")
 		assertEquals("soknadsmottaker", metricMsg.captured.application, "Metrics should have correct application name")
 
-		assertEquals(errorsBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE"), "Should not cause errors")
-		assertEquals(sentInBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE"), "Should increase counter by 1")
+		assertEquals(errorsBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_ERROR.name, "HJE"), "Should not cause errors")
+		assertEquals(sentInBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_OK.name,"HJE"), "Should increase counter by 1")
 
 	}
 
-}
 
+}

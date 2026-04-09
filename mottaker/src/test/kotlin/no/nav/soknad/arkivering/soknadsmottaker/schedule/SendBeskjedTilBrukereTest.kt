@@ -44,6 +44,7 @@ class SendBeskjedTilBrukereTest {
 
 	@Test
 	fun testLesOgKonverterInput() {
+		// Given
 		val sendBeskjedTilBrukere = SendBeskjedTilBrukere(notificationService, leaderSelectionUtility)
 		val userNotificationMessageDto = lagInput()
 		val filePath = ""
@@ -61,13 +62,13 @@ class SendBeskjedTilBrukereTest {
 		val brukernotifikasjonInfos = mutableListOf<NotificationInfo>()
 		every { notificationService.userMessageNotification(any(),capture(brukernotifikasjonInfos), any(), any()) } returns Unit
 
+		// When
 		sendBeskjedTilBrukere.start()
 
+		// Expect
 		assertTrue(brukernotifikasjonInfos.isNotEmpty())
 
 	}
-
-
 
 	fun writeBytesToFile(data: ByteArray, filePath: String) {
 		File(filePath).writeBytes(data)

@@ -40,10 +40,13 @@ fun createVariant(mediaType: String = "application/pdf") = Varianter(
 
 fun createInnsending(
 	tema: String = "HJE", skjemanr: String = "NAV 10-07.54", tittel: String = "Søknad om servicehund",
-	vedlegg: List<DokumentData> = createDefaultDokumentListe() , brukerDto: BrukerDto?) = Innsending (
+	vedlegg: List<DokumentData> = createDefaultDokumentListe(),
+	brukerDto: BrukerDto?,
+	avsenderDto: AvsenderDto= AvsenderDto(id = "01234567891", idType = AvsenderDto.IdType.FNR, navn = null),
+	kanal: String = "NAV_NO") = Innsending (
 	innsendingsId = UUID.randomUUID().toString(),
-	kanal = "NOLOGIN_NAV_NO",
-	avsenderDto = AvsenderDto(id = "01234567891", idType = AvsenderDto.IdType.FNR),
+	kanal = kanal,
+	avsenderDto = avsenderDto,
 	brukerDto = brukerDto,
 	tema = tema,
 	skjemanr = skjemanr,
