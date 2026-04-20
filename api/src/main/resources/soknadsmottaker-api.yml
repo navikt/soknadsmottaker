@@ -337,6 +337,15 @@ components:
           items:
             $ref: "#/components/schemas/DokumentData"
           description: Hver Soknad kan ha flere vedlegg. Denne listen beskriver metadata om disse dokumentene.
+        innsendtDato:
+            $ref: "#/components/schemas/InnsendtDato"
+
+    InnsendtDato:
+      type: string
+      format: date-time
+      description: >
+        Dato og tid for når innsendingen ble gjort av søker.
+      example: 2022-04-06T14:10:00Z
 
     InnsendingTopicMsg:
       type: object
