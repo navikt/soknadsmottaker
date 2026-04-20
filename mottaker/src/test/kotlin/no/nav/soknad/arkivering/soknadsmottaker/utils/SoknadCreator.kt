@@ -8,6 +8,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
 import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import no.nav.soknad.arkivering.soknadsmottaker.model.Variant
 import no.nav.soknad.arkivering.soknadsmottaker.model.Varianter
+import java.time.OffsetDateTime
 import java.util.UUID
 
 private val brukerId: String = "01234567891"
@@ -43,7 +44,9 @@ fun createInnsending(
 	vedlegg: List<DokumentData> = createDefaultDokumentListe(),
 	brukerDto: BrukerDto?,
 	avsenderDto: AvsenderDto= AvsenderDto(id = "01234567891", idType = AvsenderDto.IdType.FNR, navn = null),
-	kanal: String = "NAV_NO") = Innsending (
+	kanal: String = "NAV_NO",
+	innsendtDato: OffsetDateTime? = OffsetDateTime.now(),
+	ettersendelseTilId: String? = null) = Innsending (
 	innsendingsId = UUID.randomUUID().toString(),
 	kanal = kanal,
 	avsenderDto = avsenderDto,
@@ -51,7 +54,9 @@ fun createInnsending(
 	tema = tema,
 	skjemanr = skjemanr,
 	tittel = tittel,
-	dokumenter = vedlegg
+	dokumenter = vedlegg,
+	innsendtdato = innsendtDato,
+	ettersendelseTilId = ettersendelseTilId
 )
 
 fun createDefaultDokumentListe() : List<DokumentData> {

@@ -20,6 +20,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 class ConverterTests {
 	private val soknad = createSoknad()
@@ -88,7 +89,8 @@ class ConverterTests {
 				id = "01234567891",
 				idType = AvsenderDto.IdType.FNR,
 				navn = null
-			), kanal = "NAV_NO_UINNLOGGET", tema = "HJE"
+			), kanal = "NAV_NO_UINNLOGGET", tema = "HJE",
+			innsendtDato = null
 		)
 		val startTime = OffsetDateTime.now()
 		val convertedSoknad = mapTilInnsendingTopicMsg(soknad, false)
@@ -106,6 +108,35 @@ class ConverterTests {
 			convertedSoknad.dokumenter.map{it.varianter.map{variant-> variant.uuid}}.flatten(), "Should send correct uuids")
 		val endTime = OffsetDateTime.now()
 		assertTrue(startTime.isBefore(convertedSoknad.innsendtDato) && convertedSoknad.innsendtDato.isBefore(endTime))
+	}
+
+	@Test
+	fun `Can convert innsending message with innsendtDato`() {
+		val soknad = createInnsending(
+			brukerDto = BrukerDto("01234567891", BrukerDto.IdType.FNR),
+			avsenderDto = AvsenderDto(
+				id = "01234567891",
+				idType = AvsenderDto.IdType.FNR,
+				navn = null
+			), kanal = "NAV_NO_UINNLOGGET", tema = "HJE",
+			innsendtDato = OffsetDateTime.now(),
+			ettersendelseTilId = UUID.randomUUID().toString()
+		)
+		val convertedSoknad = mapTilInnsendingTopicMsg(soknad, false)
+
+		assertEquals(soknad.innsendingsId, convertedSoknad.innsendingsId)
+		assertEquals(soknad.tema, convertedSoknad.arkivtema)
+		assertEquals(soknad.kanal, convertedSoknad.kanal)
+		assertEquals(soknad.brukerDto?.id, convertedSoknad.brukerDto?.id)
+		assertEquals(soknad.avsenderDto.id, convertedSoknad.avsenderDto.id)
+		assertEquals(soknad.avsenderDto.idType, convertedSoknad.avsenderDto.idType)
+		assertEquals(soknad.dokumenter.size, convertedSoknad.dokumenter.size)
+		assertEquals(soknad.dokumenter.filter{it.erHovedskjema}.first().varianter.map{it.variantFormat},
+			convertedSoknad.dokumenter.filter{it.erHovedskjema}.first().varianter.map{it.variantFormat}, "Should send correct variantFormats")
+		assertEquals(soknad.dokumenter.map{it.varianter.map{variant-> variant.uuid}}.flatten(),
+			convertedSoknad.dokumenter.map{it.varianter.map{variant-> variant.uuid}}.flatten(), "Should send correct uuids")
+		assertEquals(soknad.innsendtdato, convertedSoknad.innsendtDato, "Should preserve innsendtDato")
+		assertEquals(soknad.ettersendelseTilId, convertedSoknad.ettersendelseTilId, "Should preserve ettersendelseTilId")
 	}
 
 	fun createUtcPreservingMapper(): com.fasterxml.jackson.databind.ObjectMapper {
