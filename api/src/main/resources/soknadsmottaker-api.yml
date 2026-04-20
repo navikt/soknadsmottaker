@@ -337,7 +337,7 @@ components:
           items:
             $ref: "#/components/schemas/DokumentData"
           description: Hver Soknad kan ha flere vedlegg. Denne listen beskriver metadata om disse dokumentene.
-        innsendtdato:
+        innsendtDato:
             $ref: "#/components/schemas/InnsendtDato"
 
     InnsendtDato:

@@ -30,7 +30,7 @@ fun maskIdsInInnsending(soknad: Innsending) = Innsending(
 
 fun mapTilInnsendingTopicMsg(innsending: Innsending, erInnlogget: Boolean): InnsendingTopicMsg {
 	return InnsendingTopicMsg(
-		innsendtDato = innsending.innsendtdato ?: OffsetDateTime.now(),
+		innsendtDato = innsending.innsendtDato ?: OffsetDateTime.now(),
 		innlogget = erInnlogget,
 		innsendingsId = innsending.innsendingsId,
 		ettersendelseTilId = innsending.ettersendelseTilId,

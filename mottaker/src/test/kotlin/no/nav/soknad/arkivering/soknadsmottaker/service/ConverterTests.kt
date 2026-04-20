@@ -135,7 +135,7 @@ class ConverterTests {
 			convertedSoknad.dokumenter.filter{it.erHovedskjema}.first().varianter.map{it.variantFormat}, "Should send correct variantFormats")
 		assertEquals(soknad.dokumenter.map{it.varianter.map{variant-> variant.uuid}}.flatten(),
 			convertedSoknad.dokumenter.map{it.varianter.map{variant-> variant.uuid}}.flatten(), "Should send correct uuids")
-		assertEquals(soknad.innsendtdato, convertedSoknad.innsendtDato, "Should preserve innsendtDato")
+		assertEquals(soknad.innsendtDato, convertedSoknad.innsendtDato, "Should preserve innsendtDato")
 		assertEquals(soknad.ettersendelseTilId, convertedSoknad.ettersendelseTilId, "Should preserve ettersendelseTilId")
 	}
 

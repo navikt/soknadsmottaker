@@ -55,7 +55,7 @@ fun createInnsending(
 	skjemanr = skjemanr,
 	tittel = tittel,
 	dokumenter = vedlegg,
-	innsendtdato = innsendtDato,
+	innsendtDato = innsendtDato,
 	ettersendelseTilId = ettersendelseTilId
 )
 
