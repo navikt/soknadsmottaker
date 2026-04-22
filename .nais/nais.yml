@@ -69,8 +69,6 @@ spec:
       value: {{profile}}
     - name: KAFKA_SECURITY
       value: 'TRUE'
-    - name: KAFKA_MAIN_TOPIC
-      value: {{kafka-main-topic}}
     - name: KAFKA_METRICS_TOPIC
       value: {{kafka-metrics-topic}}
     - name: KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC

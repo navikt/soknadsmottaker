@@ -5,7 +5,6 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig.USER_INFO_CONFIG
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
-import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
 import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.config.SaslConfigs.SASL_MECHANISM
@@ -50,8 +49,10 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 		}
 	}
 
+/*
 	@Bean
 	fun producerFactory() = DefaultKafkaProducerFactory<String, Soknadarkivschema>(createKafkaConfig(stringKeySerializerClass))
+*/
 
 	@Bean
 	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(createKafkaConfig(stringKeySerializerClass))
@@ -86,8 +87,10 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	@Bean
 	fun kafkaUtkastTemplate() = KafkaTemplate(utkastFactory())
 
+/*
 	@Bean
 	fun kafkaTemplate() = KafkaTemplate(producerFactory())
+*/
 
 	@Bean
 	fun metricKafkaTemplate() = KafkaTemplate(metricProducerFactory())
@@ -112,7 +115,6 @@ class KafkaConfig {
 	lateinit var keystorePath: String
 	lateinit var credstorePassword: String
 
-	lateinit var mainTopic: String
 	lateinit var metricsTopic: String
 	lateinit var brukernotifikasjonDoneTopic: String
 	lateinit var brukernotifikasjonBeskjedTopic: String

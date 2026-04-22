@@ -48,7 +48,6 @@ kafkaconfig:
   keystorePath: ${KAFKA_KEYSTORE_PATH}
   credstorePassword: ${KAFKA_CREDSTORE_PASSWORD}
 
-  mainTopic: ${KAFKA_MAIN_TOPIC}
   metricsTopic: ${KAFKA_METRICS_TOPIC}
   brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC}
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC}
@@ -88,7 +87,6 @@ kafkaconfig:
   keystorePath: ${KAFKA_KEYSTORE_PATH}
   credstorePassword: ${KAFKA_CREDSTORE_PASSWORD}
 
-  mainTopic: ${KAFKA_MAIN_TOPIC:privat-soknadinnsending-v1-dev}
   metricsTopic: ${KAFKA_METRICS_TOPIC:privat-soknadinnsending-metrics-v1-dev}
   brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC:min-side.aapen-brukernotifikasjon-done-v1}
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC:min-side.aapen-brukernotifikasjon-beskjed-v1}
@@ -127,7 +125,6 @@ kafkaconfig:
   keystorePath: path
   credstorePassword: pass
 
-  mainTopic: ${KAFKA_MAIN_TOPIC:privat-soknadinnsending-v1-dev}
   metricsTopic: ${KAFKA_METRICS_TOPIC:privat-soknadinnsending-metrics-v1-dev}
   brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC:min-side.aapen-brukernotifikasjon-done-v1}
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC:min-side.aapen-brukernotifikasjon-beskjed-v1}
