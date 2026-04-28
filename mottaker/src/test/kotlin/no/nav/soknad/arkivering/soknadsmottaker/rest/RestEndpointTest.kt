@@ -189,8 +189,6 @@ class RestEndpointTest {
 
 	}
 
-
-
 	@Test
 	fun `When receiving REST call without token, message is rejected`() {
 		// Given
@@ -213,7 +211,7 @@ class RestEndpointTest {
 		val status = api?.receiveLoggedinSoknad(soknad, issuer = null)
 
 		// Expect
-		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.OK")
+		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.UNAUTHORIZED")
 
 	}
 

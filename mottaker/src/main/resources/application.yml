@@ -129,6 +129,6 @@ kafkaconfig:
   brukernotifikasjonDoneTopic: ${KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC:min-side.aapen-brukernotifikasjon-done-v1}
   brukernotifikasjonBeskjedTopic: ${KAFKA_BRUKERNOTIFIKASJON_BESKJED_TOPIC:min-side.aapen-brukernotifikasjon-beskjed-v1}
   brukernotifikasjonOppgaveTopic: ${KAFKA_BRUKERNOTIFIKASJON_OPPGAVE_TOPIC:min-side.aapen-brukernotifikasjon-oppgave-v1}
-  loggedinSubmissionTopic: ${KAFKA_LOGGEDIN_SUBMISSION_TOPIC:privat-loggedinsubmission-v1-dev-dev}
+  loggedinSubmissionTopic: ${KAFKA_LOGGEDIN_SUBMISSION_TOPIC:privat-loggedinsubmission-v1-dev}
   nologinSubmissionTopic: ${KAFKA_NOLOGIN_SUBMISSION_TOPIC:privat-nologinsubmission-v1-dev}
 

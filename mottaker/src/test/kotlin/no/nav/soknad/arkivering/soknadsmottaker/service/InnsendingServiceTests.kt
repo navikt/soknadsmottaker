@@ -12,7 +12,7 @@ import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createInnsending
 import org.junit.jupiter.api.Test
 
-class ArchiverServiceTests {
+class InnsendingServiceTests {
 	private val kafkaSender = mockk<KafkaSender>()
 
 	private val metrics = mockk<InnsendtMetrics>(relaxed = true)

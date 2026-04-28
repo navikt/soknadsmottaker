@@ -49,11 +49,6 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 		}
 	}
 
-/*
-	@Bean
-	fun producerFactory() = DefaultKafkaProducerFactory<String, Soknadarkivschema>(createKafkaConfig(stringKeySerializerClass))
-*/
-
 	@Bean
 	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(createKafkaConfig(stringKeySerializerClass))
 
@@ -86,11 +81,6 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 
 	@Bean
 	fun kafkaUtkastTemplate() = KafkaTemplate(utkastFactory())
-
-/*
-	@Bean
-	fun kafkaTemplate() = KafkaTemplate(producerFactory())
-*/
 
 	@Bean
 	fun metricKafkaTemplate() = KafkaTemplate(metricProducerFactory())
