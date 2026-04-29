@@ -1,85 +1,54 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import no.nav.soknad.arkivering.avroschemas.Soknadstyper
 import no.nav.soknad.arkivering.soknadsmottaker.model.AvsenderDto
 import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
-import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingTopicMsg
 import no.nav.soknad.arkivering.soknadsmottaker.util.mapTilInnsendingTopicMsg
-import no.nav.soknad.arkivering.soknadsmottaker.utils.createDocuments
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createInnsending
-import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
-import no.nav.soknad.arkivering.soknadsmottaker.utils.createVariant
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.time.Instant
 import java.time.OffsetDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 class ConverterTests {
-	private val soknad = createSoknad()
+	private val soknad = createInnsending(
+		brukerDto = BrukerDto("12345678901", BrukerDto.IdType.FNR),
+		avsenderDto = AvsenderDto(
+			id = "12345678901",
+			idType = AvsenderDto.IdType.FNR,
+			navn = null
+		), kanal = "NAV_NO", tema = "BIL", innsendtDato = OffsetDateTime.now()
+	)
+
 
 	@Test
 	fun `Can convert correctly`() {
-		val startTime = OffsetDateTime.now().toEpochSecond()
+		val result = mapTilInnsendingTopicMsg(soknad, true)
 
-		val result = convert(soknad)
-
-		assertEquals(soknad.innsendingId, result.behandlingsid)
-		assertEquals(soknad.personId, result.fodselsnummer)
+		assertEquals(soknad.innsendingsId, result.innsendingsId)
+		assertEquals(soknad.brukerDto?.id, result.brukerDto?.id)
+		assertEquals(soknad.brukerDto?.idType.toString(), result.brukerDto?.idType.toString())
+		assertEquals(soknad.avsenderDto.id, result.avsenderDto.id)
+		assertEquals(soknad.avsenderDto.idType.toString(), result.avsenderDto.idType.toString())
 		assertEquals(soknad.tema, result.arkivtema)
-		val endTime = OffsetDateTime.now().toEpochSecond()
-		assertTrue(result.innsendtDato >= startTime)
-		assertTrue(result.innsendtDato <= endTime)
-		val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-		val innsendtDatoStreng = Instant.ofEpochSecond(result.innsendtDato)
-			.atZone(ZoneId.of("UTC"))
-			.format(formatter)
+		assertEquals(soknad.innsendtDato, result.innsendtDato)
+		assertEquals(soknad.ettersendelseTilId, result.ettersendelseTilId)
+		assertEquals(soknad.kanal, result.kanal)
+		assertEquals(soknad.skjemanr, result.skjemanr)
+		assertEquals(soknad.tittel, result.tittel)
 
-		assertEquals(1, result.mottatteDokumenter.size)
+		assertEquals(3, result.dokumenter.size)
 
-		assertEquals(soknad.dokumenter[0].skjemanummer, result.mottatteDokumenter[0].skjemanummer)
-		assertEquals(soknad.dokumenter[0].erHovedskjema, result.mottatteDokumenter[0].erHovedskjema)
-		assertEquals(soknad.dokumenter[0].tittel, result.mottatteDokumenter[0].tittel)
-		assertEquals(1, result.mottatteDokumenter[0].mottatteVarianter.size)
+		assertEquals(soknad.dokumenter[0].skjemanummer, result.dokumenter[0].skjemanummer)
+		assertEquals(soknad.dokumenter[0].erHovedskjema, result.dokumenter[0].erHovedskjema)
+		assertEquals(soknad.dokumenter[0].tittel, result.dokumenter[0].tittel)
+		assertEquals(2, result.dokumenter[0].varianter.size)
 
-		assertEquals(soknad.dokumenter[0].varianter[0].id, result.mottatteDokumenter[0].mottatteVarianter[0].uuid)
-		assertEquals(soknad.dokumenter[0].varianter[0].filnavn, result.mottatteDokumenter[0].mottatteVarianter[0].filnavn)
-		assertEquals(soknad.dokumenter[0].varianter[0].filtype, result.mottatteDokumenter[0].mottatteVarianter[0].filtype)
-		assertEquals("ARKIV", result.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
+		assertEquals(soknad.dokumenter[0].varianter[0].uuid, result.dokumenter[0].varianter[0].uuid)
+		assertEquals(soknad.dokumenter[0].varianter[0].filnavn, result.dokumenter[0].varianter[0].filnavn)
+		assertEquals(soknad.dokumenter[0].varianter[0].filtype, result.dokumenter[0].varianter[0].filtype)
+		assertEquals("ARKIV", result.dokumenter[0].varianter[0].variantFormat)
 	}
-
-	@Test
-	fun `Can convert Soknadstyper`() {
-		val result0 = convert(soknad.copy(erEttersendelse = false))
-		assertEquals(Soknadstyper.SOKNAD, result0.soknadstype)
-
-		val result1 = convert(soknad.copy(erEttersendelse = true))
-		assertEquals(Soknadstyper.ETTERSENDING, result1.soknadstype)
-	}
-
-	@Test
-	fun `Can convert Variantformat`() {
-		val result0 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/pdf")))))
-		assertTrue(soknad.dokumenter[0].erHovedskjema)
-		assertEquals("ARKIV", result0.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
-
-		val result1 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/pdf-fullversjon")))))
-		assertEquals("FULLVERSJON", result1.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
-
-		val result2 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/json")))))
-		assertEquals("ORIGINAL", result2.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
-
-		val result3 = convert(soknad.copy(dokumenter = createDocuments(listOf(createVariant("application/xml")))))
-		assertEquals("ORIGINAL", result3.mottatteDokumenter[0].mottatteVarianter[0].variantformat)
-	}
-
 
 	@Test
 	fun `Can convert innsending message`() {
@@ -137,19 +106,6 @@ class ConverterTests {
 			convertedSoknad.dokumenter.map{it.varianter.map{variant-> variant.uuid}}.flatten(), "Should send correct uuids")
 		assertEquals(soknad.innsendtDato, convertedSoknad.innsendtDato, "Should preserve innsendtDato")
 		assertEquals(soknad.ettersendelseTilId, convertedSoknad.ettersendelseTilId, "Should preserve ettersendelseTilId")
-	}
-
-	fun createUtcPreservingMapper(): com.fasterxml.jackson.databind.ObjectMapper {
-		val mapper = jacksonObjectMapper()
-		mapper.registerModule(JavaTimeModule())
-		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-		mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
-		return mapper
-	}
-
-	fun deserializeMsg(msgString: String): InnsendingTopicMsg {
-		return createUtcPreservingMapper()
-			.readValue(msgString, InnsendingTopicMsg::class.java)
 	}
 
 }

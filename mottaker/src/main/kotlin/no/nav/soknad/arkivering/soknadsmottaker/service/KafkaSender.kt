@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit
 @Component
 class KafkaSender(
 	private val kafkaConfig: KafkaConfig,
-	private val kafkaTemplate: KafkaTemplate<String, Soknadarkivschema>,
 	private val metricKafkaTemplate: KafkaTemplate<String, InnsendingMetrics>,
 	private val kafkaBeskjedTemplate: KafkaTemplate<String, String>,
 	private val kafkaOppgaveTemplate: KafkaTemplate<String, String>,
@@ -24,12 +23,6 @@ class KafkaSender(
 	private val nologinKafkaTemplate: KafkaTemplate<String, String>
 ) {
 	private val logger = LoggerFactory.getLogger(javaClass)
-
-	fun publishSoknadarkivschema(key: String, value: Soknadarkivschema) {
-		val topic = kafkaConfig.mainTopic
-		publish(topic, key, value, kafkaTemplate)
-		logger.info("$key: Published to $topic")
-	}
 
 	fun publishMetric(key: String, value: InnsendingMetrics) {
 		val topic = kafkaConfig.metricsTopic
@@ -57,13 +50,6 @@ class KafkaSender(
 	fun publishOppgaveNotification(key: String, value: String) {
 		val topic = kafkaConfig.brukernotifikasjonOppgaveTopic
 		publishBrukernotifikasjon(topic, key, value, kafkaOppgaveTemplate)
-	}
-
-	fun publishNologinSubmission(key: String, value: String) {
-		val topic = kafkaConfig.nologinSubmissionTopic
-		logger.info("$key: shall publish NologinSubmission to topic $topic")
-		publish(topic, key, value, nologinKafkaTemplate)
-		logger.info("$key: published to topic $topic")
 	}
 
 	private fun publishBrukernotifikasjon(topic: String, key: String, value: String, kafkaTemplate: KafkaTemplate<String,String>) {

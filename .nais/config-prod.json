@@ -4,7 +4,6 @@
 	"ingress": [
 		"https://soknadsmottaker-gcp.intern.nav.no"
 	],
-	"kafka-main-topic": "team-soknad.privat-soknadinnsending-v2",
 	"kafka-metrics-topic": "team-soknad.privat-soknadinnsending-metrics-v2",
 	"kafka-brukernotifikasjon-done-topic": "min-side.aapen-brukervarsel-v1",
 	"kafka-brukernotifikasjon-beskjed-topic": "min-side.aapen-brukervarsel-v1",
