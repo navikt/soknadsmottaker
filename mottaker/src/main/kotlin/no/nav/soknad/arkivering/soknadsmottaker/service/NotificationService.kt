@@ -107,6 +107,7 @@ class NotificationService(
 			.withLink(brukerNotifikasjonInfo.lenke)
 			.withIdent(ident)
 			.withTittel(brukerNotifikasjonInfo.notifikasjonsTittel)
+			.withSlettesEtter(ZonedDateTime.now(ZoneId.of("Z")).plusDays(brukerNotifikasjonInfo.antallAktiveDager.toLong()))
 			.create()
 
 		try {
