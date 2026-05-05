@@ -8,8 +8,9 @@ import no.nav.tms.utkast.builder.UtkastJsonBuilder
 import no.nav.tms.varsel.action.*
 import no.nav.tms.varsel.builder.VarselActionBuilder
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.time.ZoneId
+import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
@@ -18,6 +19,14 @@ class NotificationService(
 	private val kafkaSender: KafkaSender,
 	private val kafkaConfig: KafkaConfig
 ) {
+	@Value("\${cluster}")
+	private val cluster: String = ""
+
+	@Value("\${namespace}")
+	private val namespace: String = ""
+
+	@Value("\${appname}")
+	private val appname: String = ""
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -96,18 +105,28 @@ class NotificationService(
 		}
 	}
 
+	fun zonedDateTimeFromDays(days: Int): ZonedDateTime {
+		val now = OffsetDateTime.now()
+		return now
+			.toLocalDate()
+			.plusDays(days.toLong())
+			.atTime(2, 0)
+			.atZone(now.offset)
+	}
+
 	private fun publishNewUtkastNotification(
 		brukerNotifikasjonInfo: NotificationInfo,
 		eventId: String,
 		ident: String
 	) {
 		logger.info("$eventId: Lager utkast med lenke ${brukerNotifikasjonInfo.lenke}")
+
 		val utkast = UtkastJsonBuilder()
 			.withUtkastId(eventId)
 			.withLink(brukerNotifikasjonInfo.lenke)
 			.withIdent(ident)
 			.withTittel(brukerNotifikasjonInfo.notifikasjonsTittel)
-			.withSlettesEtter(ZonedDateTime.now(ZoneId.of("Z")).plusDays(brukerNotifikasjonInfo.antallAktiveDager.toLong()))
+			.withSlettesEtter(zonedDateTimeFromDays(brukerNotifikasjonInfo.antallAktiveDager))
 			.create()
 
 		try {
@@ -178,7 +197,8 @@ class NotificationService(
 				default = true
 			)
 			link = notificationInfo.lenke
-			aktivFremTil = ZonedDateTime.now(ZoneId.of("Z")).plusDays(notificationInfo.antallAktiveDager.toLong())
+			aktivFremTil = zonedDateTimeFromDays(notificationInfo.antallAktiveDager)
+			produsent = Produsent(cluster = cluster, namespace = namespace, appnavn = appname)
 			if (notificationInfo.eksternVarsling.isNotEmpty()) {
 				eksternVarsling {
 					preferertKanal =
@@ -194,6 +214,6 @@ class NotificationService(
 		}
 
 	private fun createDeleteNotification(eventId: String): String =
-		VarselActionBuilder.inaktiver { varselId = eventId }
+		VarselActionBuilder.inaktiver { varselId = eventId; produsent = Produsent(cluster = cluster, namespace = namespace, appnavn = appname) }
 
 	}
