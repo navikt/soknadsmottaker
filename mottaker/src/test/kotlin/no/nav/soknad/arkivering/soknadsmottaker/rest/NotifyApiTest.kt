@@ -151,7 +151,7 @@ class NotifyApiTest {
 		val slettesEtter = now
 			.toLocalDate()
 			.plusDays(brukerNotificationInfo.antallAktiveDager.toLong())
-			.atTime(2, 0)
+			.atTime(0, 5)
 			.atOffset(now.offset)
 		val slettesEtterString = objectMapper.writeValueAsString(slettesEtter).replace("\"", "")
 
