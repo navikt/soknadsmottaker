@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
@@ -20,13 +21,13 @@ class NotificationService(
 	private val kafkaConfig: KafkaConfig
 ) {
 	@Value("\${cluster}")
-	private val cluster: String = ""
+	private lateinit var cluster: String
 
 	@Value("\${namespace}")
-	private val namespace: String = ""
+	private lateinit var  namespace: String
 
 	@Value("\${appname}")
-	private val appname: String = ""
+	private lateinit var  appname: String
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -106,11 +107,11 @@ class NotificationService(
 	}
 
 	fun zonedDateTimeFromDays(days: Int): ZonedDateTime {
-		val now = OffsetDateTime.now()
+		val now = OffsetDateTime.now(ZoneId.of("Europe/Oslo"))
 		return now
 			.toLocalDate()
 			.plusDays(days.toLong())
-			.atTime(2, 0)
+			.atTime(0, 5)
 			.atZone(now.offset)
 	}
 
@@ -214,6 +215,9 @@ class NotificationService(
 		}
 
 	private fun createDeleteNotification(eventId: String): String =
-		VarselActionBuilder.inaktiver { varselId = eventId; produsent = Produsent(cluster = cluster, namespace = namespace, appnavn = appname) }
+		VarselActionBuilder.inaktiver {
+			varselId = eventId
+			produsent = Produsent(cluster = cluster, namespace = namespace, appnavn = appname)
+		}
 
 	}

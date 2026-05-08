@@ -205,7 +205,7 @@ class NotifyApiTest {
 		assertTrue( response.statusCode == HttpStatus.OK )
 
 		assertEquals(innsendingsId, msgKey.captured, "Should publish with correct key")
-		assertEquals(innsendingsId, msgKeyUtkast.captured, "Should)	 publish utkast done notification with correct key")
+		assertEquals(innsendingsId, msgKeyUtkast.captured, "Should publish utkast done notification with correct key")
 		assertTrue(notificationString.isCaptured, "Should capture done notification message")
 		assertTrue(notificationStringUtkast.isCaptured, "Should capture done utkast notification message")
 		val oppgaveDoneMsg = notificationString.captured
