@@ -116,7 +116,7 @@ class NotifyApiTest {
 		assertTrue (utkastMsg.contains(innsendingsId))
 		assertTrue (utkastMsg.contains("\"utkastId\":\"$innsendingsId\""))
 		assertTrue (utkastMsg.contains("\"ident\":\"${soknadRef.personId}\""))
-		assertTrue (utkastMsg.contains("\"slettesEtter\":\"${slettesEtter.toString()}\""), "Fant ikke forventet \"aktivFremTil\":\"$slettesEtterString\", i $oppgaveMsg")
+		assertTrue (utkastMsg.contains("\"slettesEtter\":\"${slettesEtter.toString()}\""), "Fant ikke forventet \"aktivFremTil\":\"${slettesEtter.toString()}\", i $utkastMsg")
 
 	}
 
