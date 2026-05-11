@@ -99,7 +99,7 @@ class NotifyApiTest {
 		val slettesEtter = now
 			.toLocalDate()
 			.plusDays(brukerNotificationInfo.antallAktiveDager.toLong())
-			.atTime(2, 0)
+			.atTime(0, 5)
 			.atOffset(now.offset)
 
 		every { kafkaSender.publishUtkastNotification(capture(msgKey), capture(notificationString)) } returns Unit
