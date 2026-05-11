@@ -116,7 +116,7 @@ class NotifyApiTest {
 		assertTrue (utkastMsg.contains(innsendingsId))
 		assertTrue (utkastMsg.contains("\"utkastId\":\"$innsendingsId\""))
 		assertTrue (utkastMsg.contains("\"ident\":\"${soknadRef.personId}\""))
-		assertTrue (utkastMsg.contains("\"slettesEtter\":\"${slettesEtter.toString()}\""), "Fant ikke forventet slettesEtter, fikk $utkastMsg")
+		assertTrue (utkastMsg.contains("\"slettesEtter\":\"${slettesEtter.toString()}\""), "Fant ikke forventet \"aktivFremTil\":\"$slettesEtterString\", i $oppgaveMsg")
 
 	}
 
@@ -170,7 +170,7 @@ class NotifyApiTest {
 		assertTrue (oppgaveMsg.contains("\"type\":\"oppgave\""))
 		assertTrue (oppgaveMsg.contains("\"varselId\":\"$innsendingsId\""))
 		assertTrue (oppgaveMsg.contains("\"ident\":\"${soknadRef.personId}\""))
-		assertTrue (oppgaveMsg.contains("\"aktivFremTil\":\"$slettesEtterString\""), "Fant ikke forventet slettesEtter, fikk $oppgaveMsg")
+		assertTrue (oppgaveMsg.contains("\"aktivFremTil\":\"$slettesEtterString\""), "Fant ikke forventet \"aktivFremTil\":\"$slettesEtterString\", i $oppgaveMsg")
 
 	}
 
