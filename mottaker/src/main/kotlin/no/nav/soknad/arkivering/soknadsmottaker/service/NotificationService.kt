@@ -112,7 +112,7 @@ class NotificationService(
 			.toLocalDate()
 			.plusDays(days.toLong())
 			.atTime(0, 5)
-			.atZone(now.offset)
+			.atZone(ZoneId.of("Europe/Oslo"))
 	}
 
 	private fun publishNewUtkastNotification(

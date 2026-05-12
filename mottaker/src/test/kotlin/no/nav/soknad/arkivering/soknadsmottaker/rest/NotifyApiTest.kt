@@ -32,7 +32,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.http.HttpStatus
 import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.UUID
 
 
@@ -96,11 +98,9 @@ class NotifyApiTest {
 		val notificationString = slot<String>()
 
 		val now = OffsetDateTime.now()
-		val slettesEtter = now
-			.toLocalDate()
-			.plusDays(brukerNotificationInfo.antallAktiveDager.toLong())
-			.atTime(0, 5)
-			.atOffset(now.offset)
+		val slettesEtter = mapToZonedDateTime(brukerNotificationInfo.antallAktiveDager)
+
+		val slettesEtterString =  objectMapper.writeValueAsString(slettesEtter).replace("\"", "")
 
 		every { kafkaSender.publishUtkastNotification(capture(msgKey), capture(notificationString)) } returns Unit
 
@@ -147,12 +147,7 @@ class NotifyApiTest {
 		val msgKey = slot<String>()
 		val notificationString = slot<String>()
 
-		val now = OffsetDateTime.now()
-		val slettesEtter = now
-			.toLocalDate()
-			.plusDays(brukerNotificationInfo.antallAktiveDager.toLong())
-			.atTime(0, 5)
-			.atOffset(now.offset)
+		val slettesEtter = mapToZonedDateTime(brukerNotificationInfo.antallAktiveDager)
 		val slettesEtterString = objectMapper.writeValueAsString(slettesEtter).replace("\"", "")
 
 		every { kafkaSender.publishOppgaveNotification(capture(msgKey), capture(notificationString)) } returns Unit
@@ -174,6 +169,14 @@ class NotifyApiTest {
 
 	}
 
+	private fun mapToZonedDateTime(noOfDays: Int): ZonedDateTime {
+		val now = OffsetDateTime.now()
+		return now
+			.toLocalDate()
+			.plusDays(noOfDays.toLong())
+			.atTime(0, 5)
+			.atZone(ZoneId.of("Europe/Oslo"))
+	}
 
 	@Test
 	fun `publishes done message when cancelNotification is called`() {
