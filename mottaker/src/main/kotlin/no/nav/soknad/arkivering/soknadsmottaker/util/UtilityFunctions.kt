@@ -1,6 +1,5 @@
 package no.nav.soknad.arkivering.soknadsmottaker.util
 
-import tools.jackson.databind.ObjectMapper
 import no.nav.soknad.arkivering.soknadsmottaker.model.AvsenderDto
 import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
 import no.nav.soknad.arkivering.soknadsmottaker.model.DokumentData
@@ -29,9 +28,9 @@ fun maskIdsInInnsending(soknad: Innsending) = Innsending(
 	)
 
 
-fun mapTilInnsendingTopicMsg(innsending: Innsending, erInnlogget: Boolean): String {
-	val msg = InnsendingTopicMsg(
-		innsendtDato = OffsetDateTime.now(),
+fun mapTilInnsendingTopicMsg(innsending: Innsending, erInnlogget: Boolean): InnsendingTopicMsg {
+	return InnsendingTopicMsg(
+		innsendtDato = innsending.innsendtDato ?: OffsetDateTime.now(),
 		innlogget = erInnlogget,
 		innsendingsId = innsending.innsendingsId,
 		ettersendelseTilId = innsending.ettersendelseTilId,
@@ -43,8 +42,6 @@ fun mapTilInnsendingTopicMsg(innsending: Innsending, erInnlogget: Boolean): Stri
 		arkivtema = innsending.tema,
 		dokumenter = innsending.dokumenter
 	)
-	val mapper = ObjectMapper()
-	return mapper.writeValueAsString(msg)
 
 }
 

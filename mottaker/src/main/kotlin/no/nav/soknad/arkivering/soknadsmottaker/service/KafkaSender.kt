@@ -14,21 +14,15 @@ import java.util.concurrent.TimeUnit
 @Component
 class KafkaSender(
 	private val kafkaConfig: KafkaConfig,
-	private val kafkaTemplate: KafkaTemplate<String, Soknadarkivschema>,
 	private val metricKafkaTemplate: KafkaTemplate<String, InnsendingMetrics>,
 	private val kafkaBeskjedTemplate: KafkaTemplate<String, String>,
 	private val kafkaOppgaveTemplate: KafkaTemplate<String, String>,
 	private val kafkaDoneTemplate: KafkaTemplate<String, String>,
 	private val kafkaUtkastTemplate: KafkaTemplate<String, String>,
+	private val loggedinKafkaTemplate: KafkaTemplate<String, String>,
 	private val nologinKafkaTemplate: KafkaTemplate<String, String>
 ) {
 	private val logger = LoggerFactory.getLogger(javaClass)
-
-	fun publishSoknadarkivschema(key: String, value: Soknadarkivschema) {
-		val topic = kafkaConfig.mainTopic
-		publish(topic, key, value, kafkaTemplate)
-		logger.info("$key: Published to $topic")
-	}
 
 	fun publishMetric(key: String, value: InnsendingMetrics) {
 		val topic = kafkaConfig.metricsTopic
@@ -58,21 +52,27 @@ class KafkaSender(
 		publishBrukernotifikasjon(topic, key, value, kafkaOppgaveTemplate)
 	}
 
-	fun publishNologinSubmission(key: String, value: String) {
-		val topic = kafkaConfig.nologinSubmissionTopic
-		logger.info("$key: shall publish NologinSubmission to topic $topic")
-		publish(topic, key, value, nologinKafkaTemplate)
-		logger.info("$key: published to topic $topic")
-	}
-
 	private fun publishBrukernotifikasjon(topic: String, key: String, value: String, kafkaTemplate: KafkaTemplate<String,String>) {
 		logger.info("${key}: Shall publish notification to topic $topic")
 		publish(topic, key, value, kafkaTemplate)
 		logger.info("${key}: Published to $topic")
 	}
 
+	fun publishSubmission(key: String, value: String, loggedIn: Boolean) {
+		if (loggedIn) {
+			val topic = kafkaConfig.loggedinSubmissionTopic
+			logger.info("$key: shall publish loggedinSubmission to topic $topic")
+			publish(topic, key, value, loggedinKafkaTemplate)
+			logger.info("$key: published to topic $topic")
+		} else {
+			val topic = kafkaConfig.nologinSubmissionTopic
+			logger.info("$key: shall publish NologinSubmission to topic $topic")
+			publish(topic, key, value, nologinKafkaTemplate)
+			logger.info("$key: published to topic $topic")
+		}
+	}
 
-	private fun <K: Any , V: Any> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
+	 fun <K: Any , V: Any> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
 		val producerRecord = ProducerRecord(topic, key, value)
 		val headers = RecordHeaders()
 		headers.add(MESSAGE_ID, UUID.randomUUID().toString().toByteArray())

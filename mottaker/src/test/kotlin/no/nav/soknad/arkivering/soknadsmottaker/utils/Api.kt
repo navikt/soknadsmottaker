@@ -2,7 +2,6 @@ package no.nav.soknad.arkivering.soknadsmottaker.utils
 
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
-import no.nav.soknad.arkivering.soknadsmottaker.model.Soknad
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
@@ -34,44 +33,6 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 		return headers
 	}
 
-	fun receiveSoknad(soknad: Soknad): HttpStatusCode {
-
-		val response = restTemplate
-			.mutate()
-			.responseTimeout(Duration.ofMinutes(2))
-			.build()
-
-			.post()
-			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
-			.headers { it.addAll(createHeaders(issuer = "azuread", audience = null)) }
-			.bodyValue(soknad)
-
-			.exchange()
-			.returnResult()
-
-		return response.status
-	}
-
-	fun receiveSoknad(soknad: Soknad, issuer: String? = "azuread", audience: String?): HttpStatusCode {
-
-		val response = restTemplate
-			.mutate()
-			.responseTimeout(Duration.ofMinutes(2))
-			.build()
-
-			.post()
-			.uri { uriBuilder -> uriBuilder.path("/soknad").build() }
-			.headers { it.addAll(createHeaders(issuer = issuer, audience = audience)) }
-			.bodyValue(soknad)
-
-			.exchange()
-			.returnResult()
-
-		return response.status
-	}
-
-
-
 	fun receiveNoLoginSoknad(soknad: Innsending, issuer: String? = "azuread"): HttpStatusCode {
 
 		val response = restTemplate
@@ -82,6 +43,30 @@ class Api(val restTemplate: WebTestClient, val mockOAuth2Server: MockOAuth2Serve
 			.post()
 			.uri { uriBuilder -> uriBuilder.path("/nologin-soknad").build() }
 			.headers { it.addAll(createHeaders(issuer = issuer, audience = null)) }
+			.bodyValue(soknad)
+
+			.exchange()
+			.returnResult()
+
+		return response.status
+	}
+
+
+	fun receiveLoggedinSoknad(soknad: Innsending, issuer: String? = "azuread"): HttpStatusCode {
+		return receiveLoggedinSoknad(soknad, issuer = issuer, audience = null)
+	}
+
+
+	fun receiveLoggedinSoknad(soknad: Innsending, issuer: String? = "azuread", audience: String? = null): HttpStatusCode {
+
+		val response = restTemplate
+			.mutate()
+			.responseTimeout(Duration.ofMinutes(2))
+			.build()
+
+			.post()
+			.uri { uriBuilder -> uriBuilder.path("/loggedin-soknad").build() }
+			.headers { it.addAll(createHeaders(issuer = issuer, audience = audience)) }
 			.bodyValue(soknad)
 
 			.exchange()

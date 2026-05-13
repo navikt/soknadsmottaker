@@ -26,34 +26,6 @@ tags:
     description: Application health endpoint
 
 paths:
-  /soknad:
-    post:
-      summary: Receives benefit application
-      description: Receives a benefit application, which will lead to it being put on a Kafka topic and archived.
-      operationId: receive
-
-      parameters:
-        - in: header
-          name: X-innsendingId
-          description: Tracing id that will be used in logging statements.
-          example: 92ee15dd-dc49-4c95-b9b6-6224bae088a0
-          required: false
-          schema:
-            type: string
-
-      requestBody:
-        description: Metadata about the benefit application being sent in.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Soknad"
-        required: true
-
-      responses:
-        200:
-          description: Successful operation
-      tags:
-        - soknad
 
   /nologin-soknad:
     post:
@@ -337,6 +309,15 @@ components:
           items:
             $ref: "#/components/schemas/DokumentData"
           description: Hver Soknad kan ha flere vedlegg. Denne listen beskriver metadata om disse dokumentene.
+        innsendtDato:
+            $ref: "#/components/schemas/InnsendtDato"
+
+    InnsendtDato:
+      type: string
+      format: date-time
+      description: >
+        Dato og tid for når innsendingen ble gjort av søker.
+      example: 2022-04-06T14:10:00Z
 
     InnsendingTopicMsg:
       type: object
@@ -415,73 +396,6 @@ components:
       type: string
       description: Tittel på innsendingen. Dette brukes for å gi en beskrivelse av hva innsendingen gjelder.
       example: Søknad om tilleggsstønader
-
-    Soknad:
-      type: object
-      required:
-        - innsendingId
-        - erEttersendelse
-        - personId
-        - tema
-        - dokumenter
-      properties:
-        innsendingId:
-          type: string
-          description: >
-            Unik id for forsendelsen. Denne **må** være unik. Id brukes på flere måter;
-            dels for sporing gjennom verdikjeden, dels som key på Kafka-topicen som Soknadsarkiverer leser. I tillegg
-            blir id sendt inn til Joark. Id blir lagret i joark sin journalpost i kolonnen `eksternReferanseId`. Hvis id
-            ikke er unik vil Joark svare med, `HttpStatus=Conflict`. Dette for å hindre at samme forsendelse arkiveres
-            flere ganger.
-          example: 2f9b8d25-1056-4827-8ddd-cedab7fafaaf
-        erEttersendelse:
-          type: boolean
-          description: Markerer hvis dette er en ettersendelse til en tidligere insendt Soknad.
-          example: true
-        personId:
-          type: string
-          description: Brukerens fødselsnummer (11 siffer).
-          example: 10108000398
-        tema:
-          type: string
-          description: Temaet som forsendelsen tilhører.
-          example: AAP
-        dokumenter:
-          type: array
-          items:
-            $ref: "#/components/schemas/DocumentData"
-          description: Hver Soknad kan ha flere vedlegg. Denne listen beskriver metadata om disse dokumentene.
-
-    DocumentData:
-      type: object
-      required:
-        - skjemanummer
-        - erHovedskjema
-        - tittel
-        - varianter
-      properties:
-        skjemanummer:
-          type: string
-          description: Skjemanummer/vedleggsnummer som dokumentet gjelder.
-          example: NAV 11-12.12
-        erHovedskjema:
-          type: boolean
-          description: >
-            Markerer hvis dette er hovedskjemaet for innsendingen. Kun ett dokument kan være markert med
-            `erHovedskjema = true`.
-          example: true
-        tittel:
-          type: string
-          description: Tittel på dokumentet.
-          example: Søknad om tilleggsstønader
-        varianter:
-          type: array
-          items:
-            $ref: "#/components/schemas/Varianter"
-          description: >
-            Det kan sendes inn flere varianter av samme dokument; for eksempel kan én søknaden sendes inn med en PDF/A
-            og en json variant av søknaden.
-            Denne lista inneholder metadata, der hver variant representerer en fysisk fil.
 
     DokumentData:
       type: object

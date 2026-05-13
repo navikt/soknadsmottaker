@@ -15,10 +15,10 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
-import no.nav.soknad.arkivering.avroschemas.Soknadarkivschema
+import no.nav.soknad.arkivering.soknadsmottaker.model.AvsenderDto
+import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createInnsending
-import no.nav.soknad.arkivering.soknadsmottaker.utils.createSoknad
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -87,31 +87,47 @@ class RestEndpointTest {
 	}
 
 	@Test
-	fun `When receiving REST call, message is put on Kafka`() {
-		val soknad = createSoknad()
-		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
+	fun `When receiving REST call to nologin endpoint, message is put on Kafka`() {
+		// Given
+		val brukerId = "01234567891"
+		val avsenderId = "12345678901"
+		val soknad = createInnsending(
+			brukerDto = BrukerDto(brukerId, BrukerDto.IdType.FNR),
+			avsenderDto = AvsenderDto(
+				id = avsenderId,
+				idType = AvsenderDto.IdType.FNR,
+				navn = null
+			), kanal = "NAV_NO_UINNLOGGET", tema = "BIL"
+		)
+		every { kafkaSender.publishSubmission(key= any(), value=any(), loggedIn=any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
 		val mockJwt = createMockJwt(AZURE_ISSUER)
 		(doReturn(mockJwt).`when` (azureJwtDecoder).decode(any()))
 
-		val status = api?.receiveSoknad(soknad)
+		// When
+		val status = api?.receiveNoLoginSoknad(soknad)
 
+		// Expect
 		assertEquals(HttpStatus.OK, status, "Should return HttpStatus.OK")
 
 		val innsendingsIdSlot = slot<String>()
-		val soknadSlot = slot<Soknadarkivschema>()
+		val innsendingMsg = slot<String>()
+		val isLoggedInSlot = slot<Boolean>()
 
-		verify(exactly = 1) { kafkaSender.publishSoknadarkivschema(capture(innsendingsIdSlot), capture(soknadSlot) ) }
+		verify(exactly = 1) { kafkaSender.publishSubmission(key=capture(innsendingsIdSlot), value=capture(innsendingMsg), loggedIn=capture(isLoggedInSlot) ) }
 		assertTrue(innsendingsIdSlot.isCaptured)
-		assertEquals(soknad.innsendingId, innsendingsIdSlot.captured, "Should send correct message")
-		assertTrue(soknadSlot.isCaptured)
-		assertEquals("BIL", soknadSlot.captured.arkivtema, "Should have correct tema")
+		assertEquals(soknad.innsendingsId, innsendingsIdSlot.captured, "Should send correct message")
+		assertTrue(innsendingMsg.isCaptured)
+		assertTrue( innsendingMsg.captured.contains("BIL"), "Should have correct tema")
+		assertTrue( innsendingMsg.captured.contains("NAV_NO_UINNLOGGET"), "Should have correct kanal")
+		assertTrue(isLoggedInSlot.isCaptured)
+		assertEquals( false, isLoggedInSlot.captured, "Should send isLoggedIn==false")
 
 		val metricsIdSlot = slot<String>()
 		val metricsDataSlot = slot<InnsendingMetrics>()
 		verify(exactly = 1) { kafkaSender.publishMetric(capture(metricsIdSlot), capture(metricsDataSlot) ) }
 		assertEquals(
-			soknad.innsendingId, metricsIdSlot.captured,
+			soknad.innsendingsId, metricsIdSlot.captured,
 			"Metrics should have a correct innsendingsId"
 		)
 		assertEquals(
@@ -121,27 +137,43 @@ class RestEndpointTest {
 
 	}
 
+
 	@Test
-	fun `When receiving REST call to nologin endpoint, message is put on Kafka`() {
-		val soknad = createInnsending()
-		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
-		every { kafkaSender.publishNologinSubmission(any(), any()) } returns Unit
+	fun `When receiving REST call to loggedin endpoint, message is put on Kafka`() {
+		// Given
+		val brukerId = "01234567891"
+		val avsenderId = "12345678901"
+		val soknad = createInnsending(
+			brukerDto = BrukerDto(brukerId, BrukerDto.IdType.FNR),
+			avsenderDto = AvsenderDto(
+				id = avsenderId,
+				idType = AvsenderDto.IdType.FNR,
+				navn = null
+			), kanal = "NAV_NO", tema = "BIL"
+		)
+		every { kafkaSender.publishSubmission(key= any(), value=any(), loggedIn=any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
 		val mockJwt = createMockJwt(AZURE_ISSUER)
 		(doReturn(mockJwt).`when` (azureJwtDecoder).decode(any()))
 
-		val status = api?.receiveNoLoginSoknad(soknad)
+		// When
+		val status = api?.receiveLoggedinSoknad(soknad)
 
+		// Expect
 		assertEquals(HttpStatus.OK, status, "Should return HttpStatus.OK")
 
 		val innsendingsIdSlot = slot<String>()
 		val innsendingMsg = slot<String>()
+		val isLoggedInSlot = slot<Boolean>()
 
-		verify(exactly = 1) { kafkaSender.publishNologinSubmission(capture(innsendingsIdSlot), capture(innsendingMsg) ) }
+		verify(exactly = 1) { kafkaSender.publishSubmission(key=capture(innsendingsIdSlot), value=capture(innsendingMsg), loggedIn=capture(isLoggedInSlot) ) }
 		assertTrue(innsendingsIdSlot.isCaptured)
 		assertEquals(soknad.innsendingsId, innsendingsIdSlot.captured, "Should send correct message")
 		assertTrue(innsendingMsg.isCaptured)
 		assertTrue( innsendingMsg.captured.contains("BIL"), "Should have correct tema")
+		assertTrue( innsendingMsg.captured.contains("NAV_NO"), "Should have correct kanal")
+		assertTrue(isLoggedInSlot.isCaptured)
+		assertEquals( true, isLoggedInSlot.captured, "Should send isLoggedIn==true")
 
 		val metricsIdSlot = slot<String>()
 		val metricsDataSlot = slot<InnsendingMetrics>()
@@ -159,29 +191,53 @@ class RestEndpointTest {
 
 	@Test
 	fun `When receiving REST call without token, message is rejected`() {
-		val soknad = createSoknad()
-		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
+		// Given
+		val brukerId = "01234567891"
+		val avsenderId = "12345678901"
+		val soknad = createInnsending(
+			brukerDto = BrukerDto(brukerId, BrukerDto.IdType.FNR),
+			avsenderDto = AvsenderDto(
+				id = avsenderId,
+				idType = AvsenderDto.IdType.FNR,
+				navn = null
+			), kanal = "NAV_NO", tema = "BIL"
+		)
+		every { kafkaSender.publishSubmission(key= any(), value=any(), loggedIn=any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
+		val mockJwt = createMockJwt(AZURE_ISSUER)
 		(doReturn(null).`when` (azureJwtDecoder).decode(any()))
 
-		val status = api?.receiveSoknad(soknad, issuer = null, audience = null)
+		// When
+		val status = api?.receiveLoggedinSoknad(soknad, issuer = null)
 
-		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.OK")
+		// Expect
+		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.UNAUTHORIZED")
 
 	}
 
 
 	@Test
 	fun `When receiving REST call with tokenx token, message is rejected`() {
-		val soknad = createSoknad()
-		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
+		// Given
+		val brukerId = "01234567891"
+		val avsenderId = "12345678901"
+		val soknad = createInnsending(
+			brukerDto = BrukerDto(brukerId, BrukerDto.IdType.FNR),
+			avsenderDto = AvsenderDto(
+				id = avsenderId,
+				idType = AvsenderDto.IdType.FNR,
+				navn = null
+			), kanal = "NAV_NO", tema = "BIL"
+		)
+		every { kafkaSender.publishSubmission(key= any(), value=any(), loggedIn=any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
 		val mockJwt = createMockJwt(TOKENX_ISSUER)
-
 		(doReturn(mockJwt).`when` (azureJwtDecoder).decode(any()))
 
-		val status = api?.receiveSoknad(soknad, "tokenx", audience = AUD)
+		// When
+		val status = api?.receiveLoggedinSoknad(soknad, issuer = "tokenx", audience = AUD)
 
+		 // Expect
 		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.UNAUTHORIZED")
 
 	}
@@ -189,15 +245,26 @@ class RestEndpointTest {
 
 	@Test
 	fun `When receiving REST call with token with wrong audience, message is rejected`() {
-		val soknad = createSoknad()
-		every { kafkaSender.publishSoknadarkivschema(any(), any()) } returns Unit
+		// Given
+		val brukerId = "01234567891"
+		val avsenderId = "12345678901"
+		val soknad = createInnsending(
+			brukerDto = BrukerDto(brukerId, BrukerDto.IdType.FNR),
+			avsenderDto = AvsenderDto(
+				id = avsenderId,
+				idType = AvsenderDto.IdType.FNR,
+				navn = null
+			), kanal = "NAV_NO", tema = "BIL"
+		)
+		every { kafkaSender.publishSubmission(key= any(), value=any(), loggedIn=any()) } returns Unit
 		every { kafkaSender.publishMetric(any(), any()) } returns Unit
-
 		val mockJwt = createMockJwt(issuer = AZURE_ISSUER, audience = "wrongAudience")
 		(doReturn(mockJwt).`when` (azureJwtDecoder).decode(any()))
 
-		val status = api?.receiveSoknad(soknad = soknad, issuer = "azuread", audience = "wrongAudience")
+		// When
+		val status = api?.receiveLoggedinSoknad(soknad, issuer = "azuread", audience = "wrongAudience")
 
+		// Expect
 		assertEquals(HttpStatus.UNAUTHORIZED, status, "Should return HttpStatus.UNAUTHORIZED")
 
 	}

@@ -69,8 +69,6 @@ spec:
       value: {{profile}}
     - name: KAFKA_SECURITY
       value: 'TRUE'
-    - name: KAFKA_MAIN_TOPIC
-      value: {{kafka-main-topic}}
     - name: KAFKA_METRICS_TOPIC
       value: {{kafka-metrics-topic}}
     - name: KAFKA_BRUKERNOTIFIKASJON_DONE_TOPIC
@@ -81,6 +79,8 @@ spec:
       value: {{kafka-brukernotifikasjon-oppgave-topic}}
     - name: KAFKA_UTKAST_TOPIC
       value: {{kafka-utkast-topic}}
+    - name: KAFKA_LOGGEDIN_SUBMISSION_TOPIC
+      value: {{kafka-loggedin-submission-topic}}
     - name: KAFKA_NOLOGIN_SUBMISSION_TOPIC
       value: {{kafka-nologin-submission-topic}}
     - name: STATUS_LOG_URL
