@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeaders
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -72,6 +73,13 @@ class KafkaSender(
 		}
 	}
 
+
+	@Retryable(
+		maxRetries = 3,
+		delay = 5000,
+		multiplier = 2.0,
+		jitter = 1
+	)
 	 fun <K: Any , V: Any> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
 		val producerRecord = ProducerRecord(topic, key, value)
 		val headers = RecordHeaders()
@@ -79,7 +87,7 @@ class KafkaSender(
 		headers.forEach { h -> producerRecord.headers().add(h) }
 
 		val future = kafkaTemplate.send(producerRecord)
-		future.get(10, TimeUnit.SECONDS)
+		future.get(30, TimeUnit.SECONDS)
 	}
 }
 
