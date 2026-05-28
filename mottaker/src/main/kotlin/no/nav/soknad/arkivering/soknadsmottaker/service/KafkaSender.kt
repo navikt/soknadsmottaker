@@ -78,7 +78,7 @@ class KafkaSender(
 		maxRetries = 3,
 		delay = 5000,
 		multiplier = 2.0,
-		jitter = 1
+		jitter = 2
 	)
 	 fun <K: Any , V: Any> publish(topic: String, key: K, value: V, kafkaTemplate: KafkaTemplate<K, V>) {
 		val producerRecord = ProducerRecord(topic, key, value)
