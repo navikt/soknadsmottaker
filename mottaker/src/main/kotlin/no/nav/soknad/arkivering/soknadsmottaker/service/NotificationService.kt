@@ -92,7 +92,7 @@ class NotificationService(
 			kafkaSender.publishOppgaveNotification(key = key, value = notification)
 			logger.info("$key: Varsel om $varselType er publisert med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke}")
 		} catch ( ex: Exception) {
-			logger.error("$key: feil ved publisering av varsel om $varselType med eventId=$eventId og lenke ${brukerNotifikasjonInfo.lenke}, \n${ex.message}")
+			logger.warn("$key: feil ved publisering av varsel om $varselType med eventId=$eventId og lenke ${brukerNotifikasjonInfo.lenke} - ${ex.message}", ex)
 			throw ex
 		}
 	}
@@ -125,7 +125,7 @@ class NotificationService(
 			kafkaSender.publishUtkastNotification(eventId, utkast)
 			logger.info("$eventId: Publisert utkast med lenke ${brukerNotifikasjonInfo.lenke}")
 		} catch ( ex: Exception) {
-			logger.error("$eventId: feil ved publisering av utkast med lenke ${brukerNotifikasjonInfo.lenke}, \n$ex")
+			logger.warn("$eventId: feil ved publisering av utkast med lenke ${brukerNotifikasjonInfo.lenke} - ${ex.message}", ex)
 			throw ex
 		}
 
@@ -141,7 +141,7 @@ class NotificationService(
 		try {
 			kafkaSender.publishUtkastNotification(eventId, utkast)
 		} catch(ex: Exception) {
-			logger.error("$eventId: feil ved publisering av done utkast, \n$ex")
+			logger.warn("$eventId: feil ved publisering av done utkast - ${ex.message}", ex)
 			throw ex
 		}
 
@@ -155,7 +155,7 @@ class NotificationService(
 		try {
 			kafkaSender.publishDoneNotification(key, doneNotification)
 		} catch (ex: Exception) {
-			logger.error("$key: feil ved publisering av done notification, \n$ex")
+			logger.error("$key: feil ved publisering av done notification - ${ex.message}", ex)
 			throw ex
 		}
 	}
