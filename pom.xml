@@ -40,7 +40,7 @@
 		<!--Serialization-->
 		<jackson-module-kotlin.version>3.1.0</jackson-module-kotlin.version>
 		<jackson-module-yaml.version>3.1.0</jackson-module-yaml.version>
-		<jackson.version>2.21.3</jackson.version>
+		<jackson.version>2.22.0</jackson.version>
 		<jackson-databind-nullable.version>0.2.10</jackson-databind-nullable.version>
 		<jackson-datataype.version>3.0.0-rc2</jackson-datataype.version>
 <!--
@@ -48,11 +48,11 @@
 -->
 
 		<!--NAV-->
-		<token-support.version>6.0.6</token-support.version>
+		<token-support.version>6.0.8</token-support.version>
 
 		<!--Kafka-->
 		<spring-kafka.version>4.0.5</spring-kafka.version>
-		<confluent.version>8.2.0</confluent.version>
+		<confluent.version>8.2.1</confluent.version>
 		<avro.version>1.12.1</avro.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>1.1.0</utkast-schema.version>
@@ -70,24 +70,24 @@
 
 		<!--Other -->
 		<okhttp3.version>5.3.2</okhttp3.version>
-		<swagger-annotations.version>2.2.49</swagger-annotations.version>
+		<swagger-annotations.version>2.2.50</swagger-annotations.version>
 
 		<!--Test-->
-		<mockk.version>1.14.9</mockk.version>
+		<mockk.version>1.14.11</mockk.version>
 		<springmockk.version>5.0.1</springmockk.version>
 		<mockito-junit-jupiter.version>5.23.0</mockito-junit-jupiter.version>
-		<junit-jupiter.version>6.0.3</junit-jupiter.version>
+		<junit-jupiter.version>6.1.0</junit-jupiter.version>
 		<spring-cloud-contract-wiremock.version>5.0.2</spring-cloud-contract-wiremock.version>
-		<wiremock.version>4.0.0-beta.30</wiremock.version>
-		<wiremock.core.version>4.0.0-beta.30</wiremock.core.version>
-		<wiremock-junit5.version>4.0.0-beta.30</wiremock-junit5.version>
+		<wiremock.version>4.0.0-beta.34</wiremock.version>
+		<wiremock.core.version>4.0.0-beta.34</wiremock.core.version>
+		<wiremock-junit5.version>4.0.0-beta.34</wiremock-junit5.version>
 		<wiremock.integrations.version>4.2.1</wiremock.integrations.version>
-		<mock-oauth2-server.version>3.0.1</mock-oauth2-server.version>
+		<mock-oauth2-server.version>4.0.0</mock-oauth2-server.version>
 
 		<!--Plugins-->
 		<versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
 		<cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
-		<maven-enforcer.version>3.6.2</maven-enforcer.version>
+		<maven-enforcer.version>3.6.3</maven-enforcer.version>
 		<openapi-generator-maven-plugin.version>7.22.0</openapi-generator-maven-plugin.version>
 	</properties>
 

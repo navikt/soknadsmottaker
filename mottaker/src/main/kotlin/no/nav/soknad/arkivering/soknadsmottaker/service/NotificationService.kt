@@ -83,26 +83,17 @@ class NotificationService(
 		eventId: String,
 		fodselsnummer: String
 	) {
-
 		val notification = generateNotificationType(
 			varseltype = varselType, eventId = eventId,
 			persId = fodselsnummer, notificationInfo = brukerNotifikasjonInfo )
-
-		loopAndPublishToKafka(key,varselType.name) {
-			logger.info(
-				"$key: Varsel om $varselType skal publiseres med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke}"
-			)
-			when {
-				varselType == Varseltype.Oppgave -> {
-					kafkaSender.publishOppgaveNotification(key = key, value = notification)
-				}
-				varselType == Varseltype.Beskjed -> {
-					kafkaSender.publishBeskjedNotification(key = key, value = notification)
-				}
-				else -> {
-					logger.warn("$key: Unexpected varselType = $varselType. Will not be published")
-				}
-			}
+		logger.info("$key: Varsel om $varselType skal publiseres med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke}"
+		)
+		try {
+			kafkaSender.publishOppgaveNotification(key = key, value = notification)
+			logger.info("$key: Varsel om $varselType er publisert med eventId=$eventId og med lenke ${brukerNotifikasjonInfo.lenke}")
+		} catch ( ex: Exception) {
+			logger.warn("$key: feil ved publisering av varsel om $varselType med eventId=$eventId og lenke ${brukerNotifikasjonInfo.lenke} - ${ex.message}", ex)
+			throw ex
 		}
 	}
 
@@ -134,7 +125,8 @@ class NotificationService(
 			kafkaSender.publishUtkastNotification(eventId, utkast)
 			logger.info("$eventId: Publisert utkast med lenke ${brukerNotifikasjonInfo.lenke}")
 		} catch ( ex: Exception) {
-			logger.error("$eventId: feil ved publisering av utkast med lenke ${brukerNotifikasjonInfo.lenke}, \n${ex.message}")
+			logger.warn("$eventId: feil ved publisering av utkast med lenke ${brukerNotifikasjonInfo.lenke} - ${ex.message}", ex)
+			throw ex
 		}
 
 	}
@@ -145,17 +137,26 @@ class NotificationService(
 		val utkast = UtkastJsonBuilder()
 			.withUtkastId(eventId)
 			.delete()
-
-		kafkaSender.publishUtkastNotification(eventId, utkast)
+		logger.info("$eventId: Skal publisere done utkast")
+		try {
+			kafkaSender.publishUtkastNotification(eventId, utkast)
+		} catch(ex: Exception) {
+			logger.warn("$eventId: feil ved publisering av done utkast - ${ex.message}", ex)
+			throw ex
+		}
 
 	}
 
 	private fun publishDoneNotification(
 		key: String,
 	) {
+		logger.info("$key: Skal publisere done notification")
 		val doneNotification = createDeleteNotification(eventId = key)
-		loopAndPublishToKafka(key, "Done") {
+		try {
 			kafkaSender.publishDoneNotification(key, doneNotification)
+		} catch (ex: Exception) {
+			logger.error("$key: feil ved publisering av done notification - ${ex.message}", ex)
+			throw ex
 		}
 	}
 
