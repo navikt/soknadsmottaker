@@ -14,6 +14,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.boot.restclient.RestTemplateBuilder
+import org.springframework.web.client.RestOperations
+import java.time.Duration
 
 @Configuration
 @Profile("!(test | docker)")
@@ -27,14 +30,22 @@ class SecurityConfig(
 	val issuerValidator = JwtIssuerValidator(azureadIssuer)
 
 	@Bean
-	fun azureJwtDecoder(): JwtDecoder {
-		val nimbusJwtDecoder = NimbusJwtDecoder.withJwkSetUri(azureadJwkUri).build()
+	fun azureJwtDecoder(restTemplateBuilder: RestTemplateBuilder): JwtDecoder {
+		val restOperations: RestOperations = restTemplateBuilder
+			.connectTimeout(Duration.ofSeconds((5)))
+			.readTimeout(Duration.ofSeconds((10)))
+			.build()
+
+		val nimbusJwtDecoder = NimbusJwtDecoder.withJwkSetUri(azureadJwkUri)
+			.restOperations(restOperations)
+			.build()
 
 		val withValidators = DelegatingOAuth2TokenValidator(audienceValidator, issuerValidator)
 
 		nimbusJwtDecoder.setJwtValidator(withValidators)
 		return nimbusJwtDecoder
 	}
+
 
 	@Bean
 	fun securityFilterChain(
