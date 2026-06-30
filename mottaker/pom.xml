@@ -20,6 +20,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 			<version>${spring-boot-starter-aop.version}</version>
 		</dependency>
@@ -174,12 +178,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-webmvc-test</artifactId>
-			<version>${spring-boot.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-restclient</artifactId>
 			<version>${spring-boot.version}</version>
 			<scope>test</scope>
 		</dependency>

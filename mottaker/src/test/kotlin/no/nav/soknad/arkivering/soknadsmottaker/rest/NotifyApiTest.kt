@@ -1,10 +1,6 @@
 package no.nav.soknad.arkivering.soknadsmottaker.rest
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.slot
@@ -16,7 +12,6 @@ import no.nav.soknad.arkivering.soknadsmottaker.model.NotificationInfo
 import no.nav.soknad.arkivering.soknadsmottaker.model.SoknadRef
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
-import no.nav.tms.varsel.builder.BuilderEnvironment
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +24,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeAll
 import org.springframework.http.HttpStatus
 import java.time.OffsetDateTime
 import java.time.ZoneId
