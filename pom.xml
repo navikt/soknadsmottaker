@@ -79,7 +79,7 @@
 		<junit-jupiter.version>6.1.0</junit-jupiter.version>
 		<spring-cloud-contract-wiremock.version>5.0.2</spring-cloud-contract-wiremock.version>
 		<wiremock.version>4.0.0-beta.34</wiremock.version>
-		<wiremock.core.version>4.0.0-beta.34</wiremock.core.version>
+		<wiremock.core.version>4.0.0-beta.37</wiremock.core.version>
 		<wiremock-junit5.version>4.0.0-beta.34</wiremock-junit5.version>
 		<wiremock.integrations.version>4.2.1</wiremock.integrations.version>
 		<mock-oauth2-server.version>4.0.0</mock-oauth2-server.version>
