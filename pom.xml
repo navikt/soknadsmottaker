@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.6</version>
+		<version>4.1.0</version>
 		<relativePath/>
 	</parent>
 
@@ -17,10 +17,10 @@
 	<description>Receives benefit applications</description>
 
 	<properties>
-		<spring-boot.version>4.0.6</spring-boot.version>
-		<spring-security-client.version>7.0.5</spring-security-client.version>
+		<spring-boot.version>4.1.0</spring-boot.version>
+		<spring-security-client.version>7.1.0</spring-security-client.version>
 		<java.version>21</java.version>
-		<kotlin.version>2.3.21</kotlin.version>
+		<kotlin.version>2.4.10</kotlin.version>
 		<maven.version>3.9.0</maven.version>
 
 		<!--Kotlin-->
@@ -32,27 +32,27 @@
 		<!--Spring-->
 		<spring-boot-starter-aop.version>4.0.0-M2</spring-boot-starter-aop.version>
 		<springdoc-openapi.version>3.0.3</springdoc-openapi.version>
-		<spring-web.version>7.0.7</spring-web.version>
-		<spring-cloud.version>5.0.2</spring-cloud.version>
+		<spring-web.version>7.0.8</spring-web.version>
+		<spring-cloud.version>5.0.3</spring-cloud.version>
 		<spring-core.version>7.0.2</spring-core.version>
 		<spring-security-test.version>7.0.2</spring-security-test.version>
 
 		<!--Serialization-->
 		<jackson-module-kotlin.version>3.1.0</jackson-module-kotlin.version>
 		<jackson-module-yaml.version>3.1.0</jackson-module-yaml.version>
-		<jackson.version>2.22.0</jackson.version>
-		<jackson-databind-nullable.version>0.2.10</jackson-databind-nullable.version>
+		<jackson.version>2.22.1</jackson.version>
+		<jackson-databind-nullable.version>0.2.11</jackson-databind-nullable.version>
 		<jackson-datataype.version>3.0.0-rc2</jackson-datataype.version>
 <!--
 		<gson.version>2.13.2</gson.version>
 -->
 
 		<!--NAV-->
-		<token-support.version>6.0.8</token-support.version>
+		<token-support.version>6.0.11</token-support.version>
 
 		<!--Kafka-->
-		<spring-kafka.version>4.0.5</spring-kafka.version>
-		<confluent.version>8.2.1</confluent.version>
+		<spring-kafka.version>4.1.0</spring-kafka.version>
+		<confluent.version>8.3.0</confluent.version>
 		<avro.version>1.12.1</avro.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>1.1.0</utkast-schema.version>
@@ -61,7 +61,7 @@
 
 		<!--Logging-->
 		<logstash.version>9.0</logstash.version>
-		<prometheus.version>1.6.1</prometheus.version>
+		<prometheus.version>1.8.0</prometheus.version>
 
 		<!--Jakarta-->
 		<jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
@@ -69,26 +69,26 @@
 		<jakarta-annotation.version>3.0.0</jakarta-annotation.version>
 
 		<!--Other -->
-		<okhttp3.version>5.3.2</okhttp3.version>
-		<swagger-annotations.version>2.2.50</swagger-annotations.version>
+		<okhttp3.version>5.4.0</okhttp3.version>
+		<swagger-annotations.version>2.2.52</swagger-annotations.version>
 
 		<!--Test-->
 		<mockk.version>1.14.11</mockk.version>
 		<springmockk.version>5.0.1</springmockk.version>
 		<mockito-junit-jupiter.version>5.23.0</mockito-junit-jupiter.version>
-		<junit-jupiter.version>6.1.0</junit-jupiter.version>
+		<junit-jupiter.version>6.1.2</junit-jupiter.version>
 		<spring-cloud-contract-wiremock.version>5.0.2</spring-cloud-contract-wiremock.version>
 		<wiremock.version>4.0.0-beta.34</wiremock.version>
 		<wiremock.core.version>4.0.0-beta.34</wiremock.core.version>
 		<wiremock-junit5.version>4.0.0-beta.34</wiremock-junit5.version>
-		<wiremock.integrations.version>4.2.1</wiremock.integrations.version>
+		<wiremock.integrations.version>4.2.2</wiremock.integrations.version>
 		<mock-oauth2-server.version>4.0.0</mock-oauth2-server.version>
 
 		<!--Plugins-->
 		<versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
-		<cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
+		<cyclonedx-maven-plugin.version>2.9.2</cyclonedx-maven-plugin.version>
 		<maven-enforcer.version>3.6.3</maven-enforcer.version>
-		<openapi-generator-maven-plugin.version>7.22.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.24.0</openapi-generator-maven-plugin.version>
 	</properties>
 
 	<modules>
