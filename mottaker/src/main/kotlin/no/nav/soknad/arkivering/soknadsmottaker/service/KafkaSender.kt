@@ -1,7 +1,7 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
-import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
+import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingMetrics
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.header.internals.RecordHeaders
 import org.slf4j.LoggerFactory
