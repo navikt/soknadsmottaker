@@ -34,15 +34,10 @@
 		<springdoc-openapi.version>3.1.0</springdoc-openapi.version>
 		<spring-web.version>7.0.8</spring-web.version>
 		<spring-cloud.version>5.0.3</spring-cloud.version>
-		<spring-core.version>7.0.2</spring-core.version>
-		<spring-security-test.version>7.0.2</spring-security-test.version>
 
 		<!--Serialization-->
-		<jackson-module-kotlin.version>3.1.0</jackson-module-kotlin.version>
-		<jackson-module-yaml.version>3.1.0</jackson-module-yaml.version>
 		<jackson.version>2.22.2</jackson.version>
 		<jackson-databind-nullable.version>0.2.11</jackson-databind-nullable.version>
-		<jackson-datataype.version>3.0.0-rc2</jackson-datataype.version>
 <!--
 		<gson.version>2.13.2</gson.version>
 -->
@@ -77,7 +72,6 @@
 		<springmockk.version>5.0.1</springmockk.version>
 		<mockito-junit-jupiter.version>5.23.0</mockito-junit-jupiter.version>
 		<junit-jupiter.version>6.1.3</junit-jupiter.version>
-		<spring-cloud-contract-wiremock.version>5.0.2</spring-cloud-contract-wiremock.version>
 		<wiremock.version>4.0.0-beta.34</wiremock.version>
 		<wiremock.core.version>4.0.0-beta.34</wiremock.core.version>
 		<wiremock-junit5.version>4.0.0-beta.34</wiremock-junit5.version>
