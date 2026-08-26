@@ -14,9 +14,9 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.*
 import io.prometheus.metrics.model.registry.PrometheusRegistry
-import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.model.AvsenderDto
 import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
+import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.utils.createInnsending
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -134,6 +134,9 @@ class RestEndpointTest {
 			"soknadsmottaker", metricsDataSlot.captured.application,
 			"Metrics should have correct application name"
 		)
+		assertEquals("publish to kafka", metricsDataSlot.captured.action, "Metrics should have correct action")
+		assertEquals(0, metricsDataSlot.captured.startTime.offset.totalSeconds, "Metrics startTime should be UTC")
+		assertTrue(metricsDataSlot.captured.duration >= 0, "Metrics duration should be milliseconds")
 
 	}
 
@@ -186,6 +189,9 @@ class RestEndpointTest {
 			"soknadsmottaker", metricsDataSlot.captured.application,
 			"Metrics should have correct application name"
 		)
+		assertEquals("publish to kafka", metricsDataSlot.captured.action, "Metrics should have correct action")
+		assertEquals(0, metricsDataSlot.captured.startTime.offset.totalSeconds, "Metrics startTime should be UTC")
+		assertTrue(metricsDataSlot.captured.duration >= 0, "Metrics duration should be milliseconds")
 
 	}
 

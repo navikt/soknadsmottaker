@@ -4,11 +4,11 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.slot
 import io.prometheus.metrics.model.registry.PrometheusRegistry
-import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.SoknadsmottakerApplication
 import no.nav.soknad.arkivering.soknadsmottaker.config.KafkaConfig
 import no.nav.soknad.arkivering.soknadsmottaker.model.AvsenderDto
 import no.nav.soknad.arkivering.soknadsmottaker.model.BrukerDto
+import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingTopicMsg
 import no.nav.soknad.arkivering.soknadsmottaker.service.KafkaSender
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
@@ -107,6 +107,9 @@ lateinit var prometheusRegistry: PrometheusRegistry
 		assertEquals(soknad.innsendingsId, metricKey.captured, "Should use innsendingsId as metric key")
 		assertTrue(metricMsg.isCaptured, "Should capture metric message")
 		assertEquals("soknadsmottaker", metricMsg.captured.application, "Metrics should have correct application name")
+		assertEquals("publish to kafka", metricMsg.captured.action, "Metrics should have correct action")
+		assertEquals(0, metricMsg.captured.startTime.offset.totalSeconds, "Metrics startTime should be UTC")
+		assertTrue(metricMsg.captured.duration >= 0, "Metrics duration should be milliseconds")
 
 		assertEquals(errorsBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE"), "Should not cause errors")
 		assertEquals(sentInBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE"), "Should increase counter by 1")
@@ -165,6 +168,9 @@ lateinit var prometheusRegistry: PrometheusRegistry
 		assertEquals(soknad.innsendingsId, metricKey.captured, "Should use innsendingsId as metric key")
 		assertTrue(metricMsg.isCaptured, "Should capture metric message")
 		assertEquals("soknadsmottaker", metricMsg.captured.application, "Metrics should have correct application name")
+		assertEquals("publish to kafka", metricMsg.captured.action, "Metrics should have correct action")
+		assertEquals(0, metricMsg.captured.startTime.offset.totalSeconds, "Metrics startTime should be UTC")
+		assertTrue(metricMsg.captured.duration >= 0, "Metrics duration should be milliseconds")
 
 		assertEquals(errorsBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE"), "Should not cause errors")
 		assertEquals(sentInBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE"), "Should increase counter by 1")
@@ -214,6 +220,9 @@ lateinit var prometheusRegistry: PrometheusRegistry
 		assertEquals(soknad.innsendingsId, metricKey.captured, "Should use innsendingsId as metric key")
 		assertTrue(metricMsg.isCaptured, "Should capture metric message")
 		assertEquals("soknadsmottaker", metricMsg.captured.application, "Metrics should have correct application name")
+		assertEquals("publish to kafka", metricMsg.captured.action, "Metrics should have correct action")
+		assertEquals(0, metricMsg.captured.startTime.offset.totalSeconds, "Metrics startTime should be UTC")
+		assertTrue(metricMsg.captured.duration >= 0, "Metrics duration should be milliseconds")
 
 		assertEquals(errorsBefore + 1.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET_ERROR.name, "HJE"), "Should not cause errors")
 		assertEquals(sentInBefore + 0.0, metrics.mottattSoknadGet(MetricNames.INNSENDT_UINNLOGGET.name,"HJE"), "Should increase counter by 1")
@@ -221,4 +230,3 @@ lateinit var prometheusRegistry: PrometheusRegistry
 	}
 
 }
-

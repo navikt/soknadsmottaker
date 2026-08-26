@@ -1,13 +1,16 @@
 package no.nav.soknad.arkivering.soknadsmottaker.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.model.Innsending
+import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.InnsendtMetrics
 import no.nav.soknad.arkivering.soknadsmottaker.supervision.MetricNames
 import no.nav.soknad.arkivering.soknadsmottaker.util.mapTilInnsendingTopicMsg
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.Duration
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 @Service
 class InnsendingService(
@@ -18,7 +21,7 @@ class InnsendingService(
 	private val logger = LoggerFactory.getLogger(javaClass)
 
 	fun publishToNoLoginTopic(key: String, innsending: Innsending) {
-		val startTime = System.currentTimeMillis()
+		val startTime = OffsetDateTime.now(ZoneOffset.UTC)
 		try {
 			publishSubmission(key, innsending, isLoggedIn=false)
 			logger.info("$key: Not logged in, published to kanal: ${innsending.kanal}, skjemanr: ${innsending.skjemanr}")
@@ -34,7 +37,7 @@ class InnsendingService(
 
 
 	fun publishToLoggedinTopic(key: String, innsending: Innsending) {
-		val startTime = System.currentTimeMillis()
+		val startTime = OffsetDateTime.now(ZoneOffset.UTC)
 		try {
 			publishSubmission(key, innsending, isLoggedIn=true)
 			logger.info("$key: Logged in, published to kanal: ${innsending.kanal}, skjemanr: ${innsending.skjemanr}")
@@ -54,9 +57,9 @@ class InnsendingService(
 		kafkaSender.publishSubmission( key, valueAsString, isLoggedIn)
 	}
 
-	private fun tryPublishingMetrics(key: String, startTime: Long) {
+	private fun tryPublishingMetrics(key: String, startTime: OffsetDateTime) {
 		try {
-			val duration = System.currentTimeMillis() - startTime
+			val duration = Duration.between(startTime, OffsetDateTime.now(ZoneOffset.UTC)).toMillis()
 
 			val metric = InnsendingMetrics("soknadsmottaker", "publish to kafka", startTime, duration)
 			kafkaSender.publishMetric(key, metric)

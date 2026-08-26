@@ -4,7 +4,7 @@ import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGI
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig.USER_INFO_CONFIG
-import no.nav.soknad.arkivering.avroschemas.InnsendingMetrics
+import no.nav.soknad.arkivering.soknadsmottaker.model.InnsendingMetrics
 import org.apache.kafka.clients.CommonClientConfigs.SECURITY_PROTOCOL_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.config.SaslConfigs.SASL_MECHANISM
@@ -22,7 +22,10 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	private val stringKeySerializerClass = StringSerializer::class.java
 	private val stringValueSerializerClass = StringSerializer::class.java
 
-	fun <T : Serializer<*>> createKafkaConfig(keySerializer: Class<T>, valueSerializer: Class<T>? = null): HashMap<String, Any> {
+	fun createKafkaConfig(
+		keySerializer: Class<out Serializer<*>>,
+		valueSerializer: Class<out Serializer<*>>? = null
+	): HashMap<String, Any> {
 
 		return HashMap<String, Any>().also {
 			it[BOOTSTRAP_SERVERS_CONFIG] = kafkaConfig.kafkaBrokers
@@ -50,7 +53,10 @@ class KafkaSetup(private val kafkaConfig: KafkaConfig) {
 	}
 
 	@Bean
-	fun metricProducerFactory() = DefaultKafkaProducerFactory<String, InnsendingMetrics>(createKafkaConfig(stringKeySerializerClass))
+	fun metricProducerFactory() =
+		DefaultKafkaProducerFactory<String, InnsendingMetrics>(
+			createKafkaConfig(stringKeySerializerClass, InnsendingMetricsJsonSerializer::class.java)
+		)
 
 	@Bean
 	fun beskjedNotificationFactory() = DefaultKafkaProducerFactory<String, String>(createKafkaConfig(stringKeySerializerClass, stringValueSerializerClass))
