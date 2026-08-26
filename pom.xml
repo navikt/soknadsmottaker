@@ -30,7 +30,6 @@
 -->
 
 		<!--Spring-->
-		<spring-boot-starter-aop.version>4.0.0-M2</spring-boot-starter-aop.version>
 		<springdoc-openapi.version>3.1.0</springdoc-openapi.version>
 		<spring-web.version>7.0.8</spring-web.version>
 		<spring-cloud.version>5.0.3</spring-cloud.version>
