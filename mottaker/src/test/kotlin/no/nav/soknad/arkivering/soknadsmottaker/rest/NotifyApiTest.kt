@@ -164,7 +164,7 @@ class NotifyApiTest {
 	}
 
 	private fun mapToZonedDateTime(noOfDays: Int): ZonedDateTime {
-		val now = OffsetDateTime.now()
+		val now = OffsetDateTime.now(ZoneId.of("Europe/Oslo"))
 		return now
 			.toLocalDate()
 			.plusDays(noOfDays.toLong())
@@ -215,4 +215,3 @@ class NotifyApiTest {
 
 
 }
-
