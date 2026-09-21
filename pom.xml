@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.7</version>
+		<version>4.1.1</version>
 		<relativePath/>
 	</parent>
 
@@ -17,10 +17,10 @@
 	<description>Receives benefit applications</description>
 
 	<properties>
-		<spring-boot.version>4.0.7</spring-boot.version>
-		<spring-security-client.version>7.0.6</spring-security-client.version>
+		<spring-boot.version>4.1.1</spring-boot.version>
+		<spring-security-client.version>7.1.1</spring-security-client.version>
 		<java.version>21</java.version>
-		<kotlin.version>2.4.10</kotlin.version>
+		<kotlin.version>2.4.20</kotlin.version>
 		<maven.version>3.9.0</maven.version>
 
 		<!--Kotlin-->
@@ -30,8 +30,8 @@
 -->
 
 		<!--Spring-->
-		<springdoc-openapi.version>3.1.0</springdoc-openapi.version>
-		<spring-web.version>7.0.8</spring-web.version>
+		<springdoc-openapi.version>3.1.1</springdoc-openapi.version>
+		<spring-web.version>7.0.9</spring-web.version>
 		<spring-cloud.version>5.0.3</spring-cloud.version>
 
 		<!--Serialization-->
@@ -46,8 +46,8 @@
 
 		<!--Kafka-->
 		<spring-kafka.version>4.1.1</spring-kafka.version>
-		<confluent.version>8.2.1</confluent.version>
-		<avro.version>1.12.1</avro.version>
+		<confluent.version>8.3.1</confluent.version>
+		<avro.version>1.12.2</avro.version>
 		<brukernotifikasjon-schemas.version>2.5.2</brukernotifikasjon-schemas.version>
 		<utkast-schema.version>1.1.0</utkast-schema.version>
 		<arkivering-schemas.version>1.4.4-bf301c4492e2</arkivering-schemas.version>
@@ -64,7 +64,7 @@
 
 		<!--Other -->
 		<okhttp3.version>5.5.0</okhttp3.version>
-		<swagger-annotations.version>2.2.54</swagger-annotations.version>
+		<swagger-annotations.version>2.2.55</swagger-annotations.version>
 
 		<!--Test-->
 		<mockk.version>1.14.11</mockk.version>
@@ -74,14 +74,14 @@
 		<wiremock.version>4.0.0-beta.34</wiremock.version>
 		<wiremock.core.version>4.0.0-beta.34</wiremock.core.version>
 		<wiremock-junit5.version>4.0.0-beta.34</wiremock-junit5.version>
-		<wiremock.integrations.version>4.2.2</wiremock.integrations.version>
+		<wiremock.integrations.version>4.2.3</wiremock.integrations.version>
 		<mock-oauth2-server.version>6.0.2</mock-oauth2-server.version>
 
 		<!--Plugins-->
-		<versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
+		<versions-maven-plugin.version>2.22.0</versions-maven-plugin.version>
 		<cyclonedx-maven-plugin.version>2.9.3</cyclonedx-maven-plugin.version>
 		<maven-enforcer.version>3.6.3</maven-enforcer.version>
-		<openapi-generator-maven-plugin.version>7.24.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.25.0</openapi-generator-maven-plugin.version>
 	</properties>
 
 	<modules>
