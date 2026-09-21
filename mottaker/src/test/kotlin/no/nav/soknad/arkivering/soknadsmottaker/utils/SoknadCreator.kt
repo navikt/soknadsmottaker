@@ -16,7 +16,8 @@ fun createInnsending(
 	avsenderDto: AvsenderDto= AvsenderDto(id = "01234567891", idType = AvsenderDto.IdType.FNR, navn = null),
 	kanal: String = "NAV_NO",
 	innsendtDato: OffsetDateTime? = OffsetDateTime.now(),
-	ettersendelseTilId: String? = null) = Innsending (
+	ettersendelseTilId: String? = null,
+	grantUserDigitalAccess: Boolean? = null) = Innsending (
 	innsendingsId = UUID.randomUUID().toString(),
 	kanal = kanal,
 	avsenderDto = avsenderDto,
@@ -26,7 +27,8 @@ fun createInnsending(
 	tittel = tittel,
 	dokumenter = vedlegg,
 	innsendtDato = innsendtDato,
-	ettersendelseTilId = ettersendelseTilId
+	ettersendelseTilId = ettersendelseTilId,
+	grantUserDigitalAccess = grantUserDigitalAccess
 )
 
 fun createDefaultDokumentListe() : List<DokumentData> {
@@ -104,4 +106,3 @@ fun createVedleggVariant(skjemanr: String = "L8"): Variant  {
 }
 
 private val defaultSkjemanr = "NAV 10-07.54"
-
