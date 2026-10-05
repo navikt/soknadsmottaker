@@ -334,6 +334,9 @@ components:
           description: Hver Soknad kan ha flere vedlegg. Denne listen beskriver metadata om disse dokumentene.
         innsendtDato:
             $ref: "#/components/schemas/InnsendtDato"
+        grantUserDigitalAccess:
+          type: boolean
+          description: Whether the user should receive digital access to the archived journalpost.
 
     InnsendtDato:
       type: string
@@ -399,6 +402,9 @@ components:
           items:
             $ref: "#/components/schemas/DokumentData"
           description: Hver innsending kan bestå av flere dokumenter. Denne listen beskriver metadata om disse dokumentene.
+        grantUserDigitalAccess:
+          type: boolean
+          description: Whether the user should receive digital access to the archived journalpost.
 
     InnsendingTopicMsgVersjon:
       type: string

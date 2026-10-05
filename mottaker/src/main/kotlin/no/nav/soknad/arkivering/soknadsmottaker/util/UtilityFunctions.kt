@@ -10,7 +10,6 @@ import java.time.OffsetDateTime
 fun maskDokumentTitle(documents:List<DokumentData>): List<DokumentData> {
 	return documents.map{DokumentData(it.skjemanummer, it.erHovedskjema, if (it.skjemanummer == "N6") "**Maskert**" else it.tittel, it.varianter)}
 }
-
 fun maskIdsInInnsending(soknad: Innsending) = Innsending(
 		innsendingsId = soknad.innsendingsId,
 		ettersendelseTilId = soknad.ettersendelseTilId,
@@ -40,8 +39,8 @@ fun mapTilInnsendingTopicMsg(innsending: Innsending, erInnlogget: Boolean): Inns
 		skjemanr = innsending.skjemanr,
 		tittel = innsending.tittel,
 		arkivtema = innsending.tema,
-		dokumenter = innsending.dokumenter
+		dokumenter = innsending.dokumenter,
+		grantUserDigitalAccess = innsending.grantUserDigitalAccess
 	)
 
 }
-

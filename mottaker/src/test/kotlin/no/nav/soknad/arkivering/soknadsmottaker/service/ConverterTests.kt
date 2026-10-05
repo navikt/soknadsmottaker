@@ -17,7 +17,7 @@ class ConverterTests {
 			id = "12345678901",
 			idType = AvsenderDto.IdType.FNR,
 			navn = null
-		), kanal = "NAV_NO", tema = "BIL", innsendtDato = OffsetDateTime.now()
+		), kanal = "NAV_NO", tema = "BIL", innsendtDato = OffsetDateTime.now(), grantUserDigitalAccess = true
 	)
 
 
@@ -36,6 +36,7 @@ class ConverterTests {
 		assertEquals(soknad.kanal, result.kanal)
 		assertEquals(soknad.skjemanr, result.skjemanr)
 		assertEquals(soknad.tittel, result.tittel)
+		assertEquals(soknad.grantUserDigitalAccess, result.grantUserDigitalAccess)
 
 		assertEquals(3, result.dokumenter.size)
 
