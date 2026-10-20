@@ -14,9 +14,9 @@ management:
       exposure:
         include: info, health, metrics, prometheus
       base-path: "/internal"
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
 
 cluster: ${NAIS_CLUSTER_NAME:dev-gcp}
