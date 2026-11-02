@@ -90,6 +90,8 @@
 							<modelPackage>no.nav.soknad.arkivering.soknadsmottaker.model</modelPackage>
 							<configOptions>
 								<useSpringBoot3>true</useSpringBoot3>
+								<generateJsonIncludeAnnotations>true</generateJsonIncludeAnnotations>
+								<generateJsonSetterNullsAnnotations>true</generateJsonSetterNullsAnnotations>
 								<gradleBuildFile>false</gradleBuildFile>
 								<exceptionHandler>false</exceptionHandler>
 								<interfaceOnly>true</interfaceOnly>
